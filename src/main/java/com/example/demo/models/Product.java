@@ -7,16 +7,22 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(name="prod_seq", initialValue = 1,allocationSize = 1)
+@ToString
+@JsonIgnoreProperties
 @Table(name="tbl_product")
+
 public class Product {
 	
 	@Id

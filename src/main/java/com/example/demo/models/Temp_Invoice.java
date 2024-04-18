@@ -13,12 +13,14 @@ import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(name="temp_invoice_seq",allocationSize = 1, initialValue = 1)
+@ToString
 @Table(name="tbl_temp_invoice")
 public class Temp_Invoice {
 

@@ -1,5 +1,7 @@
 package com.example.demo.restcontroller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +35,14 @@ public class TempInvoiceRestController {
 	@Autowired
 	TempInvoiceService tempinserv;
 	
-      static int ch_tm_id=0;
+    static int ch_tm_id=0;
 
 	@PostMapping("/")
-	public ResponseEntity<Temp_Invoice> saveTempInvoice(@RequestBody Temp_Invoice teinv, HttpSession sess)
+	public ResponseEntity<Temp_Invoice> saveTempInvoice(@RequestBody Temp_Invoice teinv, HttpSession sess,HttpServletRequest request)
 	{
 		Integer chk_tmp_id = 0;
-
 		
-	    String sessid = (String) sess.getAttribute("temp_id");
+		String sessid = (String) sess.getAttribute("temp_id");
 	    System.err.println("Session ID for first = " + sess.getAttribute("temp_id"));
 
 	    if (sessid == null) {
