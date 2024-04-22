@@ -38,8 +38,12 @@ public class TempInvoiceRestController {
     static int ch_tm_id=0;
 
 	@PostMapping("/")
-	public ResponseEntity<Temp_Invoice> saveTempInvoice(@RequestBody Temp_Invoice teinv, HttpSession sess,HttpServletRequest request)
+	public ResponseEntity<Temp_Invoice> saveTempInvoice(@RequestBody Temp_Invoice teinv, 
+														HttpSession sess, HttpServletRequest request)
 	{
+	
+		sess = request.getSession();
+		
 		Integer chk_tmp_id = 0;
 		
 		String sessid = (String) sess.getAttribute("temp_id");
