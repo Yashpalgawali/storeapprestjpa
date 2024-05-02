@@ -9,11 +9,16 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -40,45 +45,38 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 public class JWTSecurityConfiguration {
+	
+	@Autowired
+    private DataSource dataSource;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth->{
+		
+		http.httpBasic();
+		http.cors();
+		http.csrf().disable();
+		http.authorizeRequests(auth->{
+			auth.antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
+			
 			auth.anyRequest().authenticated();
 		});
 		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-		http.httpBasic();
 		
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 		
-		
 		http.headers().frameOptions().sameOrigin();
-		http.csrf().disable();
-		
 		return http.build();
 	}
-
-	@Bean
-	public UserDetailsService userDetailService(DataSource datasource) {
-		var admin = User.withUsername("admin")
-				.password("admin").passwordEncoder(str->passEncoder().encode(str))
-				.roles("ADMIN","USER")
-				.build()
-				;
-		
-		var user = User.withUsername("user")
-				.password("user").passwordEncoder(str->passEncoder().encode(str))
-				.roles("USER")
-				.build()
-				;
-		var jdbcuserdetails = new JdbcUserDetailsManager(datasource);
-		jdbcuserdetails.createUser(user);
-		jdbcuserdetails.createUser(admin);
-		
-		return jdbcuserdetails;
-	}
-	
-
+ 
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder authBuilder) throws Exception {
+        authBuilder.jdbcAuthentication()
+            .dataSource(dataSource)
+            .passwordEncoder(new BCryptPasswordEncoder())
+            .usersByUsernameQuery("select username, password, enabled from tbl_users where username=?")
+            .authoritiesByUsernameQuery("select username, role from tbl_users where username=?")
+            ;
+    }
 	
 	@Bean
 	public KeyPair keyPair() throws Exception {
@@ -93,15 +91,13 @@ public class JWTSecurityConfiguration {
 						  .privateKey(keyPair.getPrivate())
 						  .keyID(UUID.randomUUID()
 						  .toString()).build();
-		
-	} 
+	}
 	
 	@Bean
 	public JWKSource<SecurityContext> jwkSource( RSAKey rsaKey) {
-		var  jwkset =new JWKSet(rsaKey);
+		var  jwkset = new JWKSet(rsaKey);
 		
 //		var jwksource = new JWKSource<SecurityContext>() {
-//
 //			@Override
 //			public List<JWK> get(JWKSelector jwkSelector, SecurityContext context) throws KeySourceException {
 //				// TODO Auto-generated method stub
@@ -123,14 +119,15 @@ public class JWTSecurityConfiguration {
 		return new NimbusJwtEncoder(jwkSource);
 	}
 	
-	@Bean
-	public DataSource dataSource() {
-		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-				.addScript("org/springframework/security/core/userdetails/jdbc/users.ddl").build();
-	}
-	
+//	@Bean
+//	public DataSource dataSource() {
+//		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+//				.addScript("org/springframework/security/core/userdetails/jdbc/users.ddl").build();
+//	}
+	 
 	@Bean
 	public BCryptPasswordEncoder passEncoder() {
 		return new BCryptPasswordEncoder(); 
 	}
+	
 } 
