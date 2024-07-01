@@ -1,8 +1,10 @@
+
 package com.example.demo.jwtsecurity;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -21,6 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -36,20 +39,31 @@ public class JWTSecurityConfiguration {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		
 		http.httpBasic();
-		http.cors();
+		//http.cors();
+		http.cors().configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your Angular app's URL
+            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+            config.setAllowCredentials(true); // Allow cookies
+            return config;
+        });
 		http.csrf().disable();
 		http.authorizeRequests(auth->{
 			auth.antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
 			auth.anyRequest().authenticated();
 			
 		});
-		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.NEVER));
+		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 		http.headers().frameOptions().sameOrigin();
+		
+		http.logout().invalidateHttpSession(true);
 		return http.build();
 	}
- 
+
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder authBuilder) throws Exception {
     	authBuilder.jdbcAuthentication()
