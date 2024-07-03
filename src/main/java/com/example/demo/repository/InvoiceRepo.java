@@ -15,9 +15,12 @@ public interface InvoiceRepo extends JpaRepository<Invoice, Integer> {
 	public Integer getMaxInvoiceId();
 	
 	
-	@Query(value="select * from tbl_invoice join tbl_invoice_product on tbl_invoice_product.order_id=tbl_invoice.order_id join tbl_product ON tbl_product.pid=tbl_invoice_product.prod_id join tbl_customer on tbl_customer.customer_id=tbl_invoice.customer_id group by tbl_invoice.invoice_no", nativeQuery = true)
+//	@Query(value="select * from tbl_invoice join tbl_invoice_product on tbl_invoice_product.order_id=tbl_invoice.order_id join tbl_product ON tbl_product.pid=tbl_invoice_product.prod_id join tbl_customer on tbl_customer.customer_id=tbl_invoice.customer_id group by tbl_invoice.invoice_no", nativeQuery = true)
+//	public List<Invoice> getAllInvoices();
+
+	@Query("SELECT i FROM Invoice i  JOIN Customer c ON c.customer_id=i.customer.customer_id ")
 	public List<Invoice> getAllInvoices();
-	
+
 	
 	@Query(value="select * from tbl_invoice join tbl_temp_invoice ON tbl_temp_invoice.temp_invoice_id=tbl_invoice.order_id where order_id=?1", nativeQuery = true)
 	public Invoice getInvoiceByOrderId(String id);

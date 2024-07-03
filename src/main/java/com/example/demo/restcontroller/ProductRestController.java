@@ -70,8 +70,10 @@ public class ProductRestController {
 	public ResponseEntity<Product> updateProductById(@RequestBody Product prod) {
 		int res = prodserv.updateProduct(prod);
 		if(res>0)
-			{Product product = prodserv.getProductById(""+prod.getPid());
-			return new ResponseEntity<Product>(product, HttpStatus.OK);}
+		{
+			Product product = prodserv.getProductById(""+prod.getPid());
+			return new ResponseEntity<Product>(product, HttpStatus.OK);
+		}
 		else
 			return  new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
 	}

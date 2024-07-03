@@ -14,4 +14,5 @@ public interface TempInvoiceService {
 	
 	public boolean deleteSelectedTempInvoice(String temp_id);
 	
+	public List<Temp_Invoice> getTempInvByTempInvoiceId(Integer tid);
 }

@@ -45,4 +45,10 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		}
 	}
 
+	@Override
+	public List<Temp_Invoice> getTempInvByTempInvoiceId(Integer tid) {
+		
+		return tempinvrepo.getTempInvByTempInvoiceId(tid);
+	}
+
 }

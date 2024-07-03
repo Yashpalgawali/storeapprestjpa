@@ -1,5 +1,7 @@
 package com.example.demo.restcontroller;
 
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,11 +41,11 @@ public class TempInvoiceRestController {
     @Autowired
     HttpSession sess;
     
-    @Autowired
-    private HttpServletRequest request;
+//    @Autowired
+//    private HttpServletRequest request;
 
 	@PostMapping("/")
-	public ResponseEntity<Temp_Invoice> saveTempInvoice(@RequestBody Temp_Invoice teinv, 
+	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv, 
 														  HttpServletRequest request)
 	{ 
 		
@@ -108,10 +110,7 @@ public class TempInvoiceRestController {
 					+ ">> "+igst);
 		}
 		
-		String sid = (String) sess.getAttribute("temp_id");
-		
-		Integer tid = Integer.parseInt(sid);
-		
+		Integer tid = (Integer) sess.getAttribute("temp_id");
 		teinv.setTemp_invoice_id(tid);
 		teinv.setCgst(cgst);
 		teinv.setSgst(sgst);
@@ -126,10 +125,20 @@ public class TempInvoiceRestController {
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
 		if(tmpinv!=null)
-			return new ResponseEntity<Temp_Invoice>(tmpinv, HttpStatus.OK);
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(tid) , HttpStatus.OK);
 		else
-			return new ResponseEntity<Temp_Invoice>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}	
+	
+	
+	@GetMapping("/{temp_id}")
+	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable("temp_id")Integer temp_id) {
+		List<Temp_Invoice> tempinvoice = tempinserv.getTempInvByTempInvoiceId(temp_id);
+		if(tempinvoice.size()>0)
+			return new ResponseEntity<List<Temp_Invoice>>(tempinvoice, HttpStatus.OK);
+		else
+			return new ResponseEntity<List<Temp_Invoice>>( HttpStatus.NO_CONTENT);
+	}
 	
 //	@RequestMapping("/savetempinvoice")
 //	public String saveTempInvoice(@ModelAttribute("Temp_Invoice")Temp_Invoice teinv,BindingResult br , HttpSession sess,RedirectAttributes attr)
