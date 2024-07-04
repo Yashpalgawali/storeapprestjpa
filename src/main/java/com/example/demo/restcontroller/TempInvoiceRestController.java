@@ -40,9 +40,6 @@ public class TempInvoiceRestController {
 	
     @Autowired
     HttpSession sess;
-    
-//    @Autowired
-//    private HttpServletRequest request;
 
 	@PostMapping("/")
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv, 

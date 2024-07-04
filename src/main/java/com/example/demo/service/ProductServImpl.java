@@ -10,9 +10,13 @@ import com.example.demo.repository.ProductRepository;
 
 @Service("prodserv")
 public class ProductServImpl implements ProductService {
-
+	
+	private ProductRepository prodrepo;
+	
 	@Autowired
-	ProductRepository prodrepo;
+	public ProductServImpl(ProductRepository prodrepo) {
+		this.prodrepo = prodrepo;
+	}
 	
 	@Override
 	public Product saveProduct(Product pro) {

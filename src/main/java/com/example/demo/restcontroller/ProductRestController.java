@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.models.Product;
 import com.example.demo.service.ProductService;
 
-
 @RestController
 @RequestMapping("product")
 @CrossOrigin(origins = "*")
@@ -37,8 +36,6 @@ public class ProductRestController {
 		prod.setIgst_per(igst);
 		
 		Product prd = prodserv.saveProduct(prod);
-		//System.err.println(prd.toString());
-		//return new ResponseEntity<Product>( HttpStatus.NO_CONTENT);
 		if(prd!=null) {
 			return new ResponseEntity<Product>(prod, HttpStatus.OK);
 		}
@@ -66,11 +63,10 @@ public class ProductRestController {
 			return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping("/")
 	public ResponseEntity<Product> updateProductById(@RequestBody Product prod) {
 		int res = prodserv.updateProduct(prod);
-		if(res>0)
-		{
+		if(res>0) {
 			Product product = prodserv.getProductById(""+prod.getPid());
 			return new ResponseEntity<Product>(product, HttpStatus.OK);
 		}

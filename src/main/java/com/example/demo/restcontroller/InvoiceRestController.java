@@ -68,7 +68,7 @@ public class InvoiceRestController {
 		System.err.println("Products in temp invoice are \n");
 		
 		tmplist.stream().forEach(e->System.err.println(e));
-		System.err.println("");
+		
 	 	Float last_total=0.0f,sub_total=0.0f;
 	 	
 	 	int tid = tempinserv.getMaxTempInvoiceId();
@@ -92,7 +92,7 @@ public class InvoiceRestController {
 	 		
 	 		invprod.setSubtotal(tmplist.get(i).getQty() * tmplist.get(i).getUnit_price());
 	 		invprod.setTotal(tmplist.get(i).getTotal());
-//	 		invprod.setProduct(product);
+	 		invprod.setProduct(product);
 	 		
 	 		Integer order_id =  tmplist.get(i).getTemp_invoice_id();
 	 		
@@ -117,6 +117,8 @@ public class InvoiceRestController {
 	 	Long maxno = Long.valueOf(max_inv_no);
 	 	Date today = Date.valueOf(LocalDate.now());
 	 	
+	 	System.err.println("MAX INVOICE NO. = "+maxno);
+	 	
 	 	invoice.setDate_added(today);
 	 	invoice.setTotal_amount(last_total);
 	 	invoice.setInvoice_no(maxno);
@@ -126,7 +128,13 @@ public class InvoiceRestController {
 	 	invoice.setOrder_id(tmpid);
 	 	
 	 	Invoice final_invoice = invserv.saveInvoice(invoice);
-		return null;
+	 	if(final_invoice!=null)
+	 	{
+	 		sess.removeAttribute("temp_id"); // This will remove the "temporary invoice ID " from the session
+	 		return new ResponseEntity<Invoice>(final_invoice ,HttpStatus.OK);
+	 	}
+	 	else
+	 		return new ResponseEntity<Invoice>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	
@@ -137,48 +145,19 @@ public class InvoiceRestController {
 		if(invlist.size()>0)
 			return new  ResponseEntity<List<Invoice>>(invlist , HttpStatus.OK) ;
 		else
-			return new  ResponseEntity<List<Invoice>>( HttpStatus.NO_CONTENT) ; 
+			return new  ResponseEntity<List<Invoice>>( HttpStatus.NO_CONTENT) ;
 		
 	}
 	
-//	@GetMapping("/addinvoice")
-//	public String addInvoice(Model model,HttpSession sess)
-//	{
-//		List<Temp_Invoice> tilist = null;
-//		List<Product> plist= prodserv.getAllProducts();
-//		List<Customer> clist= custserv.getAllCustomers();
-//		
-//		Object tmpid = sess.getAttribute("temp_id");
-//		
-//		if(tmpid!=null) {
-//			Integer newtmpid = Integer.parseInt(tmpid.toString());
-//			
-//			if(newtmpid > 0) {
-//
-//				tilist = tempinserv.getTempInvById(newtmpid);
-//				
-//				model.addAttribute("plist", plist);
-//				model.addAttribute("clist", clist);
-//				model.addAttribute("tilist", tilist);
-//				return "AddInvoice";
-//			}
-//			else {
-//				model.addAttribute("plist", plist);
-//				model.addAttribute("clist", clist);
-//				model.addAttribute("tilist", null);
-//				
-//				return "AddInvoice";
-//			}
-//	  }
-//	  else {
-//			model.addAttribute("plist", plist);
-//			model.addAttribute("clist", clist);
-//			model.addAttribute("tilist", null);
-//			
-//			return "AddInvoice";
-//		}
-//	}
-//		
+	@GetMapping("/{id}")
+	public ResponseEntity<Invoice> getInvoiceByInvoiceId(@PathVariable("id")String id)
+	{
+		Invoice invoice = invserv.getInvoiceByInvoiceId(id);
+		if(invoice!=null)
+			return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+		else
+			return new ResponseEntity<Invoice>(HttpStatus.NO_CONTENT);
+	}
 //	@RequestMapping("/saveinvoice")
 //	public String saveFinalInvoice(@ModelAttribute("Invoice")Invoice invoice,
 //									HttpSession sess, RedirectAttributes attr,Model model) {
@@ -209,7 +188,7 @@ public class InvoiceRestController {
 //	 		
 //	 		invprod.setSubtotal(tmplist.get(i).getQty() * tmplist.get(i).getUnit_price());
 //	 		invprod.setTotal(tmplist.get(i).getTotal());
-////	 		invprod.setProduct(product);
+//	 		invprod.setProduct(product);
 //	 		
 //	 		Integer order_id =  tmplist.get(i).getTemp_invoice_id();
 //	 		
