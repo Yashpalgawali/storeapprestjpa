@@ -2,23 +2,31 @@ package com.example.demo.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @Table(name="tbl_po_products")
+@ToString
 @SequenceGenerator(name="po_products_seq",initialValue = 1, allocationSize = 1)
 public class PurchaseOrderProducts {
 
@@ -46,9 +54,12 @@ public class PurchaseOrderProducts {
 	
 	private float total;
 	
-	@OneToMany
+	@Transient
+	private String stoption;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="prod_id")
-	private List<Product> product;
+	private PoProductsList product;
 	
 	
 }
