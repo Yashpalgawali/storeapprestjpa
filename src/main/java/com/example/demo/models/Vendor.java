@@ -10,11 +10,13 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @SequenceGenerator(name="vendor_seq",allocationSize = 1 , initialValue = 1)
 @Table(name="tbl_vendor")
 public class Vendor {

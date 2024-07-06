@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,20 @@ public class VendorRestController {
 	@GetMapping("/")
 	public ResponseEntity<List<Vendor>> viewVendors() {
 		return new ResponseEntity<List<Vendor>>(vendorserv.getAllVendors(),HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Vendor> getVendorById(@PathVariable("id")Integer id) {
+		
+		Vendor vendor = vendorserv.getVendorById(""+id);
+		if(vendor!=null) {
+			return new  ResponseEntity<Vendor> (vendor,HttpStatus.OK);
+		}
+		else {
+			return new  ResponseEntity<Vendor> (HttpStatus.NO_CONTENT);
+		}
+		
 	}
 	
 		

@@ -28,7 +28,7 @@ public class VendorServiceImpl implements VendorService {
 	public Vendor getVendorById(String vid) {
 		
 		Integer venid = Integer.parseInt(vid);
-		return vendorrepo.getById(venid);
+		return vendorrepo.findById(venid).get();
 	}
 
 	@Override

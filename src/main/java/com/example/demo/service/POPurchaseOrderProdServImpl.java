@@ -51,13 +51,15 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			cgst=Math.round( (subtotal/ 100) * cgst_per);
 			sgst=Math.round( (subtotal/ 100) * sgst_per);
 			igst=Math.round( (subtotal/ 100) * igst_per);
+			
+			
 		}
 		
 		if(stoption.equals("ot"))
 		{
 			cgst_per = 0;
 			sgst_per = 0;
-			igst_per = (int) poprod.getProduct().getSgst_per();
+			igst_per = poprod.getProduct().getGst_rate() ;
 			
 			cgst=Math.round( (subtotal/ 100) * cgst_per);
 			sgst=Math.round( (subtotal/ 100) * sgst_per);
