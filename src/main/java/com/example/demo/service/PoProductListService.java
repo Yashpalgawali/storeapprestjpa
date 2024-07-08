@@ -12,5 +12,5 @@ public interface PoProductListService {
 	
 	public PoProductsList getPoProductById(Integer pid);
 	
-	public PoProductsList updatePoProductsList(PoProductsList poprod);
+	public int updatePoProductsList(PoProductsList poprod);
 }

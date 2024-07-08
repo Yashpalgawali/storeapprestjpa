@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,8 @@ import com.example.demo.repository.PurchaseOrderProductsRepo;
 @Service("popurchaseorderserv")
 public class POPurchaseOrderProdServImpl implements PoProductsService {
 
+	HttpServletRequest request;
+	
 	private PurchaseOrderProductsRepo po_prod_repo; 
 	
 	@Autowired
@@ -19,16 +24,25 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	} 
 	
 	@Override
-	public PurchaseOrderProducts savePurchaseOrderProducts(PurchaseOrderProducts poprod) {
+	public PurchaseOrderProducts savePurchaseOrderProducts(PurchaseOrderProducts poprod , HttpSession sess ) {
 		
 		Integer tid = 0;
 		
-		if(po_prod_repo.getMaxTempId()!=null) {
-			tid = po_prod_repo.getMaxTempId();
-		}
-		else {
-			tid=1;
-		}
+		Integer sessid = (Integer) sess.getAttribute("temp_id");
+	   
+	    if (sessid == null) {
+	    	tid = po_prod_repo.getMaxTempId();
+	        if (tid == null) {
+	        	tid = 1;
+	             
+	        } else {
+	        	tid += 1;
+	        }
+	        sess.setAttribute("temp_id", tid);
+	    }
+	    else {
+	    	tid = sessid;
+	    }
 		
 		poprod.setTemp_id(tid);
 		
@@ -42,28 +56,37 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		subtotal = unit_price * poprod.getQty();
 		
 		poprod.setUnit_price( unit_price);
+		System.err.println("Check state option \n Is this MH = "+stoption.equals("mh")+"\n Is this Other = "+stoption.equals("ot"));
+		
+		int gst_rate = poprod.getProduct().getIgst_per();
+		
 		if(stoption.equals("mh"))
 		{
-			cgst_per =  poprod.getProduct().getGst_rate() /2 ;
-			sgst_per =  poprod.getProduct().getGst_rate() /2 ;
+			System.err.println("state is MH \n");
+			cgst_per =  gst_rate /2 ;
+			sgst_per =  gst_rate /2 ;
 			igst_per = 0;
 			
 			cgst=Math.round( (subtotal/ 100) * cgst_per);
 			sgst=Math.round( (subtotal/ 100) * sgst_per);
 			igst=Math.round( (subtotal/ 100) * igst_per);
 			
-			
+			System.err.println("cgst_per = "+cgst_per);
 		}
 		
 		if(stoption.equals("ot"))
 		{
+			System.err.println("state is OTher \n");
 			cgst_per = 0;
 			sgst_per = 0;
-			igst_per = poprod.getProduct().getGst_rate() ;
+			igst_per = gst_rate ;
 			
 			cgst=Math.round( (subtotal/ 100) * cgst_per);
 			sgst=Math.round( (subtotal/ 100) * sgst_per);
 			igst=Math.round( (subtotal/ 100) * igst_per);
+			
+			System.err.println("igst_per = "+igst_per+" \n CGST = "+cgst_per);
+
 		}
 		
 		total = subtotal+cgst+sgst+igst;

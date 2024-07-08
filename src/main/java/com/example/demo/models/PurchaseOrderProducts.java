@@ -18,6 +18,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,7 +46,7 @@ public class PurchaseOrderProducts {
 	private Integer igst_per;
 	
 	private Integer cgst;
-	
+	 
 	private Integer sgst;
 	
 	private Integer igst;
@@ -57,7 +58,8 @@ public class PurchaseOrderProducts {
 	@Transient
 	private String stoption;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
+//	@JsonIgnore
 	@JoinColumn(name="prod_id")
 	private PoProductsList product;
 	

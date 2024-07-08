@@ -23,12 +23,12 @@ import com.example.demo.service.POPurchaseOrderProdServImpl;
 @RestController
 @RequestMapping("purchaseorderproduct")
 @CrossOrigin("*")
-public class PurchaseOrderProductsRestController {
+public class TempPurchaseOrderProductsRestController {
 
 	private	POPurchaseOrderProdServImpl popurchaseorderserv;
 	
 	@Autowired
-	public PurchaseOrderProductsRestController(POPurchaseOrderProdServImpl popurchaseorderserv) {
+	public TempPurchaseOrderProductsRestController(POPurchaseOrderProdServImpl popurchaseorderserv) {
 		this.popurchaseorderserv = popurchaseorderserv;
 	}
 	
@@ -36,10 +36,10 @@ public class PurchaseOrderProductsRestController {
 	public ResponseEntity<PurchaseOrderProducts> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,HttpServletRequest request)
 	{
 		System.err.println("INside save purchase products() controller \n "+poproducts.toString());
-		
-		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts);
+		HttpSession sess = request.getSession();
+		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts, sess);
 		if(poprod!=null) {
-			HttpSession sess = request.getSession();
+			
 			sess.setAttribute("temp_id", poprod.getTemp_id() );
 			return new ResponseEntity<PurchaseOrderProducts>(poprod ,HttpStatus.OK);
 		}
@@ -67,6 +67,7 @@ public class PurchaseOrderProductsRestController {
 	@GetMapping("/{tempid}")
 	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable("tempid") Integer tempid)
 	{
+		System.err.println("inside getPurchaseOrderProductsByTempId() \n TEMP ID +"+tempid);
 		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(tempid);
 		if(tempList.size()>0)
 		{

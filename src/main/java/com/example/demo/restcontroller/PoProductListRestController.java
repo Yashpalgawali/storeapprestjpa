@@ -67,14 +67,14 @@ public class PoProductListRestController {
 	
 	
 	@PutMapping("/")
-	public ResponseEntity<PoProductsList> updatePoProducts(@RequestBody PoProductsList poprods)
+	public ResponseEntity<List<PoProductsList>> updatePoProducts(@RequestBody PoProductsList poprods)
 	{
-		PoProductsList poProd = poprodserv.updatePoProductsList(poprods);
-		if(poProd!=null) {
-			return new ResponseEntity<PoProductsList>(poProd , HttpStatus.OK);
+		int result  = poprodserv.updatePoProductsList(poprods);
+		if(result > 0) {
+			return new ResponseEntity<List<PoProductsList>>(poprodserv.getAllPoProductList() , HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity<PoProductsList>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<PoProductsList>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

@@ -11,12 +11,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name="tbl_po_products_list")
 @SequenceGenerator(name="po_prod_list_seq" , initialValue = 1, allocationSize = 1)
 public class PoProductsList {

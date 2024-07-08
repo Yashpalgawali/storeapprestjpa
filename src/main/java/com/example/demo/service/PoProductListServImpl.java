@@ -22,10 +22,13 @@ public class PoProductListServImpl implements PoProductListService {
 	@Override
 	public PoProductsList savePoProductsList(PoProductsList poprod) {
 		
-		poprod.setCgst_per(poprod.getGst_rate()/2);
-		poprod.setSgst_per(poprod.getSgst_per()/2);
-		poprod.setIgst_per(poprod.getGst_rate());
-		
+		int cgst_per = poprod.getGst_rate()/2;
+		int igst_per = poprod.getGst_rate();
+		poprod.setCgst_per(cgst_per);
+		poprod.setSgst_per(cgst_per);
+		poprod.setIgst_per(igst_per);
+		System.err.println("cgst per is "+cgst_per+"\n sgst_per "+(poprod.getGst_rate()/2)+"\n IGST per = "+igst_per);
+		System.err.println("Inside savePoProductsList service \n "+poprod.toString());
 		return poprodlistrepo.save(poprod);
 	}
 
@@ -48,13 +51,15 @@ public class PoProductListServImpl implements PoProductListService {
 	}
 
 	@Override
-	public PoProductsList updatePoProductsList(PoProductsList poprod) {
+	public int updatePoProductsList(PoProductsList poprod) {
 		
-//		int res = poprodlistrepo.updatePoProductById(poprod.getProd_id(), poprod.getProd_name(), poprod.getProd_model(), poprod.getProd_hsn(), poprod.getProd_price(), poprod.getProd_unit(), poprod.getGst_rate());
-//		if(res>0)
-//			return poprodlistrepo.findById(poprod.getProd_id()).get();
-//		else 
-			return null;
+		System.err.println("Inside update poproducts \n"+poprod.toString());
+		
+		int cgst = poprod.getGst_rate()/2;
+		int igst = poprod.getGst_rate();
+		int result = poprodlistrepo.updatePoProductById(poprod.getProd_id(), poprod.getProd_name(), poprod.getProd_model(), poprod.getProd_hsn(), poprod.getProd_price(), poprod.getProd_unit(), cgst, cgst, igst);
+		
+		return result;
 	}
 
 }
