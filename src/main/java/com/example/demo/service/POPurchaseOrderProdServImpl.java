@@ -28,7 +28,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		
 		Integer tid = 0;
 		
-		Integer sessid = (Integer) sess.getAttribute("temp_id");
+		Integer sessid = (Integer) sess.getAttribute("temp_po_id");
 	   
 	    if (sessid == null) {
 	    	tid = po_prod_repo.getMaxTempId();
@@ -38,7 +38,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	        } else {
 	        	tid += 1;
 	        }
-	        sess.setAttribute("temp_id", tid);
+	        sess.setAttribute("temp_po_id", tid);
 	    }
 	    else {
 	    	tid = sessid;
@@ -86,7 +86,6 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			igst=Math.round( (subtotal/ 100) * igst_per);
 			
 			System.err.println("igst_per = "+igst_per+" \n CGST = "+cgst_per);
-
 		}
 		
 		total = subtotal+cgst+sgst+igst;

@@ -9,8 +9,13 @@ import com.example.demo.repository.InvoiceProductRepo;
 @Service("invprodserv")
 public class InvoiceProductServImpl implements InvoiceProductService {
 
+	
+	private InvoiceProductRepo invprodrepo;
+	
 	@Autowired
-	InvoiceProductRepo invprodrepo;
+	public InvoiceProductServImpl(InvoiceProductRepo invprodrepo) {
+		this.invprodrepo=invprodrepo;
+	}
 	
 	@Override
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod) {

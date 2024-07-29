@@ -22,8 +22,13 @@ import com.example.demo.service.CustomerService;
 @CrossOrigin("*")
 public class CustomerRestController {
 
-	@Autowired	
-	CustomerService custserv;
+	
+	private CustomerService custserv;
+	
+	@Autowired
+	public CustomerRestController(CustomerService custserv) {
+		this.custserv=custserv;
+	}
 	
 	
 	@PostMapping("/")

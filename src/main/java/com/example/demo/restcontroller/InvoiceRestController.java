@@ -37,26 +37,24 @@ import com.example.demo.service.TempInvoiceService;
 @RestController
 @RequestMapping("invoice")
 @CrossOrigin("*")
-public class InvoiceRestController {
-
-	@Autowired
-	ProductService prodserv;
+public class InvoiceRestController { 
+	private ProductService prodserv;
+	private InvoiceProductService invprodserv;
+	private InvoiceService invserv;
+	private TempInvoiceService tempinvserv;
+	private TempInvoiceService tempinserv;
+	private CustomerService custserv;
 	
 	@Autowired
-	InvoiceProductService invprodserv;
-	
-	@Autowired
-	InvoiceService invserv;
-	
-	@Autowired
-	TempInvoiceService tempinvserv;
-
-	@Autowired
-	TempInvoiceService tempinserv;
-	
-	@Autowired
-	CustomerService custserv; 
-	
+	public InvoiceRestController(CustomerService custserv , TempInvoiceService tempinserv ,TempInvoiceService tempinvserv,
+			InvoiceService invserv,InvoiceProductService invprodserv,ProductService prodserv) {
+		this.custserv = custserv;
+		this.prodserv=prodserv;
+		this.invprodserv = invprodserv;
+		this.tempinserv = tempinserv;
+		this.tempinvserv = tempinvserv;
+		this.invserv = invserv;
+	}
 	
 	@PostMapping("/")
 	public ResponseEntity<Invoice> saveInvoice(@RequestBody Invoice invoice,HttpServletRequest request)

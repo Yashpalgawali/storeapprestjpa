@@ -22,8 +22,13 @@ import com.example.demo.service.PartyService;
 @CrossOrigin("*")
 public class PartyRestController {
 
-	@Autowired	
-	PartyService partyserv;
+		
+	private PartyService partyserv;
+	
+	@Autowired
+	public PartyRestController(PartyService partyserv) {
+		this.partyserv = partyserv;
+	}
 	
 	@PostMapping("/")
 	public ResponseEntity<Party> saveParty(@RequestBody Party party) {

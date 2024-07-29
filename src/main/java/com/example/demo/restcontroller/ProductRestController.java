@@ -22,9 +22,13 @@ import com.example.demo.service.ProductService;
 @CrossOrigin(origins = "*")
 public class ProductRestController {
 
+	private ProductService prodserv;
+
 	@Autowired
-	ProductService prodserv;
-	
+	public ProductRestController(ProductService prodserv){
+		this.prodserv = prodserv;
+	}	
+
 	@PostMapping("/")
 	public ResponseEntity<Product> saveProduct(@RequestBody Product prod) {
 		

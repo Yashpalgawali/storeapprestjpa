@@ -29,25 +29,27 @@ import com.example.demo.service.TempInvoiceService;
 @RequestMapping("tempinvoice")
 @CrossOrigin("*")
 public class TempInvoiceRestController {
-	@Autowired
-	ProductService prodserv;
 	
-	@Autowired
-	TempInvoiceService tempinvserv;
-
-	@Autowired
-	TempInvoiceService tempinserv;
-	
+	private ProductService prodserv;
+	private TempInvoiceService tempinvserv;
+	private TempInvoiceService tempinserv;
+    private HttpSession sess;
+    
     @Autowired
-    HttpSession sess;
-
+    TempInvoiceRestController(HttpSession sess,TempInvoiceService tempinserv,TempInvoiceService tempinvserv,ProductService prodserv) {
+    	this.sess=sess;
+    	this.tempinserv=tempinserv;
+    	this.tempinvserv=tempinvserv;
+    	this.prodserv=prodserv;
+    }
+    
+    
 	@PostMapping("/")
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv, 
 														  HttpServletRequest request)
 	{ 
 		
 		HttpSession sess = request.getSession();
-	   
 		Integer sessid = (Integer) sess.getAttribute("temp_id");
 		    
 	    Integer chk_tmp_id = 0;
@@ -67,7 +69,8 @@ public class TempInvoiceRestController {
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
 		Integer p_qty   	= teinv.getQty();
-		Float   p_cust_price= teinv.getCustom_price(),unit_price=0.0f;
+		Float   p_cust_price= teinv.getCustom_price();
+		Float unit_price=0.0f;
 		
 		float sub_tot,cgst,sgst,igst,total;
 		
@@ -103,7 +106,7 @@ public class TempInvoiceRestController {
 			sgst = Math.round((sub_tot/100) * teinv.getSgst_per());
 			igst = Math.round((sub_tot/100) * tem.getIgst_per());
 			
-			System.out.println("Other state is selected \n Product PRICE=>> "+teinv.getUnit_price() +"\nProduct ID is---> "+teinv.getProduct().getPid()+"\n CGST-->> "+cgst+"\nSGST-->> "+sgst+"\nIGST--"
+			System.out.println("Other State is selected \n Product PRICE=>> "+teinv.getUnit_price() +"\nProduct ID is---> "+teinv.getProduct().getPid()+"\n CGST-->> "+cgst+"\nSGST-->> "+sgst+"\nIGST--"
 					+ ">> "+igst);
 		}
 		
@@ -117,7 +120,7 @@ public class TempInvoiceRestController {
 		String nhsn = String.valueOf(phsn);
 		teinv.setHsn(nhsn);
 		teinv.setUnit(tem.getProd_unit());
-		
+		teinv.setUnit_price(unit_price);
 		teinv.setTotal(sub_tot+cgst+sgst+igst);
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
@@ -297,8 +300,8 @@ public class TempInvoiceRestController {
 		teinv.setSgst(sgst);
 		teinv.setIgst(igst);
 		
-		Long phsn = tem.getProd_hsn();
-		String nhsn = String.valueOf(phsn);
+		 
+		String nhsn = String.valueOf(tem.getProd_hsn());
 		teinv.setHsn(nhsn);
 		teinv.setUnit(tem.getProd_unit());
 		

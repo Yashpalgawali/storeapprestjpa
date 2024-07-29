@@ -21,11 +21,16 @@ import com.example.demo.service.PartyService;
 @CrossOrigin("*")
 public class DocketRestController {
 
-	@Autowired
-	DocketService dockserv;
 	
+	private DocketService dockserv;
+	
+	private PartyService partyserv;
+
 	@Autowired
-	PartyService partyserv;
+	public DocketRestController(PartyService partyserv,DocketService dockserv) {
+		this.partyserv=partyserv;
+		this.dockserv=dockserv;
+	}
 	
 	@RequestMapping("/savedocket")
 	public ResponseEntity<Docket> saveDocket(@RequestBody Docket dock) {
