@@ -76,11 +76,16 @@ public class TempInvoiceRestController {
 		
 		Product tem = prodserv.getProductById((String.valueOf(prod_id)));
 		
-		if(teinv.getUnit_price() > 0){
-			unit_price = teinv.getUnit_price();
+		System.err.println("Custom Price is "+teinv.getCustom_price());
+		
+		if(p_cust_price> 0){ 
+			 
+			unit_price = (float) (p_cust_price / 1.18);
+			
 		}
 		else{
-			unit_price = Float.parseFloat(tem.getProd_price());
+			unit_price = (float) (Float.parseFloat(tem.getProd_price())/(1.18));
+			System.err.println("custom price is zero "+unit_price);
 		}
 		
 		sub_tot = unit_price * teinv.getQty();
@@ -124,10 +129,13 @@ public class TempInvoiceRestController {
 		teinv.setTotal(sub_tot+cgst+sgst+igst);
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
-		if(tmpinv!=null)
+		if(tmpinv!=null) {
 			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(tid) , HttpStatus.OK);
+		}
 		else
+		{
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}	
 	
 	

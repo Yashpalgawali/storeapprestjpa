@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +22,11 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 	@Override
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod) {
 		return invprodrepo.save(invprod);
+	}
+
+	@Override
+	public List<Invoice_Product> getInvoiceProductsByOrderId(String orderid) {
+		// TODO Auto-generated method stub
+		return invprodrepo.findInvoiceProductsByOrderId(orderid);
 	}
 }

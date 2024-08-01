@@ -60,7 +60,10 @@ public class InvoiceRestController {
 	public ResponseEntity<Invoice> saveInvoice(@RequestBody Invoice invoice,HttpServletRequest request)
 	{
 		HttpSession sess = request.getSession();
-		Integer temp_id = (Integer) sess.getAttribute("temp_id");
+//		Integer temp_id = (Integer) sess.getAttribute("temp_id");
+//		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
+		
+		Integer temp_id = Integer.parseInt(""+invoice.getOrder_id());
 		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
 		
 		System.err.println("Products in temp invoice are \n");
@@ -156,6 +159,22 @@ public class InvoiceRestController {
 		else
 			return new ResponseEntity<Invoice>(HttpStatus.NO_CONTENT);
 	}
+	
+	
+	@GetMapping("/order/{id}")
+	public ResponseEntity<List<Invoice_Product>> getInvoiceProductsByOrderId(@PathVariable("id")String id)
+	{
+		List<Invoice_Product> prodlist = invprodserv.getInvoiceProductsByOrderId(id);
+		System.err.println("Inside getInvoiceProductsByOrderId() the Order id is ="+id+"\n");
+		
+ 		prodlist.stream().forEach(r->System.err.println(r));
+ 		
+		if(prodlist.size()>0)
+			return new ResponseEntity<List<Invoice_Product>>(prodlist ,HttpStatus.OK);
+		else
+			return new ResponseEntity<List<Invoice_Product>>(HttpStatus.NO_CONTENT);
+	}
+	
 //	@RequestMapping("/saveinvoice")
 //	public String saveFinalInvoice(@ModelAttribute("Invoice")Invoice invoice,
 //									HttpSession sess, RedirectAttributes attr,Model model) {

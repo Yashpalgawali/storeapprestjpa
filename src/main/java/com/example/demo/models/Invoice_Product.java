@@ -1,13 +1,16 @@
 package com.example.demo.models;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,8 +28,7 @@ public class Invoice_Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "invoice_prod_seq")
 	private int inv_prod_id;
-	
-	
+	 
 	private int qty;
 	
 	private float price;
@@ -47,10 +49,12 @@ public class Invoice_Product {
 	
 	private int igst_per;
 	
-//	@ManyToOne
-//	@JoinColumn(name="tmp_invoice_id")
-//	private Temp_Invoice temp_invoice;
-	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="invoice_id")
+	private Invoice invoice;
+
+//	@Transient
+//	private Invoice invoice;
 	
 	private String order_id;
 	
