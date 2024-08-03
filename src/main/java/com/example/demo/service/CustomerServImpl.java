@@ -25,11 +25,10 @@ public class CustomerServImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer getCustomerById(String cid) {
+	public Customer getCustomerById(Long cid) {
 		
-		Long cuid = Long.parseLong(cid);
 		try {
-			return custrepo.findById(cuid).get();
+			return custrepo.findById(cid).get();
 		}
 		catch(Exception e) {
 			return null;

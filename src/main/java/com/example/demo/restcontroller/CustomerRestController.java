@@ -47,13 +47,14 @@ public class CustomerRestController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable("id") Long id) {
-		Customer cust = custserv.getCustomerById(""+id);
+		System.err.println("Inside getcustbyid() ID = "+id);
+		Customer cust = custserv.getCustomerById(id);
 		if(cust!=null)
 			return new ResponseEntity<Customer>(cust,HttpStatus.OK);
 		else
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PutMapping("/")
 	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
 		int res = custserv.updateCustomer(customer);

@@ -165,10 +165,7 @@ public class InvoiceRestController {
 	public ResponseEntity<List<Invoice_Product>> getInvoiceProductsByOrderId(@PathVariable("id")String id)
 	{
 		List<Invoice_Product> prodlist = invprodserv.getInvoiceProductsByOrderId(id);
-		System.err.println("Inside getInvoiceProductsByOrderId() the Order id is ="+id+"\n");
-		
- 		prodlist.stream().forEach(r->System.err.println(r));
- 		
+		 
 		if(prodlist.size()>0)
 			return new ResponseEntity<List<Invoice_Product>>(prodlist ,HttpStatus.OK);
 		else
