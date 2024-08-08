@@ -34,7 +34,7 @@ public class PoProductListRestController {
 	{
 		PoProductsList poProd = poprodserv.savePoProductsList(poprods);
 		if(poProd!=null) {
-			return new ResponseEntity<PoProductsList>(poProd , HttpStatus.OK);
+			return new ResponseEntity<PoProductsList>(poProd , HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<PoProductsList>(HttpStatus.INTERNAL_SERVER_ERROR);

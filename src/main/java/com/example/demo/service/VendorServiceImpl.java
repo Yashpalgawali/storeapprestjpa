@@ -1,22 +1,42 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.globalconfig.Global;
+import com.example.demo.models.Activities;
 import com.example.demo.models.Vendor;
+import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.VendorRepo;
 
 @Service("vendorserv")
 public class VendorServiceImpl implements VendorService {
 
-	@Autowired
+	
 	VendorRepo vendorrepo;
 	
+	ActivityRepository actrepo;
+	
+	public VendorServiceImpl(VendorRepo vendorrepo, ActivityRepository actrepo) {
+		super();
+		this.vendorrepo = vendorrepo;
+		this.actrepo = actrepo;
+	}
+
 	@Override
 	public Vendor saveVendor(Vendor vend) {
-		return vendorrepo.save(vend);
+		Vendor vendor = vendorrepo.save(vend);
+		if(vendor!=null) {
+			actrepo.save(new Activities("Vendor "+vendor.getVendor_name()+" is saved successfully", Global.DATE_FORMATTER.format(LocalDateTime.now()) , Global.TIME_FORMATTER.format(LocalDateTime.now())));
+			return vendor;
+		}
+		else {
+			actrepo.save(new Activities("Vendor "+vend.getVendor_name()+" is saved successfully", Global.DATE_FORMATTER.format(LocalDateTime.now()) , Global.TIME_FORMATTER.format(LocalDateTime.now())));
+			return vendor;
+		}
 	}
 
 	@Override
@@ -33,7 +53,15 @@ public class VendorServiceImpl implements VendorService {
 
 	@Override
 	public int updateVendorById(Vendor vend) {
-		return vendorrepo.updateVendor(vend.getVendor_name(), vend.getVendor_email(), vend.getVendor_address(), vend.getVendor_contact(), vend.getState_name(), vend.getCity_name(), vend.getVendor_gst(), vend.getPincode(), vend.getVendor_id());
+		int result = vendorrepo.updateVendor(vend.getVendor_name(), vend.getVendor_email(), vend.getVendor_address(), vend.getVendor_contact(), vend.getState_name(), vend.getCity_name(), vend.getVendor_gst(), vend.getPincode(), vend.getVendor_id());
+		if(result>0) {
+			actrepo.save(new Activities("Vendor "+vend.getVendor_name()+" is updated successfully", Global.DATE_FORMATTER.format(LocalDateTime.now()) , Global.TIME_FORMATTER.format(LocalDateTime.now())));
+			return result;
+		}
+		else {
+			actrepo.save(new Activities("Vendor "+vend.getVendor_name()+" is not updated ", Global.DATE_FORMATTER.format(LocalDateTime.now()) , Global.TIME_FORMATTER.format(LocalDateTime.now())));
+			return result;
+		}
 	}
 
 }

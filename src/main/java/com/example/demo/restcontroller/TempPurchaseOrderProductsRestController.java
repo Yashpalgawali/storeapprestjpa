@@ -35,13 +35,11 @@ public class TempPurchaseOrderProductsRestController {
 	@PostMapping("/")
 	public ResponseEntity<PurchaseOrderProducts> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,HttpServletRequest request)
 	{
-		System.err.println("INside save purchase products() controller \n "+poproducts.toString());
 		HttpSession sess = request.getSession();
 		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts, sess);
 		if(poprod!=null) {
-			
 			sess.setAttribute("temp_id", poprod.getTemp_id() );
-			return new ResponseEntity<PurchaseOrderProducts>(poprod ,HttpStatus.OK);
+			return new ResponseEntity<PurchaseOrderProducts>(poprod ,HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<PurchaseOrderProducts>(HttpStatus.OK);
@@ -67,10 +65,8 @@ public class TempPurchaseOrderProductsRestController {
 	@GetMapping("/{tempid}")
 	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable("tempid") Integer tempid)
 	{
-		System.err.println("inside getPurchaseOrderProductsByTempId() \n TEMP ID +"+tempid);
 		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(tempid);
-		if(tempList.size()>0)
-		{
+		if(tempList.size()>0) 		{
 			return new ResponseEntity<List<PurchaseOrderProducts>>(tempList ,HttpStatus.OK);
 		}
 		else {

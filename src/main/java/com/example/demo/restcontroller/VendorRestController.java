@@ -22,9 +22,15 @@ import com.example.demo.service.VendorService;
 @CrossOrigin("*")
 public class VendorRestController {
 
-	@Autowired
-	VendorService vendorserv;
 	
+	private VendorService vendorserv;
+	
+	@Autowired
+	public VendorRestController(VendorService vendorserv) {
+		super();
+		this.vendorserv = vendorserv;
+	}
+
 	@PostMapping("/")
 	public ResponseEntity<Vendor> saveVendor(@RequestBody Vendor vendor ) {	
 		Vendor vend = vendorserv.saveVendor(vendor);
@@ -42,10 +48,8 @@ public class VendorRestController {
 		return new ResponseEntity<List<Vendor>>(vendorserv.getAllVendors(),HttpStatus.OK);
 	}
 	
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<Vendor> getVendorById(@PathVariable("id")Integer id) {
-		
 		Vendor vendor = vendorserv.getVendorById(""+id);
 		if(vendor!=null) {
 			return new  ResponseEntity<Vendor> (vendor,HttpStatus.OK);
@@ -53,14 +57,11 @@ public class VendorRestController {
 		else {
 			return new  ResponseEntity<Vendor> (HttpStatus.NO_CONTENT);
 		}
-		
 	}
 	
-		
 	@PutMapping("/")
 	public ResponseEntity<Vendor> updateVendor(@RequestBody Vendor vend ) {
 		int val = vendorserv.updateVendorById(vend);
-		
 		if(val > 0 ) {
 			return new ResponseEntity<Vendor>(vend , HttpStatus.OK);
 		}

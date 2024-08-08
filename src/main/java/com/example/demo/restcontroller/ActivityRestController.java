@@ -22,7 +22,6 @@ public class ActivityRestController {
 
 	private ActivityService actserv ;
 	
-	@Autowired
 	public ActivityRestController(ActivityService actserv) {
 		this.actserv = actserv;
 	}

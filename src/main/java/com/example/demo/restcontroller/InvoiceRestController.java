@@ -2,6 +2,8 @@ package com.example.demo.restcontroller;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -132,13 +134,13 @@ public class InvoiceRestController {
 	 	if(final_invoice!=null)
 	 	{
 	 		sess.removeAttribute("temp_id"); // This will remove the "temporary invoice ID " from the session
-	 		return new ResponseEntity<Invoice>(final_invoice ,HttpStatus.OK);
+	 		return new ResponseEntity<Invoice>(final_invoice ,HttpStatus.CREATED);
 	 	}
 	 	else
 	 		return new ResponseEntity<Invoice>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	
+
 	@GetMapping("/")
 	public ResponseEntity<List<Invoice>> getAllInvoices() {
 		

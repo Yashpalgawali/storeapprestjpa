@@ -37,12 +37,11 @@ public class PurchaseOrderRestController {
 	public ResponseEntity<PurchaseOrder> savePurchaseOrder(@RequestBody PurchaseOrder porder,HttpServletRequest request)
 	{
 		HttpSession sess = request.getSession();
-		System.err.println("inside save purchase order() \n "+porder.toString());
 		PurchaseOrder pord = porderserv.savePurchaseOrder(porder,request);
 		if(pord!=null)
 		{
 			sess.removeAttribute("temp_po_id");
-			return new ResponseEntity<PurchaseOrder>(pord, HttpStatus.OK);
+			return new ResponseEntity<PurchaseOrder>(pord, HttpStatus.CREATED);
 		
 		}
 		else

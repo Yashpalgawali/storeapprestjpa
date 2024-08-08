@@ -2,7 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -41,19 +40,13 @@ public class TempInvoiceRestController {
     	this.tempinserv=tempinserv;
     	this.tempinvserv=tempinvserv;
     	this.prodserv=prodserv;
-    }
-    
-    
+    } 
 	@PostMapping("/")
-	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv, 
-														  HttpServletRequest request)
-	{ 
-		
+	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
+	{
 		HttpSession sess = request.getSession();
-		Integer sessid = (Integer) sess.getAttribute("temp_id");
-		    
-	    Integer chk_tmp_id = 0;
-		
+		Integer sessid = (Integer) sess.getAttribute("temp_id"); 
+	    Integer chk_tmp_id = 0; 
 	    if (sessid == null) {
 	        chk_tmp_id = tempinserv.getMaxTempInvoiceId();
 	        if (chk_tmp_id == null) {
@@ -63,9 +56,7 @@ public class TempInvoiceRestController {
 	            chk_tmp_id = chk_tmp_id + 1;
 	        }
 	        sess.setAttribute("temp_id", chk_tmp_id);
-	    }
-
-		
+	    } 
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
 		Integer p_qty   	= teinv.getQty();
@@ -75,17 +66,11 @@ public class TempInvoiceRestController {
 		float sub_tot,cgst,sgst,igst,total;
 		
 		Product tem = prodserv.getProductById((String.valueOf(prod_id)));
-		
-		System.err.println("Custom Price is "+teinv.getCustom_price());
-		
-		if(p_cust_price> 0){ 
-			 
+ 		if(p_cust_price> 0){
 			unit_price = (float) (p_cust_price / 1.18);
-			
 		}
 		else{
 			unit_price = (float) (Float.parseFloat(tem.getProd_price())/(1.18));
-			System.err.println("custom price is zero "+unit_price);
 		}
 		
 		sub_tot = unit_price * teinv.getQty();
@@ -98,9 +83,6 @@ public class TempInvoiceRestController {
 			cgst = Math.round((sub_tot/100) * tem.getCgst_per());
 			sgst = Math.round((sub_tot/100) * tem.getSgst_per());
 			igst = Math.round((sub_tot/100) * teinv.getIgst_per());
-		
-			System.out.println("Maharashtra state is selected \n Product PRICE=>> "+unit_price+"\nProduct ID is---> "+teinv.getProduct().getPid()+"\n CGST-->> "+cgst+"\nSGST-->> "+sgst+"\nIGST--"+ ">> "+igst);
-		
 		}
 		else {	
 			teinv.setIgst_per(tem.getIgst_per());
@@ -110,13 +92,9 @@ public class TempInvoiceRestController {
 			cgst = Math.round((sub_tot/100) * teinv.getCgst_per());
 			sgst = Math.round((sub_tot/100) * teinv.getSgst_per());
 			igst = Math.round((sub_tot/100) * tem.getIgst_per());
-			
-			System.out.println("Other State is selected \n Product PRICE=>> "+teinv.getUnit_price() +"\nProduct ID is---> "+teinv.getProduct().getPid()+"\n CGST-->> "+cgst+"\nSGST-->> "+sgst+"\nIGST--"
-					+ ">> "+igst);
 		}
 		
-		Integer tid = (Integer) sess.getAttribute("temp_id");
-		teinv.setTemp_invoice_id(tid);
+		teinv.setTemp_invoice_id(sessid);
 		teinv.setCgst(cgst);
 		teinv.setSgst(sgst);
 		teinv.setIgst(igst);
@@ -130,10 +108,9 @@ public class TempInvoiceRestController {
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
 		if(tmpinv!=null) {
-			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(tid) , HttpStatus.OK);
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid) , HttpStatus.CREATED);
 		}
-		else
-		{
+		else {
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}	

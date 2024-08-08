@@ -41,7 +41,7 @@ public class ProductRestController {
 		
 		Product prd = prodserv.saveProduct(prod);
 		if(prd!=null) {
-			return new ResponseEntity<Product>(prod, HttpStatus.OK);
+			return new ResponseEntity<Product>(prod, HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<Product>( HttpStatus.NO_CONTENT);
