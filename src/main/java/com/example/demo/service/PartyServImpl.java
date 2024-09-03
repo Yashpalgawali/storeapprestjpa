@@ -25,11 +25,10 @@ public class PartyServImpl implements PartyService {
 	}
 
 	@Override
-	public Party getpartyById(String id) {
+	public Party getpartyById(Integer id) {
 		
-		Integer pid = Integer.parseInt(id);
 		try {
-			return partyrepo.findById(pid).get();
+			return partyrepo.findById(id).get();
 		}
 		catch(Exception e) {
 			return null;
@@ -37,11 +36,9 @@ public class PartyServImpl implements PartyService {
 	}
 
 	@Override
-	public int updateParty(Party part) {
-		Integer pid = part.getParty_id();
-		String pname= part.getParty_name();
-		
-		return partyrepo.updateParty(pname, pid);
+	public int updateParty(Party party) {
+		  
+		return partyrepo.updateParty(party.getParty_name(),  party.getParty_id());
 	}
 
 }

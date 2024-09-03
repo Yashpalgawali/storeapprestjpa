@@ -2,7 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,10 +21,8 @@ import com.example.demo.service.PartyService;
 @CrossOrigin("*")
 public class PartyRestController {
 
-		
 	private PartyService partyserv;
-	
-	@Autowired
+
 	public PartyRestController(PartyService partyserv) {
 		this.partyserv = partyserv;
 	}
@@ -44,13 +41,19 @@ public class PartyRestController {
 	
 	@GetMapping("/")
 	public  ResponseEntity<List<Party>> viewParties() {
-		return new ResponseEntity<List<Party>>(partyserv.getAllParties(), HttpStatus.OK);
+		List<Party> partyList = partyserv.getAllParties();
+		if(partyList.size()>0) {
+			return new ResponseEntity<List<Party>>(partyList, HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<List<Party>>(partyList, HttpStatus.NO_CONTENT);
+		}
 	}
 	
 	@GetMapping("/{id}")
-	public  ResponseEntity<Party> getPartyById(@PathVariable Long id) {
+	public  ResponseEntity<Party> getPartyById(@PathVariable Integer id) {
 		
-		Party party = partyserv.getpartyById(""+id);
+		Party party = partyserv.getpartyById(id);
 		if(party!=null)
 			return new ResponseEntity<Party>(party, HttpStatus.OK);
 		else

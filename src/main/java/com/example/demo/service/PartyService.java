@@ -10,7 +10,7 @@ public interface PartyService {
 	
 	public List<Party> getAllParties();
 	
-	public Party getpartyById(String id);
+	public Party getpartyById(Integer id);
 	
 	public int updateParty(Party part);
 	

@@ -15,7 +15,7 @@ public interface PartyRepo extends JpaRepository<Party, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query(value="update tbl_party set party_name=?1 where party_id=?2",nativeQuery = true)
+	@Query(value="UPDATE Party p SET p.party_name=:pname WHERE p.party_id=:pid")
 	Integer updateParty(String pname,Integer pid);
 	
 }

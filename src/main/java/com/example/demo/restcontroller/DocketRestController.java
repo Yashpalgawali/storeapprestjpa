@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,7 @@ public class DocketRestController {
 		this.dockserv=dockserv;
 	}
 	
-	@RequestMapping("/savedocket")
+	@PostMapping("/")
 	public ResponseEntity<Docket> saveDocket(@RequestBody Docket dock) {
 		Docket docket = dockserv.saveDocket(dock);
 		if(docket!=null) {
@@ -44,7 +46,24 @@ public class DocketRestController {
 	@GetMapping("/")
 	public ResponseEntity<List<Docket>> viewDocket() {
 		List<Docket> dlist = dockserv.getAllDocketsWithJoin();
-		return new ResponseEntity<List<Docket>>(dlist,HttpStatus.OK);
+		if(dlist.size()>0) {
+			return new ResponseEntity<List<Docket>>(dlist,HttpStatus.OK);	
+		}
+		else {
+			return new ResponseEntity<List<Docket>>(HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Docket> getDocketById(@PathVariable("id") Integer id ) {
+		Docket docket = dockserv.getDocketById(id);
+		if(docket!=null) {
+			return new ResponseEntity<Docket>(docket, HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<Docket>(docket, HttpStatus.NOT_FOUND);
+		}
+		
 	}
 	
 	@PutMapping("/")
