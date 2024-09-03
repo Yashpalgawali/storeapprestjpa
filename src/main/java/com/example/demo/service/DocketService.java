@@ -10,7 +10,7 @@ public interface DocketService {
 	
 	public List<Docket> getAllDockets();
 	
-	public Docket getDocketById(String id);
+	public Docket getDocketById(Integer id);
 	
 	public int updateDocket(Docket dock);
 	

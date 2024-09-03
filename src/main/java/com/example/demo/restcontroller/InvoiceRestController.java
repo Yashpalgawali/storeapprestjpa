@@ -2,8 +2,7 @@ package com.example.demo.restcontroller;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+ 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,20 +11,15 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+ 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.example.demo.models.Customer;
+ 
 import com.example.demo.models.Invoice;
 import com.example.demo.models.Invoice_Product;
 import com.example.demo.models.Product;
@@ -47,7 +41,7 @@ public class InvoiceRestController {
 	private TempInvoiceService tempinserv;
 	private CustomerService custserv;
 	
-	@Autowired
+	 
 	public InvoiceRestController(CustomerService custserv , TempInvoiceService tempinserv ,TempInvoiceService tempinvserv,
 			InvoiceService invserv,InvoiceProductService invprodserv,ProductService prodserv) {
 		this.custserv = custserv;
@@ -67,10 +61,6 @@ public class InvoiceRestController {
 		
 		Integer temp_id = Integer.parseInt(""+invoice.getOrder_id());
 		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
-		
-		System.err.println("Products in temp invoice are \n");
-		
-		tmplist.stream().forEach(e->System.err.println(e));
 		
 	 	Float last_total=0.0f,sub_total=0.0f;
 	 	

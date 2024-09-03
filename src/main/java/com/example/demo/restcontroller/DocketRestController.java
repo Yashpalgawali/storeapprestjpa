@@ -20,13 +20,11 @@ import com.example.demo.service.PartyService;
 @RequestMapping("docket")
 @CrossOrigin("*")
 public class DocketRestController {
-
-	
+ 
 	private DocketService dockserv;
 	
 	private PartyService partyserv;
 
-	@Autowired
 	public DocketRestController(PartyService partyserv,DocketService dockserv) {
 		this.partyserv=partyserv;
 		this.dockserv=dockserv;
@@ -48,7 +46,6 @@ public class DocketRestController {
 		List<Docket> dlist = dockserv.getAllDocketsWithJoin();
 		return new ResponseEntity<List<Docket>>(dlist,HttpStatus.OK);
 	}
-	
 	
 	@PutMapping("/")
 	public ResponseEntity<Docket> updateDocket(@RequestBody Docket dock ) {

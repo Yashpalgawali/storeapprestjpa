@@ -11,9 +11,13 @@ import com.example.demo.repository.InvoiceRepo;
 @Service("invserv")
 public class InvoiceServImpl implements InvoiceService {
 
-	@Autowired
-	InvoiceRepo invrepo;
+	private InvoiceRepo invrepo;
 	
+	public InvoiceServImpl(InvoiceRepo invrepo) {
+		super();
+		this.invrepo = invrepo;
+	}
+
 	@Override
 	public Invoice saveInvoice(Invoice inv) {
 		return invrepo.save(inv);

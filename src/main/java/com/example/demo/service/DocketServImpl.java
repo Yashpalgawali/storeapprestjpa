@@ -15,9 +15,14 @@ import com.example.demo.repository.DocketRepo;
 @Service("dockserv")
 public class DocketServImpl implements DocketService {
 
-	@Autowired
-	DocketRepo dockrepo;
+	 
+	private DocketRepo dockrepo;
 	
+	public DocketServImpl(DocketRepo dockrepo) {
+		super();
+		this.dockrepo = dockrepo;
+	}
+
 	@Override
 	public Docket saveDocket(Docket dock) {
 		return dockrepo.save(dock);
@@ -29,13 +34,15 @@ public class DocketServImpl implements DocketService {
 	}
 
 	@Override
-	public Docket getDocketById(String id) {
-		Integer did = Integer.parseInt(id);
-		Docket dct = dockrepo.getById(did);
-		if(dct!=null) {
-			return dct ;
+	public Docket getDocketById(Integer id) {
+		
+		Optional<Docket> docket = dockrepo.findById(id);
+		if(!docket.isEmpty()) {
+			return docket.get();
 		}
-		return dct ;
+		else {
+			return null;
+		}
 	}
 
 	@Override
