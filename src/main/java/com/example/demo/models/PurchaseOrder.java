@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -24,6 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name="tbl_purchase_order")
 @SequenceGenerator(name="po_seq",allocationSize = 1 , initialValue = 1)
+@ToString
 public class PurchaseOrder {
 
 	@Id
@@ -32,19 +35,19 @@ public class PurchaseOrder {
 	
 	private Integer po_no;
 	
-	private Integer po_date;
+	private String po_date;
 	
-	@OneToOne
-	@JoinColumn(name="prod_id")
-	private Product product;
-	
+	private String prefix;
+ 
 	@OneToOne
 	@JoinColumn(name="vendor_id")
 	private Vendor vendor;
 	
 	private String prepared_by;
 	
-	private Float packing_charge;
+	private float packing_charge;
 	
-	private Float transport_charge;
+	private float transport_charge;
+	
+	private float total_amount;
 }

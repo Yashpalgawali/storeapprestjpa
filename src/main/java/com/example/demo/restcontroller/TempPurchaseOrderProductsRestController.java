@@ -27,7 +27,6 @@ public class TempPurchaseOrderProductsRestController {
 
 	private	POPurchaseOrderProdServImpl popurchaseorderserv;
 	
-	@Autowired
 	public TempPurchaseOrderProductsRestController(POPurchaseOrderProdServImpl popurchaseorderserv) {
 		this.popurchaseorderserv = popurchaseorderserv;
 	}

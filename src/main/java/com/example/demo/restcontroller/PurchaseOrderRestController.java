@@ -1,5 +1,6 @@
 package com.example.demo.restcontroller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.globalconfig.Global;
 import com.example.demo.models.PurchaseOrder;
+import com.example.demo.models.PurchaseOrderProducts;
+import com.example.demo.service.PoProductsService;
 import com.example.demo.service.PurchaseOrderServImpl;
 
 @RestController
@@ -28,6 +32,8 @@ public class PurchaseOrderRestController {
 	private PurchaseOrderServImpl porderserv;
 	
 	@Autowired
+	private PoProductsService poprodserv;
+	
 	public PurchaseOrderRestController(PurchaseOrderServImpl porderserv)
 	{
 		this.porderserv = porderserv;
@@ -37,12 +43,12 @@ public class PurchaseOrderRestController {
 	public ResponseEntity<PurchaseOrder> savePurchaseOrder(@RequestBody PurchaseOrder porder,HttpServletRequest request)
 	{
 		HttpSession sess = request.getSession();
+		 
 		PurchaseOrder pord = porderserv.savePurchaseOrder(porder,request);
 		if(pord!=null)
 		{
 			sess.removeAttribute("temp_po_id");
 			return new ResponseEntity<PurchaseOrder>(pord, HttpStatus.CREATED);
-		
 		}
 		else
 			return new ResponseEntity<PurchaseOrder>(HttpStatus.INTERNAL_SERVER_ERROR);

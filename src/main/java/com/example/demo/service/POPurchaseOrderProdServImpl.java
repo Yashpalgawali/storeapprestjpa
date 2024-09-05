@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +49,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		poprod.setTemp_id(tid);
 		
 		String stoption = poprod.getStoption();
-		Integer cgst=0,sgst=0,igst=0;
+		float cgst=0,sgst=0,igst=0;
 		Integer cgst_per=0,sgst_per=0,igst_per=0;
 		
 		Float subtotal=0.0f,total=0.0f,unit_price =0.0f;
@@ -67,11 +69,17 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			sgst_per =  gst_rate /2 ;
 			igst_per = 0;
 			
-			cgst=Math.round( (subtotal/ 100) * cgst_per);
-			sgst=Math.round( (subtotal/ 100) * sgst_per);
-			igst=Math.round( (subtotal/ 100) * igst_per);
+			cgst=( (subtotal/ 100) * cgst_per);
+			sgst=( (subtotal/ 100) * sgst_per);
+			igst=( (subtotal/ 100) * igst_per);
 			
-			System.err.println("cgst_per = "+cgst_per);
+		      // Convert to BigDecimal, round, and convert back to float
+	        BigDecimal bd = new BigDecimal(Float.toString(cgst));
+	        bd = bd.setScale(2, RoundingMode.HALF_UP);
+			cgst = bd.floatValue();
+			sgst = cgst;
+			
+	        System.err.println("cgst_per = "+cgst_per);
 		}
 		
 		if(stoption.equals("ot"))
@@ -81,9 +89,14 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			sgst_per = 0;
 			igst_per = gst_rate ;
 			
-			cgst=Math.round( (subtotal/ 100) * cgst_per);
-			sgst=Math.round( (subtotal/ 100) * sgst_per);
-			igst=Math.round( (subtotal/ 100) * igst_per);
+			cgst=( (subtotal/ 100) * cgst_per);
+			sgst=( (subtotal/ 100) * sgst_per);
+			igst=( (subtotal/ 100) * igst_per);
+			
+			  // Convert to BigDecimal, round, and convert back to float
+	        BigDecimal bd = new BigDecimal(Float.toString(igst));
+	        bd = bd.setScale(2, RoundingMode.HALF_UP);
+			cgst = bd.floatValue();
 			
 			System.err.println("igst_per = "+igst_per+" \n CGST = "+cgst_per);
 		}

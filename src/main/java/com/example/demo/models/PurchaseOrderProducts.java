@@ -1,24 +1,16 @@
 package com.example.demo.models;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +22,7 @@ import lombok.ToString;
 @ToString
 @SequenceGenerator(name="po_products_seq",initialValue = 1, allocationSize = 1)
 public class PurchaseOrderProducts {
-
+ 
 	@Id
 	@GeneratedValue(generator = "po_products_seq",strategy = GenerationType.AUTO)
 	private Integer purchase_prod_order_id;
@@ -39,17 +31,17 @@ public class PurchaseOrderProducts {
 	
 	private Integer temp_id;
 	
-	private Integer cgst_per;
+	private float cgst_per;
 	
-	private Integer sgst_per;
+	private float sgst_per;
 	
-	private Integer igst_per;
+	private float igst_per;
 	
-	private Integer cgst;
+	private float cgst;
 	 
-	private Integer sgst;
+	private float sgst;
 	
-	private Integer igst;
+	private float igst;
 	
 	private float unit_price;
 	
