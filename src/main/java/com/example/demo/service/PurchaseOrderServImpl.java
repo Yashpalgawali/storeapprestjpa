@@ -36,7 +36,7 @@ public class PurchaseOrderServImpl implements PurchaseOrderService {
 		HttpSession sess = request.getSession();
 		Integer temp_id=  (Integer) sess.getAttribute("temp_id");
 		
-		porder.setPo_no(temp_id);
+		porder.setOrder_id(temp_id);
 		
 		porder.setPo_date(LocalDate.now().format(Global.DATE_FORMATTER));
 		prefixserv.getAllPrefixes().stream().forEach(e->{

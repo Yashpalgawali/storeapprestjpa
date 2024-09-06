@@ -1,11 +1,13 @@
 package com.example.demo.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -35,7 +37,7 @@ public class PurchaseOrderProducts {
 	
 	private float sgst_per;
 	
-	private float igst_per;
+	private float igst_per; 
 	
 	private float cgst;
 	 
@@ -51,9 +53,12 @@ public class PurchaseOrderProducts {
 	private String stoption;
 	
 	@OneToOne(fetch = FetchType.EAGER)
-//	@JsonIgnore
-	@JoinColumn(name="prod_id")
+	@JoinColumn(name="po_prod_id")
 	private PoProductsList product;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="po_id")
+	private PurchaseOrder po_id;
 	
 	
 }

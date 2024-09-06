@@ -64,7 +64,6 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		
 		if(stoption.equals("mh"))
 		{
-			System.err.println("state is MH \n");
 			cgst_per =  gst_rate /2 ;
 			sgst_per =  gst_rate /2 ;
 			igst_per = 0;
@@ -73,18 +72,15 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			sgst=( (subtotal/ 100) * sgst_per);
 			igst=( (subtotal/ 100) * igst_per);
 			
-		      // Convert to BigDecimal, round, and convert back to float
+		    // Convert to BigDecimal, round, and convert back to float
 	        BigDecimal bd = new BigDecimal(Float.toString(cgst));
 	        bd = bd.setScale(2, RoundingMode.HALF_UP);
 			cgst = bd.floatValue();
 			sgst = cgst;
-			
-	        System.err.println("cgst_per = "+cgst_per);
 		}
 		
 		if(stoption.equals("ot"))
 		{
-			System.err.println("state is OTher \n");
 			cgst_per = 0;
 			sgst_per = 0;
 			igst_per = gst_rate ;
@@ -97,8 +93,6 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	        BigDecimal bd = new BigDecimal(Float.toString(igst));
 	        bd = bd.setScale(2, RoundingMode.HALF_UP);
 			cgst = bd.floatValue();
-			
-			System.err.println("igst_per = "+igst_per+" \n CGST = "+cgst_per);
 		}
 		
 		total = subtotal+cgst+sgst+igst;

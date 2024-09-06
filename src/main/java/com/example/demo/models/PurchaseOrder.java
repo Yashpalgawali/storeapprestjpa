@@ -2,7 +2,6 @@ package com.example.demo.models;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,21 +23,21 @@ import lombok.ToString;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="tbl_purchase_order")
+@Table(name="tbl_purchase_order") 
 @SequenceGenerator(name="po_seq",allocationSize = 1 , initialValue = 1)
 @ToString
 public class PurchaseOrder {
 
 	@Id
 	@GeneratedValue(generator="po_seq" , strategy = GenerationType.AUTO)
-	private Integer po_id;
-	
-	private Integer po_no;
+	private Integer po_id; 
 	
 	private String po_date;
 	
 	private String prefix;
  
+	private int order_id; 
+	
 	@OneToOne
 	@JoinColumn(name="vendor_id")
 	private Vendor vendor;
@@ -50,4 +49,7 @@ public class PurchaseOrder {
 	private float transport_charge;
 	
 	private float total_amount;
+ 	
+	@OneToMany(mappedBy = "po_id")
+	private List<PurchaseOrderProducts> po_ord_products;
 }
