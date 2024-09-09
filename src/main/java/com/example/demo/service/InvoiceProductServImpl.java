@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.models.Invoice_Product;
@@ -11,10 +11,8 @@ import com.example.demo.repository.InvoiceProductRepo;
 @Service("invprodserv")
 public class InvoiceProductServImpl implements InvoiceProductService {
 
-	
 	private InvoiceProductRepo invprodrepo;
 	
-	@Autowired
 	public InvoiceProductServImpl(InvoiceProductRepo invprodrepo) {
 		this.invprodrepo=invprodrepo;
 	}
@@ -26,7 +24,21 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 
 	@Override
 	public List<Invoice_Product> getInvoiceProductsByOrderId(String orderid) {
-		// TODO Auto-generated method stub
+		 
 		return invprodrepo.findInvoiceProductsByOrderId(orderid);
+	}
+
+	@Override
+	public boolean deleteInvoiceProductById(String prod_id) {
+		 
+		Optional<Invoice_Product> invprod = invprodrepo.findById(Integer.parseInt(prod_id));
+		if(!invprod.isEmpty()) {
+			invprodrepo.deleteById(Integer.parseInt(prod_id));
+			return true;
+		}
+		else {
+			return false;
+		}
+		
 	}
 }

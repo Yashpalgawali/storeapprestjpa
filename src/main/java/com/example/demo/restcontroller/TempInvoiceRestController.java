@@ -72,6 +72,8 @@ public class TempInvoiceRestController {
 	        sess.setAttribute("temp_id", chk_tmp_id);
 	    }
 	    
+	    sessid = (Integer) sess.getAttribute("temp_id");
+	    
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
 		Integer p_qty   	= teinv.getQty();

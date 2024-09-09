@@ -129,4 +129,58 @@ public class InvoiceServImpl implements InvoiceService {
 	public Invoice getInvoiceByInvoiceId(String id) {
 		return invrepo.getInvoiceByInvoiceId(id);
 	}
+
+	@Override
+	public int updateInvoiceById(Invoice invoice, HttpServletRequest request) {
+		
+		HttpSession sess = request.getSession();
+//		Integer temp_id = (Integer) sess.getAttribute("temp_id");
+//		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
+		
+		Integer temp_id = Integer.parseInt(""+invoice.getOrder_id());
+		tempinvrepo.findById(temp_id).get();
+		
+		List<Temp_Invoice> tmplist = tempinvrepo.getTempInvById(temp_id);
+		
+	 	Float last_total=0.0f,sub_total=0.0f;
+	 	
+	 //	int tid = tempinvrepo.getMaxTempInvoiceNum();
+	 	
+	 	for(int i=0;i<tmplist.size();i++) {
+	 		//String pid = String.valueOf(tmplist.get(i).getProduct().getPid());
+	 		
+	 		Product product = prodrepo.findById(tmplist.get(i).getProduct().getPid()).get();
+	 		//Product product = prodserv.getProductById(pid);
+	 		
+	 		Invoice_Product invprod = new Invoice_Product();
+	 		
+	 		//invprod.setTemp_invoice(tmplist.get(i));
+	 		 
+	 		invprod.setCgst(tmplist.get(i).getCgst());
+	 		invprod.setSgst(tmplist.get(i).getSgst());
+	 		invprod.setIgst(tmplist.get(i).getIgst());
+	 		invprod.setCgst_per((int) tmplist.get(i).getCgst_per());
+	 		invprod.setSgst_per((int) tmplist.get(i).getSgst_per());
+	 		invprod.setIgst_per((int) tmplist.get(i).getIgst_per());
+	 		invprod.setPrice(tmplist.get(i).getUnit_price());
+	 		invprod.setQty(tmplist.get(i).getQty());
+	 		
+	 		invprod.setSubtotal(tmplist.get(i).getQty() * tmplist.get(i).getUnit_price());
+	 		invprod.setTotal(tmplist.get(i).getTotal());
+	 		invprod.setProduct(product);
+	 		
+	 		Integer order_id =  tmplist.get(i).getTemp_invoice_id();
+	 		
+	 		invprod.setOrder_id(String.valueOf(order_id));
+	 		
+	 		last_total = last_total + tmplist.get(i).getTotal();
+	 		Invoice_Product inprod = invprodrepo.save(invprod);
+	 		//Invoice_Product inprod = invprodserv.saveInvoiceProduct(invprod);
+	 	}
+
+	 	invoice.setTotal_amount(last_total);
+	 	
+		
+		return 0;
+	}
 }

@@ -10,4 +10,5 @@ public interface InvoiceProductService {
 	
 	public List<Invoice_Product> getInvoiceProductsByOrderId(String orderid);
 	
+	public boolean deleteInvoiceProductById(String prod_id);
 }
