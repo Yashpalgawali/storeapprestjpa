@@ -58,8 +58,8 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		if(tempinvrepo.existsById(tid)) {
 			tempinvrepo.deleteById(tid);
 			
-			Activities act = new Activities("Product with ID "+temp_id+" deleted from table ", LocalDate.now().format(Global.DATE_FORMATTER),  LocalDate.now().format(Global.TIME_FORMATTER));
-			actrepo.save(act);
+//			Activities act = new Activities("Product with ID "+temp_id+" deleted from table ", LocalDate.now().format(Global.DATE_FORMATTER),  LocalDate.now().format(Global.TIME_FORMATTER));
+//			actrepo.save(act);
 			return true;
 		}
 		else {

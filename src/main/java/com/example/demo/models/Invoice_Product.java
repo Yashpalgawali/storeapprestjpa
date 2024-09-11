@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,20 +44,23 @@ public class Invoice_Product {
 	
 	private float igst;
 	
-	private int cgst_per;
+	private float cgst_per;
 	
-	private int sgst_per;
+	private float sgst_per;
 	
-	private int igst_per;
+	private float igst_per;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL )
 	@JoinColumn(name="invoice_id")
 	private Invoice invoice;
 
-//	@Transient
-//	private Invoice invoice;
-	
 	private String order_id;
+	
+	@Transient
+	private float custom_price;
+	
+	@Transient
+	private String stoption;
 	
 	@OneToOne
 	@JoinColumn(name="prod_id")

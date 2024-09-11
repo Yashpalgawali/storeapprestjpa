@@ -3,6 +3,7 @@ package com.example.demo.models;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,9 +51,12 @@ public class Invoice {
 		
 		private Float total_amount;
 		
-		private Date date_added;
+//		private Date date_added;
+//		private Date updated_date;
 		
-		private Date updated_date;
+		private String date_added;
+		
+		private String updated_date;
 		
 		private String vehicle;
 		

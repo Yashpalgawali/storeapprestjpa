@@ -60,7 +60,8 @@ public class JWTSecurityConfiguration {
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 		http.headers().frameOptions().sameOrigin();
 		
-		http.logout().invalidateHttpSession(true);
+		http
+		.logout().invalidateHttpSession(true);
 		return http.build();
 	}
 

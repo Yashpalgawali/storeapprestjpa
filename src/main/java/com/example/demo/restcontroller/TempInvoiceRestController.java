@@ -5,21 +5,17 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
@@ -55,7 +51,7 @@ public class TempInvoiceRestController {
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
 	{
 		HttpSession sess = request.getSession();
-		Integer sessid = (Integer) sess.getAttribute("temp_id"); 
+		Long sessid = (Long) sess.getAttribute("temp_id"); 
 		System.err.println("temp_id in session is "+sessid);
 		
 	    Integer chk_tmp_id = 0; 
@@ -71,8 +67,6 @@ public class TempInvoiceRestController {
 	        }
 	        sess.setAttribute("temp_id", chk_tmp_id);
 	    }
-	    
-	    sessid = (Integer) sess.getAttribute("temp_id");
 	    
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
@@ -111,7 +105,9 @@ public class TempInvoiceRestController {
 			igst = Math.round((sub_tot/100) * tem.getIgst_per());
 		}
 		
-		teinv.setTemp_invoice_id(sessid);
+		Integer sid = Integer.parseInt(String.valueOf(sessid));
+		
+		teinv.setTemp_invoice_id(sid);
 		teinv.setCgst(cgst);
 		teinv.setSgst(sgst);
 		teinv.setIgst(igst);
@@ -125,7 +121,7 @@ public class TempInvoiceRestController {
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
 		if(tmpinv!=null) {
-			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid) , HttpStatus.CREATED);
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sid) , HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -136,6 +132,7 @@ public class TempInvoiceRestController {
 	@GetMapping("/{temp_id}")
 	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable("temp_id")Integer temp_id) {
 		List<Temp_Invoice> tempinvoice = tempinserv.getTempInvByTempInvoiceId(temp_id);
+		  
 		if(tempinvoice.size()>0)
 			return new ResponseEntity<List<Temp_Invoice>>(tempinvoice, HttpStatus.OK);
 		else
