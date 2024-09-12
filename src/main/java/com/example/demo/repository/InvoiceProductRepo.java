@@ -16,5 +16,5 @@ public interface InvoiceProductRepo extends JpaRepository<Invoice_Product, Integ
 //			+ "	JOIN tbl_invoice ON tbl_invoice.order_id=tbl_invoice_product.order_id "
 //			+ " WHERE tbl_invoice_product.order_id=:id",nativeQuery =  true)
 	@Query("SELECT ip FROM Invoice_Product ip WHERE ip.order_id=:id")
-	List<Invoice_Product> findInvoiceProductsByOrderId(String id);
+	List<Invoice_Product> findInvoiceProductsByOrderId(Integer id);
 }

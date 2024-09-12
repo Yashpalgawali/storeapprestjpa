@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -17,10 +18,11 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SequenceGenerator(name = "activity_seq" , allocationSize = 1,initialValue = 1)
 public class Activities {
 
 	@Id
-	@GeneratedValue(generator = "" , strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "activity_seq" , strategy = GenerationType.AUTO)
 	private Integer activity_id;
 	
 	private String activity;

@@ -46,7 +46,7 @@ public class InvoiceProductController {
 	}
 	
 	@GetMapping("/{order_id}")
-	public ResponseEntity<List<Invoice_Product>> getAllInvoiceProductsByOrderId(@PathVariable("order_id") String order_id){
+	public ResponseEntity<List<Invoice_Product>> getAllInvoiceProductsByOrderId(@PathVariable("order_id") Integer order_id){
 		
 		List<Invoice_Product> prodlist = invprodserv.getInvoiceProductsByOrderId(order_id);
 		
@@ -63,11 +63,17 @@ public class InvoiceProductController {
 		
 		HttpSession sess = request.getSession();
 		
-		System.err.println("temp _ID is = "+ sess.getAttribute("temp_id"));
+		System.err.println("Inside addInvoiceProducts() temp _ID is = "+ sess.getAttribute("temp_id"));
 		
 	
 		System.err.println("Inside saveinvproduct \n "+invprod.toString());
-		invprodserv.saveInvoiceProduct(invprod,request);
-		return null;
+		Invoice_Product iprod = invprodserv.saveInvoiceProduct(invprod,request);
+		if(iprod!=null)
+		{
+			return new  ResponseEntity<String>(HttpStatus.OK);
+		}
+		else {
+			return new  ResponseEntity<String>(HttpStatus.NOT_MODIFIED);
+		}
 	}
 }

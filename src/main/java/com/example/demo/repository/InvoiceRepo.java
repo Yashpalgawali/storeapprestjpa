@@ -3,8 +3,10 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.models.Invoice;
 
@@ -28,5 +30,10 @@ public interface InvoiceRepo extends JpaRepository<Invoice, Integer> {
 	
 	@Query(value="select * from tbl_invoice where invoice_id=?1", nativeQuery = true)
 	public Invoice getInvoiceByInvoiceId(String id);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Invoice i set i.order_id=:order_id,i.invoice_no=:invoice_no,i.total_amount=:total_amount,i.customer.customer_id=:cust_id,i.date_added=:date_added,i.updated_date=:updated_date,i.vehicle=:vehicle,i.batch_no=:batch_no,i.orderponumber=:orderponumber WHERE i.invoice_id=:id")
+	public int updateInvoiceById(Integer id,Integer order_id,Integer invoice_no,Float total_amount,Long cust_id,String date_added,String updated_date,String vehicle,String batch_no,String orderponumber);
 	
 }

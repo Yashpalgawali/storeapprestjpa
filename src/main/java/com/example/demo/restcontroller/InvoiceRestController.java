@@ -121,7 +121,7 @@ public class InvoiceRestController {
 //	 	Long tmpid = Long.valueOf(temp_id);
 //	 	
 //	 	invoice.setOrder_id(tmpid);
-	 	
+	 	System.err.println("Inside saveInvoice() session ID is "+sess.getId()+" temp_id = "+sess.getAttribute("temp_id"));
 	 	Invoice final_invoice = invserv.saveInvoice(invoice, request);
 	 	if(final_invoice!=null)
 	 	{
@@ -138,7 +138,7 @@ public class InvoiceRestController {
 		
 		HttpSession sess = request.getSession();
 		
-		System.err.println("sessiong iDI iS = "+request.getSession().getId());
+		System.err.println("Inside getAllInvoices() sessiong IDI IS = "+request.getSession().getId()+"\n id in the session is "+sess.getAttribute("temp_id"));
 		List<Invoice> invlist = invserv.getAllInvoices();
 		if(invlist.size()>0)
 			return new  ResponseEntity<List<Invoice>>(invlist , HttpStatus.OK) ;
@@ -155,6 +155,7 @@ public class InvoiceRestController {
 		{
 			HttpSession sess = request.getSession();
 			sess.setAttribute("temp_id", invoice.getOrder_id());
+			sess.setAttribute("invoice_num", invoice.getInvoice_no());
 			System.err.println("inside getinvoice() \n order id in session is "+sess.getAttribute("temp_id"));
 			return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
 		}
@@ -166,7 +167,7 @@ public class InvoiceRestController {
 	
 	
 	@GetMapping("/order/{id}")
-	public ResponseEntity<List<Invoice_Product>> getInvoiceProductsByOrderId(@PathVariable("id")String id)
+	public ResponseEntity<List<Invoice_Product>> getInvoiceProductsByOrderId(@PathVariable("id")Integer id)
 	{
 		List<Invoice_Product> prodlist = invprodserv.getInvoiceProductsByOrderId(id);
 		 
@@ -177,9 +178,15 @@ public class InvoiceRestController {
 	}
 	 
 	@PutMapping("/")
-	public ResponseEntity<Invoice> updateInvoice(@RequestBody Invoice invoice,HttpServletRequest request)
+	public ResponseEntity<String> updateInvoice(@RequestBody Invoice invoice,HttpServletRequest request)
 	{
-		invserv.updateInvoiceById(invoice, request);
-		return null;
+		int result = invserv.updateInvoiceById(invoice, request);
+		if(result>0) {
+			return new ResponseEntity<String>(HttpStatus.OK);		
+		}
+		else {
+			return new ResponseEntity<String>(HttpStatus.NOT_MODIFIED); 
+		}
+		 
 	}
 }

@@ -29,7 +29,7 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod, HttpServletRequest request) {
 		
 		HttpSession sess = request.getSession();
-		Long temp_id = (Long) sess.getAttribute("temp_id");
+		Integer temp_id = (Integer) sess.getAttribute("temp_id");
 		
 		Product prod = prodrepo.findById(invprod.getProduct().getPid()).get();
 		
@@ -46,7 +46,10 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 			unit_price = (float) (Float.parseFloat(prod.getProd_price()) / 1.18); 
 		}
  		
+ 		invprod.setCustom_price(unit_price);
 		sub_tot = unit_price * invprod.getQty();
+		
+		invprod.setSubtotal(sub_tot);
 		
 		if(state.equals("mh")) {
 		
@@ -80,15 +83,15 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 		invprod.setSubtotal(sub_tot);
 		invprod.setTotal(total);
 		
-		//invprod.setOrder_id(""+temp_id);
-		
+		invprod.setOrder_id(temp_id);
+		invprod.setInvoice(null);
 		System.err.println("Inside save invprod service () \n "+invprod.toString());
 		
 		return invprodrepo.save(invprod);
 	}
 
 	@Override
-	public List<Invoice_Product> getInvoiceProductsByOrderId(String orderid) {
+	public List<Invoice_Product> getInvoiceProductsByOrderId(Integer orderid) {
 		return invprodrepo.findInvoiceProductsByOrderId(orderid);
 	}
 

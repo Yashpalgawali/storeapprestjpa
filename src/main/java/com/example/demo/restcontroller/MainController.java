@@ -17,7 +17,8 @@ public class MainController{
 	public String authenticate(Authentication auth,HttpServletRequest request) {
 	
 		HttpSession sess = request.getSession();
-		sess.removeAttribute("temp_id");
+		System.err.println("Inside basicauth() \n session ID is "+sess.getId()+"\n temp_id value in session is "+sess.getAttribute("temp_id"));
+		//sess.removeAttribute("temp_id");
 		return "You are authenticated";
 	}
 	

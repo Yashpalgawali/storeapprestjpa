@@ -54,7 +54,7 @@ public class Invoice_Product {
 	@JoinColumn(name="invoice_id")
 	private Invoice invoice;
 
-	private String order_id;
+	private Integer order_id;
 	
 	@Transient
 	private float custom_price;

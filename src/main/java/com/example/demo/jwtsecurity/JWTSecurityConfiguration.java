@@ -61,10 +61,14 @@ public class JWTSecurityConfiguration {
 		http.headers().frameOptions().sameOrigin();
 		
 		http
-		.logout().invalidateHttpSession(true);
+		.logout()
+		.logoutUrl("/logout")
+		.logoutSuccessUrl("/authenticate") // Redirect after successful logout
+		.deleteCookies("JSESSIONID")
+		.invalidateHttpSession(true);
 		return http.build();
 	}
-
+ 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder authBuilder) throws Exception {
     	authBuilder.jdbcAuthentication()

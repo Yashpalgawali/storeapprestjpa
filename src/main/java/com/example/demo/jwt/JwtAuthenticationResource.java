@@ -41,7 +41,7 @@ public class JwtAuthenticationResource {
 	        model.addAttribute("session_id", sessionId);
 	        session.setAttribute("session_id", sessionId); // Store session ID in HttpSession
 
-	        System.err.println("Session ID set: " + sessionId); // Debugging output
+	        System.err.println("Inside Authenticate() Session ID set: " + sessionId); // Debugging output
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //		session = request.getSession();
 //		session.setAttribute("session_id", session.getId());

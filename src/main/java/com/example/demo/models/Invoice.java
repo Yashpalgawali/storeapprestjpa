@@ -31,11 +31,11 @@ public class Invoice {
 		
 		@Id
 		@GeneratedValue(strategy = GenerationType.AUTO ,generator = "invoice_seq")
-		private Long invoice_id;
+		private Integer invoice_id;
 		
-		private Long order_id;
+		private Integer order_id;
 		
-		private Long invoice_no;
+		private Integer invoice_no;
 		
 		private String prefix;
 		

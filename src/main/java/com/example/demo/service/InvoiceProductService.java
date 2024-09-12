@@ -10,7 +10,7 @@ public interface InvoiceProductService {
 
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod,HttpServletRequest request);
 	
-	public List<Invoice_Product> getInvoiceProductsByOrderId(String orderid);
+	public List<Invoice_Product> getInvoiceProductsByOrderId(Integer orderid);
 	
 	public boolean deleteInvoiceProductById(String prod_id);
 }

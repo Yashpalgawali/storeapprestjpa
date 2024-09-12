@@ -51,8 +51,8 @@ public class TempInvoiceRestController {
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
 	{
 		HttpSession sess = request.getSession();
-		Long sessid = (Long) sess.getAttribute("temp_id"); 
-		System.err.println("temp_id in session is "+sessid);
+		Integer sessid = (Integer) sess.getAttribute("temp_id"); 
+		System.err.println("Inside saveTempInvoice() session ID is "+sess.getId()+"\n temp_id in the session is "+sessid);
 		
 	    Integer chk_tmp_id = 0; 
 	    if (sessid == null) {
@@ -66,8 +66,11 @@ public class TempInvoiceRestController {
 	            chk_tmp_id = chk_tmp_id + 1;
 	        }
 	        sess.setAttribute("temp_id", chk_tmp_id);
+	        sessid=chk_tmp_id;
 	    }
 	    
+	
+	    		
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
 		Integer p_qty   	= teinv.getQty();
@@ -105,9 +108,8 @@ public class TempInvoiceRestController {
 			igst = Math.round((sub_tot/100) * tem.getIgst_per());
 		}
 		
-		Integer sid = Integer.parseInt(String.valueOf(sessid));
 		
-		teinv.setTemp_invoice_id(sid);
+		teinv.setTemp_invoice_id(sessid);
 		teinv.setCgst(cgst);
 		teinv.setSgst(sgst);
 		teinv.setIgst(igst);
@@ -121,13 +123,12 @@ public class TempInvoiceRestController {
 		
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
 		if(tmpinv!=null) {
-			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sid) , HttpStatus.CREATED);
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid) , HttpStatus.CREATED);
 		}
 		else {
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}	
-	
 	
 	@GetMapping("/{temp_id}")
 	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable("temp_id")Integer temp_id) {
