@@ -46,9 +46,8 @@ public class InvoiceProductServImpl implements InvoiceProductService {
 			unit_price = (float) (Float.parseFloat(prod.getProd_price()) / 1.18); 
 		}
  		
- 		invprod.setCustom_price(unit_price);
-		sub_tot = unit_price * invprod.getQty();
-		
+ 		sub_tot = unit_price * invprod.getQty();
+		invprod.setPrice(p_cust_price);
 		invprod.setSubtotal(sub_tot);
 		
 		if(state.equals("mh")) {

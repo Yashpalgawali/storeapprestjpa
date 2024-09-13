@@ -154,14 +154,20 @@ public class InvoiceRestController {
 		if(invoice!=null)
 		{
 			HttpSession sess = request.getSession();
-			sess.setAttribute("temp_id", invoice.getOrder_id());
-			sess.setAttribute("invoice_num", invoice.getInvoice_no());
-			System.err.println("inside getinvoice() \n order id in session is "+sess.getAttribute("temp_id"));
-			return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+			if(sess.getAttribute("temp_id")!=null)
+			{
+				sess.setAttribute("temp_id", invoice.getOrder_id());
+				sess.setAttribute("invoice_num", invoice.getInvoice_no());
+				System.err.println("inside getinvoice() \n order id in session is "+sess.getAttribute("temp_id"));
+				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+			}
+			else {
+				return new ResponseEntity<Invoice>(HttpStatus.NOT_FOUND);
+			}
 		}
 		else
 		{
-			return new ResponseEntity<Invoice>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Invoice>(HttpStatus.NOT_FOUND);
 		}
 	}
 	

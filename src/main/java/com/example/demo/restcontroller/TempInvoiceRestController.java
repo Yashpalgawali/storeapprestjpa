@@ -69,7 +69,7 @@ public class TempInvoiceRestController {
 	        sessid=chk_tmp_id;
 	    }
 	    
-	
+	    System.err.println("inside saveTempInvoice() sessid = "+sessid);
 	    		
 		Long 	prod_id 	= teinv.getProduct().getPid();
 		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
