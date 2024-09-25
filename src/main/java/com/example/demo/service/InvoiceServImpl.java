@@ -129,8 +129,10 @@ public class InvoiceServImpl implements InvoiceService {
 	}
 
 	@Override
-	public Invoice getInvoiceByInvoiceId(String id) {
-		return invrepo.getInvoiceByInvoiceId(id);
+	public Invoice getInvoiceByInvoiceId(Integer id) {
+		Invoice invoice = invrepo.getInvoiceByInvoiceId(id);
+		System.err.println("Invoice is "+invoice.toString());
+		return invoice;
 	}
 
 	@Override

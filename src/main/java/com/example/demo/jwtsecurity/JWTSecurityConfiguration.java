@@ -35,7 +35,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 public class JWTSecurityConfiguration {
 	
 	@Autowired
-    private DataSource dataSource;
+	private DataSource dataSource;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

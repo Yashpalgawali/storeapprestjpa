@@ -146,24 +146,26 @@ public class InvoiceRestController {
 			return new  ResponseEntity<List<Invoice>>( HttpStatus.NO_CONTENT) ;
 		
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Invoice> getInvoiceByInvoiceId(@PathVariable("id")String id,HttpServletRequest request)
+	public ResponseEntity<Invoice> getInvoiceByInvoiceId(@PathVariable("id")Integer id,HttpServletRequest request)
 	{
+		System.err.println("Inside getInvoiceById() ID = "+id);
 		Invoice invoice = invserv.getInvoiceByInvoiceId(id);
 		if(invoice!=null)
 		{
-			HttpSession sess = request.getSession();
-			if(sess.getAttribute("temp_id")!=null)
-			{
-				sess.setAttribute("temp_id", invoice.getOrder_id());
-				sess.setAttribute("invoice_num", invoice.getInvoice_no());
-				System.err.println("inside getinvoice() \n order id in session is "+sess.getAttribute("temp_id"));
-				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
-			}
-			else {
-				return new ResponseEntity<Invoice>(HttpStatus.NOT_FOUND);
-			}
+			return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+//			HttpSession sess = request.getSession();
+//			if(sess.getAttribute("temp_id")!=null)
+//			{
+//				sess.setAttribute("temp_id", invoice.getOrder_id());
+//				sess.setAttribute("invoice_num", invoice.getInvoice_no());
+//				System.err.println("inside getinvoice() \n order id in Session is "+sess.getAttribute("temp_id"));
+//				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+//			}
+//			else {
+//				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+//			}
 		}
 		else
 		{

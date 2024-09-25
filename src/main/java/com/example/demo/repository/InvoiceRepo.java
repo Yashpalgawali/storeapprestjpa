@@ -28,8 +28,9 @@ public interface InvoiceRepo extends JpaRepository<Invoice, Integer> {
 	public Invoice getInvoiceByOrderId(String id);
 	
 	
-	@Query(value="select * from tbl_invoice where invoice_id=?1", nativeQuery = true)
-	public Invoice getInvoiceByInvoiceId(String id);
+	//@Query(value="select * from tbl_invoice where invoice_id=?1", nativeQuery = true)
+	@Query("SELECT i FROM Invoice i WHERE i.invoice_id=:id")
+	public Invoice getInvoiceByInvoiceId(Integer id);
 	
 	@Transactional
 	@Modifying

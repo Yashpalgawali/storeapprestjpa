@@ -14,7 +14,7 @@ public interface InvoiceService {
 	
 	public List<Invoice> getAllInvoices();
 	
-	public Invoice getInvoiceByInvoiceId(String id);
+	public Invoice getInvoiceByInvoiceId(Integer id);
 	
 	public int updateInvoiceById(Invoice invoice,HttpServletRequest request);
 	
