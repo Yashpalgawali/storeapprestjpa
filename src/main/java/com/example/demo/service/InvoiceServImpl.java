@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Invoice;
 import com.example.demo.models.Invoice_Product;
+import com.example.demo.models.Prefix;
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
 import com.example.demo.repository.CustomerRepo;
 import com.example.demo.repository.InvoiceProductRepo;
 import com.example.demo.repository.InvoiceRepo;
+import com.example.demo.repository.PrefixRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.TempInvoiceRepo;
 
@@ -32,14 +34,16 @@ public class InvoiceServImpl implements InvoiceService {
 	private InvoiceProductRepo invprodrepo;
 	
 	private CustomerRepo customerrepo;
+	private PrefixRepository prefixrepo;
 	
 	public InvoiceServImpl(InvoiceRepo invrepo, TempInvoiceRepo tempinvrepo, ProductRepository prodrepo,
-			InvoiceProductRepo invprodrepo, CustomerRepo customerrepo) {
+			InvoiceProductRepo invprodrepo, CustomerRepo customerrepo,PrefixRepository prefixrepo) {
 		super();
 		this.invrepo = invrepo;
 		this.tempinvrepo = tempinvrepo;
 		this.prodrepo = prodrepo;
 		this.invprodrepo = invprodrepo;
+		this.prefixrepo = prefixrepo;
 		this.customerrepo = customerrepo;
 	}
 
@@ -101,9 +105,7 @@ public class InvoiceServImpl implements InvoiceService {
 	 	else {
 	 		max_inv_no= 1;
 	 	}
-	 	
-//	 	Long maxno = Long.valueOf(max_inv_no);
-	 	
+	 	 	
 	 	System.err.println("MAX INVOICE NO. = "+max_inv_no);
 	 	
 	 	invoice.setDate_added(LocalDate.now().format(Global.DATE_FORMATTER));
@@ -113,7 +115,8 @@ public class InvoiceServImpl implements InvoiceService {
 	 	//Long tmpid = Long.valueOf(temp_id);
 	 	
 	 	invoice.setOrder_id(temp_id);
-	 	
+	 	Prefix prefix = prefixrepo.findById(1).get();
+	 	invoice.setPrefix(prefix.getPrefix()+""+prefix.getFin_year());
 	 	Invoice final_invoice = invrepo.save(invoice);
 		return invrepo.save(final_invoice);
 	}
@@ -131,7 +134,6 @@ public class InvoiceServImpl implements InvoiceService {
 	@Override
 	public Invoice getInvoiceByInvoiceId(Integer id) {
 		Invoice invoice = invrepo.getInvoiceByInvoiceId(id);
-		System.err.println("Invoice is "+invoice.toString());
 		return invoice;
 	}
 

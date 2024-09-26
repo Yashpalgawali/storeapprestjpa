@@ -154,18 +154,18 @@ public class InvoiceRestController {
 		Invoice invoice = invserv.getInvoiceByInvoiceId(id);
 		if(invoice!=null)
 		{
-			return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
-//			HttpSession sess = request.getSession();
-//			if(sess.getAttribute("temp_id")!=null)
-//			{
-//				sess.setAttribute("temp_id", invoice.getOrder_id());
-//				sess.setAttribute("invoice_num", invoice.getInvoice_no());
-//				System.err.println("inside getinvoice() \n order id in Session is "+sess.getAttribute("temp_id"));
-//				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
-//			}
-//			else {
-//				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
-//			}
+			//return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+			HttpSession sess = request.getSession();
+			if(sess.getAttribute("temp_id")!=null)
+			{
+				System.err.println("inside getinvoice() \n order id in Session is "+sess.getAttribute("temp_id"));
+				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+			}
+			else {
+				sess.setAttribute("temp_id", invoice.getOrder_id());
+				sess.setAttribute("invoice_num", invoice.getInvoice_no());
+				return new ResponseEntity<Invoice>(invoice ,HttpStatus.OK);
+			}
 		}
 		else
 		{

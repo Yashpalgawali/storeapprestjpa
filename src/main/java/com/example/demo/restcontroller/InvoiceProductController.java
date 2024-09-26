@@ -22,7 +22,6 @@ import com.example.demo.service.InvoiceProductService;
 
 @RestController
 @RequestMapping("invoiceproduct")
-@CrossOrigin("*")
 public class InvoiceProductController {
 
 	private InvoiceProductService invprodserv;
@@ -61,12 +60,6 @@ public class InvoiceProductController {
 	@PostMapping("/")
 	public ResponseEntity<String> addInvoiceProducts(@RequestBody Invoice_Product invprod,HttpServletRequest request) {
 		
-		HttpSession sess = request.getSession();
-		
-		System.err.println("Inside addInvoiceProducts() temp _ID is = "+ sess.getAttribute("temp_id"));
-		
-	
-		System.err.println("Inside saveinvproduct \n "+invprod.toString());
 		Invoice_Product iprod = invprodserv.saveInvoiceProduct(invprod,request);
 		if(iprod!=null)
 		{
