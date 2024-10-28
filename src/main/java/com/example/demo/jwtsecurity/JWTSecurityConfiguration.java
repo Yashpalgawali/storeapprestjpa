@@ -1,4 +1,3 @@
-
 package com.example.demo.jwtsecurity;
 
 import java.security.KeyPair;
@@ -7,6 +6,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,16 +59,21 @@ public class JWTSecurityConfiguration {
 		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 		http.headers().frameOptions().sameOrigin();
-		
-		http
-		.logout()
-		.logoutUrl("/logout")
-		.logoutSuccessUrl("/authenticate") // Redirect after successful logout
-		.deleteCookies("JSESSIONID")
-		.invalidateHttpSession(true);
-		return http.build();
-	}
  
+		
+		http.logout(logout->{
+		logout.logoutUrl("/logouturl");
+		logout.invalidateHttpSession(true);
+		logout.clearAuthentication(true);
+		logout.deleteCookies("SESSION");
+		logout.logoutSuccessHandler((request, response , authentication)->{
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("{\" message\": \" Logged Out Successfully \" }");
+			response.getWriter().flush();
+		});
+	});
+	return http.build();
+}
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder authBuilder) throws Exception {
     	authBuilder.jdbcAuthentication()

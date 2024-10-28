@@ -82,13 +82,13 @@
 		<dependency>
 		    <groupId>org.projectlombok</groupId>
 		    <artifactId>lombok</artifactId>
-		   
 		    <scope>provided</scope>
 		</dependency>
 		
 	</dependencies>
 
 	<build>
+		<finalName>storeapprest</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

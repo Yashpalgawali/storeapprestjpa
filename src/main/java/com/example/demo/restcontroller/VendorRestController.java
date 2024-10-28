@@ -2,6 +2,9 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +24,9 @@ import com.example.demo.service.VendorService;
 @RequestMapping("vendor")
 @CrossOrigin("*")
 public class VendorRestController {
-
 	
 	private VendorService vendorserv;
 	
-	@Autowired
 	public VendorRestController(VendorService vendorserv) {
 		super();
 		this.vendorserv = vendorserv;
@@ -44,7 +45,9 @@ public class VendorRestController {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<List<Vendor>> viewVendors() {
+	public ResponseEntity<List<Vendor>> viewVendors(HttpServletRequest request) {
+		HttpSession sess= request.getSession();
+		System.err.println("Inside viewvendors() \n session ID is "+sess.getId());
 		return new ResponseEntity<List<Vendor>>(vendorserv.getAllVendors(),HttpStatus.OK);
 	}
 	
