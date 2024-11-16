@@ -1,15 +1,31 @@
 package com.example.demo.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class AuthenticationBean {
 
 	private String message;
-	
+
+	/**
+	 * @param message
+	 */
+	public AuthenticationBean(String message) {
+		super();
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * 
+	 */
+	public AuthenticationBean() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 }

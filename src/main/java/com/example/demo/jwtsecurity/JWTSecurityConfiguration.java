@@ -40,17 +40,17 @@ public class JWTSecurityConfiguration {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
-		http.httpBasic();
-		//http.cors();
-		http.cors().configurationSource(request -> {
+		http.httpBasic(basic->{});
+        
+        http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your Angular app's URL
             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
             config.setAllowCredentials(true); // Allow cookies
             return config;
-        });
-		http.csrf().disable();
+        }));
+        http.csrf(csrf -> csrf.disable());
 		http.authorizeRequests(auth->{
 			auth.antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
 			auth.anyRequest().authenticated();
@@ -58,7 +58,7 @@ public class JWTSecurityConfiguration {
 		});
 		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-		http.headers().frameOptions().sameOrigin();
+        http.headers(headers -> headers.frameOptions().sameOrigin());
  
 		
 		http.logout(logout->{
@@ -83,24 +83,24 @@ public class JWTSecurityConfiguration {
             .authoritiesByUsernameQuery("select username, role from tbl_users where username=?")
             ;
     }
-	
-	@Bean
-	public KeyPair keyPair() throws Exception {
+
+    @Bean
+    KeyPair keyPair() throws Exception {
 		 var keyPairGen = KeyPairGenerator.getInstance("RSA");
 		 keyPairGen.initialize(2048);
 		 return keyPairGen.generateKeyPair();
 	}
-	
-	@Bean
-	public RSAKey rsaKey(KeyPair keyPair) {
+
+    @Bean
+    RSAKey rsaKey(KeyPair keyPair) {
 		return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
 						  .privateKey(keyPair.getPrivate())
 						  .keyID(UUID.randomUUID()
 						  .toString()).build();
 	}
-	
-	@Bean
-	public JWKSource<SecurityContext> jwkSource( RSAKey rsaKey) {
+
+    @Bean
+    JWKSource<SecurityContext> jwkSource(RSAKey rsaKey) {
 		var  jwkset = new JWKSet(rsaKey);
 		
 //		var jwksource = new JWKSource<SecurityContext>() {
@@ -114,25 +114,25 @@ public class JWTSecurityConfiguration {
 		//By using Lambda function
 		return (jwkSelector, context)-> jwkSelector.select(jwkset);
 	}
-	
-	@Bean
-	public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
+
+    @Bean
+    JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
 		return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
 	}
-	
-	@Bean
-	public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+
+    @Bean
+    JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
 		return new NimbusJwtEncoder(jwkSource);
 	}
-	
+
 //	@Bean
 //	public DataSource dataSource() {
 //		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
 //				.addScript("org/springframework/security/core/userdetails/jdbc/users.ddl").build();
 //	}
-	 
-	@Bean
-	public BCryptPasswordEncoder passEncoder() {
+     
+    @Bean
+    BCryptPasswordEncoder passEncoder() {
 		return new BCryptPasswordEncoder(); 
 	}
 	

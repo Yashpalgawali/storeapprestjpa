@@ -13,13 +13,12 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @RestController
-@CrossOrigin(origins = "*") // Add this line
+//@CrossOrigin(origins = "*") // Add this line
 @SessionAttributes("session_id") // Indicate which model attributes should be stored in the session
 public class JwtAuthenticationResource {
 

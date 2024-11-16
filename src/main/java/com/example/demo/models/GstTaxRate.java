@@ -11,9 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @SequenceGenerator(name="taxrate_seq",allocationSize = 1,initialValue = 1)
 @Table(name="tbl_gsttaxrate")
@@ -27,4 +24,48 @@ public class GstTaxRate {
 	private Float taxrate;
 	
 	private String type;
+
+	public Integer getGstid() {
+		return gstid;
+	}
+
+	public void setGstid(Integer gstid) {
+		this.gstid = gstid;
+	}
+
+	public Float getTaxrate() {
+		return taxrate;
+	}
+
+	public void setTaxrate(Float taxrate) {
+		this.taxrate = taxrate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * @param gstid
+	 * @param taxrate
+	 * @param type
+	 */
+	public GstTaxRate(Integer gstid, Float taxrate, String type) {
+		super();
+		this.gstid = gstid;
+		this.taxrate = taxrate;
+		this.type = type;
+	}
+
+	/**
+	 * 
+	 */
+	public GstTaxRate() {
+		super();
+	}
+	
 }
