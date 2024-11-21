@@ -191,24 +191,6 @@ public class Invoice_Product {
 		this.product = product;
 	}
 
-	/**
-	 * @param inv_prod_id
-	 * @param qty
-	 * @param price
-	 * @param subtotal
-	 * @param total
-	 * @param cgst
-	 * @param sgst
-	 * @param igst
-	 * @param cgst_per
-	 * @param sgst_per
-	 * @param igst_per
-	 * @param invoice
-	 * @param order_id
-	 * @param custom_price
-	 * @param stoption
-	 * @param product
-	 */
 	public Invoice_Product(int inv_prod_id, int qty, float price, float subtotal, float total, float cgst, float sgst,
 			float igst, float cgst_per, float sgst_per, float igst_per, Invoice invoice, Integer order_id,
 			float custom_price, String stoption, Product product) {
@@ -231,9 +213,6 @@ public class Invoice_Product {
 		this.product = product;
 	}
 
-	/**
-	 * 
-	 */
 	public Invoice_Product() {
 		super();
 	}

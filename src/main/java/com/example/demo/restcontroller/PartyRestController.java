@@ -63,10 +63,7 @@ public class PartyRestController {
 	@PutMapping("/")
 	public ResponseEntity<List<Party>> updateParty(@RequestBody Party party) {
 		
-		System.err.println("Party Object is = "+party.toString());
-		
 		int value = partyserv.updateParty(party);
-		
 		if(value > 0) {
 			return new ResponseEntity<List<Party>>(partyserv.getAllParties(), HttpStatus.OK);
 		}

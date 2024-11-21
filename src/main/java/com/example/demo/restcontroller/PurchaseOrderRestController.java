@@ -1,12 +1,10 @@
 package com.example.demo.restcontroller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.globalconfig.Global;
 import com.example.demo.models.PurchaseOrder;
-import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.service.PoProductsService;
 import com.example.demo.service.PurchaseOrderServImpl;
 
@@ -30,13 +26,12 @@ import com.example.demo.service.PurchaseOrderServImpl;
 public class PurchaseOrderRestController {
 
 	private PurchaseOrderServImpl porderserv;
-	
-	@Autowired
 	private PoProductsService poprodserv;
-	
-	public PurchaseOrderRestController(PurchaseOrderServImpl porderserv)
+
+	public PurchaseOrderRestController(PurchaseOrderServImpl porderserv,PoProductsService poprodserv)
 	{
 		this.porderserv = porderserv;
+		this.poprodserv = poprodserv;
 	}
 	
 	@PostMapping("/")
@@ -67,7 +62,7 @@ public class PurchaseOrderRestController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable("id")Integer id) {
+	public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Integer id) {
 		PurchaseOrder porder = porderserv.getPurchaseOrderById(id);
 		if(porder!=null) {
 			return new ResponseEntity<PurchaseOrder>(porder , HttpStatus.OK);

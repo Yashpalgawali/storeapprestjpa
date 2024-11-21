@@ -2,7 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,7 +54,7 @@ public class DocketRestController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Docket> getDocketById(@PathVariable("id") Integer id ) {
+	public ResponseEntity<Docket> getDocketById(@PathVariable Integer id ) {
 		Docket docket = dockserv.getDocketById(id);
 		if(docket!=null) {
 			return new ResponseEntity<Docket>(docket, HttpStatus.OK);

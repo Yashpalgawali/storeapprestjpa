@@ -1,8 +1,6 @@
 package com.example.demo.restcontroller;
 
-
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,12 +19,10 @@ import com.example.demo.service.CustomerService;
 @RequestMapping("customer")
 @CrossOrigin("*")
 public class CustomerRestController {
-
 	
 	private CustomerService custserv;
 	
-	@Autowired
-	public CustomerRestController(CustomerService custserv) {
+ 	public CustomerRestController(CustomerService custserv) {
 		this.custserv=custserv;
 	}
 	
@@ -46,7 +42,7 @@ public class CustomerRestController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Customer> getCustomerById(@PathVariable("id") Long id) {
+	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
 		System.err.println("Inside getcustbyid() ID = "+id);
 		Customer cust = custserv.getCustomerById(id);
 		if(cust!=null)

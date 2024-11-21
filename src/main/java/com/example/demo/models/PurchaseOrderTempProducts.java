@@ -8,10 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
-//@Entity
-//	@Table(name="tbl_temp_po_products")
+	@Entity
+	@Table(name="tbl_temp_po_products")
 	@SequenceGenerator(name="po_temp_products_seq",initialValue = 1, allocationSize = 1)
 	public class PurchaseOrderTempProducts {
 
@@ -42,7 +43,7 @@ import javax.persistence.Transient;
 		@Transient
 		private String stoption;
 		
-		@OneToOne(fetch = FetchType.EAGER)
+		@OneToOne()
 //		@JsonIgnore
 		@JoinColumn(name="prod_id")
 		private PoProductsList product;

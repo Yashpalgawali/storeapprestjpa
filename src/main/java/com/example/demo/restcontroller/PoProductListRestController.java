@@ -2,7 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +23,6 @@ public class PoProductListRestController {
 
 	private PoProductListServImpl poprodserv;
 	
-	@Autowired
 	public PoProductListRestController(PoProductListServImpl poprodserv) {
 		this.poprodserv = poprodserv;
 	}
@@ -54,7 +52,7 @@ public class PoProductListRestController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PoProductsList> getPoProductById(@PathVariable("id") Integer id) {
+	public ResponseEntity<PoProductsList> getPoProductById(@PathVariable Integer id) {
 		
 		PoProductsList poProd = poprodserv.getPoProductById(id);
 		if(poProd!=null) {

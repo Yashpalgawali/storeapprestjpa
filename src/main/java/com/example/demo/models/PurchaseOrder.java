@@ -142,5 +142,14 @@ public class PurchaseOrder {
 	public PurchaseOrder() {
 		super();
 	}
+
+	@Override
+	public String toString() {
+		return "PurchaseOrder [po_id=" + po_id + ", po_date=" + po_date + ", prefix=" + prefix + ", order_id="
+				+ order_id + ", vendor=" + vendor + ", prepared_by=" + prepared_by + ", packing_charge="
+				+ packing_charge + ", transport_charge=" + transport_charge + ", total_amount=" + total_amount
+				+ ", po_ord_products=" + po_ord_products + "]";
+	}
+
 	
 }

@@ -2,7 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +22,6 @@ public class GstTaxRateController {
 
 	private GstTaxService gsttaxserv;
 
-	@Autowired
 	public GstTaxRateController(GstTaxService gsttaxserv) {
 		this.gsttaxserv = gsttaxserv;
 	}

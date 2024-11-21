@@ -28,7 +28,7 @@ public class PrefixController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Prefix> getPrefixById(@PathVariable("id") Integer id) {
+	public ResponseEntity<Prefix> getPrefixById(@PathVariable Integer id) {
 		Prefix prefix = prefixserv.getPrefixById(id);
 		if(prefix!=null) {
 			return new ResponseEntity<Prefix>(prefix, HttpStatus.OK);

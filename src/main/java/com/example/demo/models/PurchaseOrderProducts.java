@@ -2,7 +2,6 @@ package com.example.demo.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,10 +11,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name="tbl_po_products")
@@ -49,7 +44,7 @@ public class PurchaseOrderProducts {
 	@Transient
 	private String stoption;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name="po_prod_id")
 	private PoProductsList product;
 	
@@ -168,33 +163,16 @@ public class PurchaseOrderProducts {
 	public void setPo_id(PurchaseOrder po_id) {
 		this.po_id = po_id;
 	}
-
-	/**
-	 * 
-	 */
+ 
 	public PurchaseOrderProducts() {
 		super();
 	}
 
-	/**
-	 * @param purchase_prod_order_id
-	 * @param qty
-	 * @param temp_id
-	 * @param cgst_per
-	 * @param sgst_per
-	 * @param igst_per
-	 * @param cgst
-	 * @param sgst
-	 * @param igst
-	 * @param unit_price
-	 * @param total
-	 * @param stoption
-	 * @param product
-	 * @param po_id
-	 */
+ 
 	public PurchaseOrderProducts(Integer purchase_prod_order_id, Integer qty, Integer temp_id, float cgst_per,
 			float sgst_per, float igst_per, float cgst, float sgst, float igst, float unit_price, float total,
 			String stoption, PoProductsList product, PurchaseOrder po_id) {
+ 
 		super();
 		this.purchase_prod_order_id = purchase_prod_order_id;
 		this.qty = qty;
@@ -212,6 +190,7 @@ public class PurchaseOrderProducts {
 		this.po_id = po_id;
 	}
 
+ 
 	@Override
 	public String toString() {
 		return "PurchaseOrderProducts [purchase_prod_order_id=" + purchase_prod_order_id + ", qty=" + qty + ", temp_id="

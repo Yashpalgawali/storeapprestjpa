@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,7 +40,7 @@ public class TempPurchaseOrderProductsRestController {
 			return new ResponseEntity<PurchaseOrderProducts>(poprod ,HttpStatus.CREATED);
 		}
 		else {
-			return new ResponseEntity<PurchaseOrderProducts>(HttpStatus.OK);
+			return new ResponseEntity<PurchaseOrderProducts>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -62,7 +61,7 @@ public class TempPurchaseOrderProductsRestController {
 //	}
 	
 	@GetMapping("/{tempid}")
-	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable("tempid") Integer tempid)
+	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable Integer tempid)
 	{
 		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(tempid);
 		if(tempList.size()>0) 		{

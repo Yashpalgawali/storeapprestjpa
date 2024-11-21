@@ -131,7 +131,7 @@ public class TempInvoiceRestController {
 	}	
 	
 	@GetMapping("/{temp_id}")
-	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable("temp_id")Integer temp_id) {
+	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable Integer temp_id) {
 		List<Temp_Invoice> tempinvoice = tempinserv.getTempInvByTempInvoiceId(temp_id);
 		  
 		if(tempinvoice.size()>0)
@@ -141,7 +141,7 @@ public class TempInvoiceRestController {
 	}
 	
 	@DeleteMapping("/removeitem/{id}")
-	public ResponseEntity<String> removeTemp_invoice(@PathVariable("id") String id) {
+	public ResponseEntity<String> removeTemp_invoice(@PathVariable String id) {
 		boolean res = tempinserv.deleteSelectedTempInvoice(id);
 		if(res) {
 			return new ResponseEntity<String>("true",HttpStatus.OK);	

@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.AbstractSessionFixationProtectionStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.nimbusds.jose.JOSEException;
@@ -56,7 +57,11 @@ public class JWTSecurityConfiguration {
 			auth.anyRequest().authenticated();
 			
 		});
-		http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+		http.sessionManagement(session-> { 
+				session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+				
+			});
+		
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         http.headers(headers -> headers.frameOptions().sameOrigin());
  
@@ -66,6 +71,7 @@ public class JWTSecurityConfiguration {
 		logout.invalidateHttpSession(true);
 		logout.clearAuthentication(true);
 		logout.deleteCookies("SESSION");
+		
 		logout.logoutSuccessHandler((request, response , authentication)->{
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("{\" message\": \" Logged Out Successfully \" }");
@@ -74,6 +80,8 @@ public class JWTSecurityConfiguration {
 	});
 	return http.build();
 }
+	
+	
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder authBuilder) throws Exception {
     	authBuilder.jdbcAuthentication()
