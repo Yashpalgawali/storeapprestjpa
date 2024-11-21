@@ -17,4 +17,8 @@ public interface PurchaseOrderProductsRepo extends JpaRepository<PurchaseOrderPr
 	
 	@Query("SELECT MAX(p.temp_id) FROM PurchaseOrderProducts p")
 	public Integer getMaxTempId();
+	
+	@Query("DELETE FROM PurchaseOrderProducts p WHERE p.purchase_prod_order_id=:id")
+	
+	public void removeProductById(Integer id);
 }

@@ -134,4 +134,22 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		return po_prod_repo.getMaxTempId();
 	}
 
+	@Override
+	public void RemovePoProductById(Integer id) {
+		
+		po_prod_repo.removeProductById(id);
+	}
+
+	@Override
+	public PurchaseOrderProducts getPurchaseorderProductById(Integer id) {
+		
+		Optional<PurchaseOrderProducts> prod_obj = po_prod_repo.findById(id);
+		if(!prod_obj.isEmpty()){
+			return null;
+		}
+		else {
+			return prod_obj.get();
+		}
+	}
+
 }

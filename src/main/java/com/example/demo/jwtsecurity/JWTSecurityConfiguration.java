@@ -64,7 +64,6 @@ public class JWTSecurityConfiguration {
 		
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         http.headers(headers -> headers.frameOptions().sameOrigin());
- 
 		
 		http.logout(logout->{
 		logout.logoutUrl("/logouturl");

@@ -12,6 +12,9 @@ public interface PoProductsService {
 	
 	public List<PurchaseOrderProducts> getPOPurchaseProductsByTempId(Integer tempid);
 	
-	
 	public Integer getMaxtempId();
+	
+	public void RemovePoProductById(Integer id);
+	
+	public PurchaseOrderProducts getPurchaseorderProductById(Integer id);
 }
