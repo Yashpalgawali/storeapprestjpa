@@ -30,27 +30,43 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	} 
 
 	@Override
-	public PurchaseOrderProducts savePurchaseOrderProducts(PurchaseOrderProducts poprod , HttpSession sess ) {
+	public PurchaseOrderProducts savePurchaseOrderProducts(PurchaseOrderProducts poprod , HttpServletRequest request) {
 
+		HttpSession sess = request.getSession();
 		Integer tid = 0;
 
 		Integer sessid = (Integer) sess.getAttribute("temp_po_id");
-
+		System.err.println("temp po id in session is "+sessid+"\n");
+//	    if (sessid == null) {
+//	    	tid = po_prod_repo.getMaxTempId();
+//	        if (tid == null) {
+//	        	tid = 1;
+//
+//	        } else {
+//	        	tid += 1;
+//	        }
+//	        sess.setAttribute("temp_po_id", tid);
+//	    }
+//	    else {
+//	    	tid = sessid;
+//	    }
+	    
+	    Integer chk_tmp_id = 0; 
 	    if (sessid == null) {
-	    	tid = po_prod_repo.getMaxTempId();
-	        if (tid == null) {
-	        	tid = 1;
-
+	        chk_tmp_id = po_prod_repo.getMaxTempId();
+	        if (chk_tmp_id == null) {
+	        	System.err.println("MAX temp_id is  NULL \n");
+	            chk_tmp_id = 1;
+	             
 	        } else {
-	        	tid += 1;
+	        	System.err.println("MAX temp_id is = "+chk_tmp_id);
+	            chk_tmp_id = chk_tmp_id + 1;
 	        }
-	        sess.setAttribute("temp_po_id", tid);
-	    }
-	    else {
-	    	tid = sessid;
+	        sess.setAttribute("temp_po_id", chk_tmp_id);
+	        sessid=chk_tmp_id;
 	    }
 
-		poprod.setTemp_id(tid);
+		poprod.setTemp_id(sessid);
 
 		String stoption = poprod.getStoption();
 		float cgst=0,sgst=0,igst=0;
@@ -118,13 +134,11 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		
 		System.err.println("Inside savePOpurchaseorder service "+poprod.toString());
 		
-		System.err.println("Purchase order product OBject = "+poprod.toString());
 		return po_prod_repo.save(poprod);
 	}
 
 	@Override
 	public List<PurchaseOrderProducts> getPOPurchaseProductsByTempId(Integer tempid) {
-		// TODO Auto-generated method stub
 		return po_prod_repo.getPurchaseOrderProductsByTempId(tempid);
 	}
 

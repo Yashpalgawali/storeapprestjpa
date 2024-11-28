@@ -32,16 +32,16 @@ public class TempPurchaseOrderProductsRestController {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<PurchaseOrderProducts> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,HttpServletRequest request)
+	public ResponseEntity<List<PurchaseOrderProducts>> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,HttpServletRequest request)
 	{
-		HttpSession sess = request.getSession();
-		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts, sess);
+		 
+		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts, request);
 		if(poprod!=null) {
-			sess.setAttribute("temp_id", poprod.getTemp_id() );
-			return new ResponseEntity<PurchaseOrderProducts>(poprod ,HttpStatus.CREATED);
+			List<PurchaseOrderProducts> polist = popurchaseorderserv.getPOPurchaseProductsByTempId(poprod.getTemp_id());
+			return new ResponseEntity<List<PurchaseOrderProducts>>(polist ,HttpStatus.CREATED);
 		}
 		else {
-			return new ResponseEntity<PurchaseOrderProducts>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<PurchaseOrderProducts>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -65,6 +65,8 @@ public class TempPurchaseOrderProductsRestController {
 	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable Integer tempid)
 	{
 		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(tempid);
+		System.err.println("inside getPOPurchaseProductsByTempId() Temp Id= "+tempid+"\n");
+		tempList.stream().forEach(e->System.err.println(e));
 		if(tempList.size()>0) {
 			return new ResponseEntity<List<PurchaseOrderProducts>>(tempList ,HttpStatus.OK);
 		}
@@ -75,7 +77,7 @@ public class TempPurchaseOrderProductsRestController {
 	
 	@DeleteMapping("/remove/product/{id}")
 	public ResponseEntity<String> removePOProductById(@PathVariable Integer id ) {
-		System.err.println("inside dleete mapping");
+		System.err.println("inside delete mapping");
 		PurchaseOrderProducts prod_obj = popurchaseorderserv.getPurchaseorderProductById(id);
 		if(prod_obj!=null) {
 			popurchaseorderserv.RemovePoProductById(id);
