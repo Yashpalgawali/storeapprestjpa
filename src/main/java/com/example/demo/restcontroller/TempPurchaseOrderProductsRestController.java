@@ -3,7 +3,6 @@ package com.example.demo.restcontroller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.service.POPurchaseOrderProdServImpl;
-
 
 @RestController
 @RequestMapping("purchaseorderproduct")

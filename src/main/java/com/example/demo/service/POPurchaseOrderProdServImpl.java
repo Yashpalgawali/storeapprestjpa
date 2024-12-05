@@ -27,16 +27,16 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	public POPurchaseOrderProdServImpl(PurchaseOrderProductsRepo po_prod_repo,PoProductListRepository poprodlistrepo) {
 		this.po_prod_repo = po_prod_repo;
 		this.poprodlistrepo = poprodlistrepo;
-	} 
+	}
 
 	@Override
 	public PurchaseOrderProducts savePurchaseOrderProducts(PurchaseOrderProducts poprod , HttpServletRequest request) {
 
 		HttpSession sess = request.getSession();
-		Integer tid = 0;
-
+	
 		Integer sessid = (Integer) sess.getAttribute("temp_po_id");
 		System.err.println("temp po id in session is "+sessid+"\n");
+//		Integer tid = 0;
 //	    if (sessid == null) {
 //	    	tid = po_prod_repo.getMaxTempId();
 //	        if (tid == null) {

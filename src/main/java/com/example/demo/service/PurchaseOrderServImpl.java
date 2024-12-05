@@ -34,7 +34,7 @@ public class PurchaseOrderServImpl implements PurchaseOrderService {
 	public PurchaseOrder savePurchaseOrder(PurchaseOrder porder,HttpServletRequest request) {
 		
 		HttpSession sess = request.getSession();
-		Integer temp_id=  (Integer) sess.getAttribute("temp_id");
+		Integer temp_id=  (Integer) sess.getAttribute("temp_po_id");
 		
 		porder.setOrder_id(temp_id);
 		
