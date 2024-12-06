@@ -1,26 +1,46 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.globalconfig.Global;
+import com.example.demo.models.Activities;
 import com.example.demo.models.Product;
+import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.ProductRepository;
 
 @Service("prodserv")
 public class ProductServImpl implements ProductService {
 	
-	private ProductRepository prodrepo;
-	
-	@Autowired
-	public ProductServImpl(ProductRepository prodrepo) {
+	private final ProductRepository prodrepo;
+	private final ActivityRepository actrepo;
+
+	public ProductServImpl(ProductRepository prodrepo, ActivityRepository actrepo) {
+		super();
 		this.prodrepo = prodrepo;
+		this.actrepo = actrepo;
 	}
-	
+
 	@Override
 	public Product saveProduct(Product pro) {
-		return prodrepo.save(pro);
+		Product prod = prodrepo.save(pro);
+		if(prod!=null) {
+			Activities activity = new Activities();
+			activity.setActivity("Product "+prod.getProd_name() +" is Saved successfully");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}
+		else {
+			Activities activity = new Activities();
+			activity.setActivity("Product is not Saved ");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}	
+		return prod;
 	}
 
 	@Override
@@ -41,8 +61,23 @@ public class ProductServImpl implements ProductService {
 
 	@Override
 	public int updateProduct(Product prod) {
-		return prodrepo.updateProduct(prod.getPid(), prod.getProd_name(), prod.getProd_price(), prod.getProd_unit(),
+		Integer result = prodrepo.updateProduct(prod.getPid(), prod.getProd_name(), prod.getProd_price(), prod.getProd_unit(),
 				prod.getProd_model_no(), prod.getProd_hsn(), prod.getGsttax());
+		if(result>0) {
+			Activities activity = new Activities();
+			activity.setActivity("Product "+prod.getProd_name() +" is updated successfully");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}
+		else {
+			Activities activity = new Activities();
+			activity.setActivity("Product "+prod.getProd_name() +" is not updated successfully");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}
+		return result;
 	}
 
 }

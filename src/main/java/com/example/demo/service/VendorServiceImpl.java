@@ -3,7 +3,6 @@ package com.example.demo.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
@@ -14,11 +13,9 @@ import com.example.demo.repository.VendorRepo;
 
 @Service("vendorserv")
 public class VendorServiceImpl implements VendorService {
-
 	
-	VendorRepo vendorrepo;
-	
-	ActivityRepository actrepo;
+	private final VendorRepo vendorrepo;
+	private final ActivityRepository actrepo;
 	
 	public VendorServiceImpl(VendorRepo vendorrepo, ActivityRepository actrepo) {
 		super();

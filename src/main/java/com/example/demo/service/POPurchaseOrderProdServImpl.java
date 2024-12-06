@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.globalconfig.Global;
+import com.example.demo.models.Activities;
 import com.example.demo.models.PoProductsList;
 import com.example.demo.models.PurchaseOrderProducts;
+import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.PoProductListRepository;
 import com.example.demo.repository.PurchaseOrderProductsRepo;
 
@@ -20,13 +24,17 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 
 	HttpServletRequest request;
 
-	private PurchaseOrderProductsRepo po_prod_repo; 
-
-	private PoProductListRepository poprodlistrepo;
-
-	public POPurchaseOrderProdServImpl(PurchaseOrderProductsRepo po_prod_repo,PoProductListRepository poprodlistrepo) {
+	private final PurchaseOrderProductsRepo po_prod_repo; 
+	private final PoProductListRepository poprodlistrepo;
+	private final ActivityRepository actrepo; 
+	
+	public POPurchaseOrderProdServImpl(HttpServletRequest request, PurchaseOrderProductsRepo po_prod_repo,
+			PoProductListRepository poprodlistrepo, ActivityRepository actrepo) {
+		super();
+		this.request = request;
 		this.po_prod_repo = po_prod_repo;
 		this.poprodlistrepo = poprodlistrepo;
+		this.actrepo = actrepo;
 	}
 
 	@Override
@@ -36,21 +44,6 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 	
 		Integer sessid = (Integer) sess.getAttribute("temp_po_id");
 		System.err.println("temp po id in session is "+sessid+"\n");
-//		Integer tid = 0;
-//	    if (sessid == null) {
-//	    	tid = po_prod_repo.getMaxTempId();
-//	        if (tid == null) {
-//	        	tid = 1;
-//
-//	        } else {
-//	        	tid += 1;
-//	        }
-//	        sess.setAttribute("temp_po_id", tid);
-//	    }
-//	    else {
-//	    	tid = sessid;
-//	    }
-	    
 	    Integer chk_tmp_id = 0; 
 	    if (sessid == null) {
 	        chk_tmp_id = po_prod_repo.getMaxTempId();
@@ -134,7 +127,9 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		
 		System.err.println("Inside savePOpurchaseorder service "+poprod.toString());
 		
-		return po_prod_repo.save(poprod);
+		PurchaseOrderProducts prod = po_prod_repo.save(poprod);
+		 
+		return prod;
 	}
 
 	@Override

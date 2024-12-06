@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +11,10 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
+import com.example.demo.models.Activities;
 import com.example.demo.models.PurchaseOrder;
 import com.example.demo.models.PurchaseOrderProducts;
+import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.PurchaseOrderProductsRepo;
 import com.example.demo.repository.PurchaseOrderRepository;
 
@@ -21,13 +24,15 @@ public class PurchaseOrderServImpl implements PurchaseOrderService {
 	private PurchaseOrderRepository porderrepo;
 	private PurchaseOrderProductsRepo po_prod_repo;
 	private PrefixService prefixserv;
- 
+	private final ActivityRepository actrepo;
+
 	public PurchaseOrderServImpl(PurchaseOrderRepository porderrepo, PurchaseOrderProductsRepo po_prod_repo,
-			PrefixService prefixserv) {
+			PrefixService prefixserv, ActivityRepository actrepo) {
 		super();
 		this.porderrepo = porderrepo;
 		this.po_prod_repo = po_prod_repo;
 		this.prefixserv = prefixserv;
+		this.actrepo = actrepo;
 	}
 
 	@Override
@@ -50,7 +55,22 @@ public class PurchaseOrderServImpl implements PurchaseOrderService {
          
 		porder.setTotal_amount(total);
 		 
-		return porderrepo.save(porder);
+		PurchaseOrder order = porderrepo.save(porder);
+		if(order!=null) {
+			Activities activity = new Activities();
+			activity.setActivity("Order "+order.getOrder_id() +" is Saved successfully");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}
+		else {
+			Activities activity = new Activities();
+			activity.setActivity("Order is not Saved ");
+			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
+			actrepo.save(activity);
+		}
+		return order;
 	}
 
 	@Override

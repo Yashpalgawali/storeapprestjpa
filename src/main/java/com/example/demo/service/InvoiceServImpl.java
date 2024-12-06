@@ -10,11 +10,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
+import com.example.demo.models.Activities;
 import com.example.demo.models.Invoice;
 import com.example.demo.models.Invoice_Product;
 import com.example.demo.models.Prefix;
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
+import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.CustomerRepo;
 import com.example.demo.repository.InvoiceProductRepo;
 import com.example.demo.repository.InvoiceRepo;
@@ -25,28 +27,30 @@ import com.example.demo.repository.TempInvoiceRepo;
 @Service("invserv")
 public class InvoiceServImpl implements InvoiceService {
 
-	private InvoiceRepo invrepo;
-	
-	private TempInvoiceRepo tempinvrepo;
-	
-	private ProductRepository prodrepo;
-	
-	private InvoiceProductRepo invprodrepo;
-	
-	private CustomerRepo customerrepo;
-	private PrefixRepository prefixrepo;
-	
+	private final InvoiceRepo invrepo;
+	private final TempInvoiceRepo tempinvrepo;
+	private final ProductRepository prodrepo;
+	private final InvoiceProductRepo invprodrepo;
+	private final CustomerRepo customerrepo;
+	private final PrefixRepository prefixrepo;
+	private final ActivityRepository actrepo;
+		
 	public InvoiceServImpl(InvoiceRepo invrepo, TempInvoiceRepo tempinvrepo, ProductRepository prodrepo,
-			InvoiceProductRepo invprodrepo, CustomerRepo customerrepo,PrefixRepository prefixrepo) {
+			InvoiceProductRepo invprodrepo, CustomerRepo customerrepo, PrefixRepository prefixrepo,
+			ActivityRepository actrepo) {
 		super();
 		this.invrepo = invrepo;
 		this.tempinvrepo = tempinvrepo;
 		this.prodrepo = prodrepo;
 		this.invprodrepo = invprodrepo;
-		this.prefixrepo = prefixrepo;
 		this.customerrepo = customerrepo;
+		this.prefixrepo = prefixrepo;
+		this.actrepo = actrepo;
 	}
 
+	private Activities activity= new Activities();
+		
+	
 	@Override
 	public Invoice saveInvoice(Invoice invoice, HttpServletRequest request) {
 		
@@ -107,8 +111,10 @@ public class InvoiceServImpl implements InvoiceService {
 	 	}
 	 	 	
 	 	System.err.println("MAX INVOICE NO. = "+max_inv_no);
+	 	String tday = LocalDate.now().format(Global.DATE_FORMATTER);
+	 	String ttime = LocalDate.now().format(Global.TIME_FORMATTER);
 	 	
-	 	invoice.setDate_added(LocalDate.now().format(Global.DATE_FORMATTER));
+	 	invoice.setDate_added(tday);
 	 	invoice.setTotal_amount(last_total);
 	 	invoice.setInvoice_no(max_inv_no);
 	 	
@@ -118,7 +124,19 @@ public class InvoiceServImpl implements InvoiceService {
 	 	Prefix prefix = prefixrepo.findById(1).get();
 	 	invoice.setPrefix(prefix.getPrefix()+""+prefix.getFin_year());
 	 	Invoice final_invoice = invrepo.save(invoice);
-		return invrepo.save(final_invoice);
+	 	if(final_invoice!=null) {
+	 		activity.setActivity("Invoice with Invoice number "+final_invoice.getInvoice_no()+" saved successfully");
+	 		activity.setActivity_date(tday);
+	 		activity.setActivity_time(ttime);
+	 		actrepo.save(activity);
+	 	}
+	 	else {
+	 		activity.setActivity("Invoice is not saved ");
+	 		activity.setActivity_date(tday);
+	 		activity.setActivity_time(ttime);
+	 		actrepo.save(activity);
+	 	}
+		return final_invoice;
 	}
 
 	@Override
@@ -155,19 +173,32 @@ public class InvoiceServImpl implements InvoiceService {
 		last_total = (float) prodlist.stream().flatMapToDouble(entity -> Arrays.stream(new double[] {
 												entity.getTotal()
 											} )).sum(); 
-		
+
 		invoice.setTotal_amount(last_total);
-		
+
 		invoice.setUpdated_date((LocalDate.now().format(Global.DATE_FORMATTER)));
-		 
+
 		invoice.setTotal_amount(last_total);
-	 	
+
 		String today = LocalDate.now().format(Global.DATE_FORMATTER);
-		
+		String ttime = LocalDate.now().format(Global.DATE_FORMATTER);
+
 	 	int res = invrepo.updateInvoiceById(invoice.getInvoice_id(), invoice.getOrder_id(), invoice.getInvoice_no(),
 	 										last_total,invoice.getCustomer().getCustomer_id(),old_invoice.getDate_added(),
 	 										today,invoice.getVehicle(),invoice.getBatch_no(),invoice.getOrderponumber());
-		 
+		
+	 	if(res>0) {
+	 		activity.setActivity("Invoice with Invoice number "+invoice.getInvoice_no()+" updated successfully");
+	 		activity.setActivity_date(today);
+	 		activity.setActivity_time(ttime);
+	 		actrepo.save(activity);
+	 	}
+	 	else {
+	 		activity.setActivity("Invoice with Invoice number "+invoice.getInvoice_no()+" is not updated ");
+	 		activity.setActivity_date(today);
+	 		activity.setActivity_time(ttime);
+	 		actrepo.save(activity);
+	 	}
 		return res;
 	}
 }

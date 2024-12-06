@@ -1,14 +1,10 @@
 package com.example.demo.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
@@ -23,11 +19,11 @@ import com.example.demo.repository.TempInvoiceRepo;
 public class TempInvoiceServImpl implements TempInvoiceService {
 
 	
-	private TempInvoiceRepo tempinvrepo;
+	private final TempInvoiceRepo tempinvrepo;
 	
-	private ActivityRepository actrepo;
+	private final ActivityRepository actrepo;
 	
-	private ProductRepository prodrepo;
+	private final ProductRepository prodrepo;
 	
 	public TempInvoiceServImpl(TempInvoiceRepo tempinvrepo, ActivityRepository actrepo,ProductRepository prodrepo) {
 		super();
@@ -127,6 +123,7 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		
 		Temp_Invoice tmpinv = tempinvrepo.save(teinv);
 		if(tmpinv!=null) {
+			 
 			return 1;
 		}
 		else {

@@ -1,12 +1,8 @@
 package com.example.demo.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
@@ -19,11 +15,10 @@ import com.example.demo.repository.CustomerRepo;
 public class CustomerServImpl implements CustomerService {
 
  
-	private CustomerRepo custrepo;
+	private final CustomerRepo custrepo;
 	
-	private ActivityRepository actrepo;
+	private final ActivityRepository actrepo;
 	
-	@Autowired
 	public CustomerServImpl(CustomerRepo custrepo,ActivityRepository actrepo) {
 		super();
 		this.custrepo = custrepo;
