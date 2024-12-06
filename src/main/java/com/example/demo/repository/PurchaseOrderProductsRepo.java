@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,6 @@ public interface PurchaseOrderProductsRepo extends JpaRepository<PurchaseOrderPr
 	public Integer getMaxTempId();
 	
 	@Query("DELETE FROM PurchaseOrderProducts p WHERE p.purchase_prod_order_id=:id")
-	
+	@Modifying
 	public void removeProductById(Integer id);
 }

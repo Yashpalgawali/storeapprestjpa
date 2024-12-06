@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,9 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.globalconfig.Global;
-import com.example.demo.models.Activities;
 import com.example.demo.models.PoProductsList;
 import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.repository.ActivityRepository;
@@ -20,6 +18,7 @@ import com.example.demo.repository.PoProductListRepository;
 import com.example.demo.repository.PurchaseOrderProductsRepo;
 
 @Service("popurchaseorderserv")
+@Transactional
 public class POPurchaseOrderProdServImpl implements PoProductsService {
 
 	HttpServletRequest request;
@@ -75,8 +74,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 
 		int gst_rate = poprod.getProduct().getIgst_per();
 
-		if(stoption.equals("mh"))
-		{
+		if(stoption.equals("mh")) {
 			cgst_per =  gst_rate /2 ;
 			sgst_per =  gst_rate /2 ;
 			igst_per = 0;
@@ -102,7 +100,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 			sgst=( (subtotal/ 100) * sgst_per);
 			igst=( (subtotal/ 100) * igst_per);
 
-			  // Convert to BigDecimal, round, and convert back to float
+			// Convert to BigDecimal, round, and convert back to float
 	        BigDecimal bd = new BigDecimal(Float.toString(igst));
 	        bd = bd.setScale(2, RoundingMode.HALF_UP);
 			cgst = bd.floatValue();
@@ -145,7 +143,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 
 	@Override
 	public void RemovePoProductById(Integer id) {
-		
+		System.err.println("Inside removeproduct() Product ID = "+id+"\n");
 		po_prod_repo.removeProductById(id);
 	}
 
@@ -154,10 +152,10 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		
 		Optional<PurchaseOrderProducts> prod_obj = po_prod_repo.findById(id);
 		if(!prod_obj.isEmpty()){
-			return null;
+			return prod_obj.get();
 		}
 		else {
-			return prod_obj.get();
+			return null;
 		}
 	}
 

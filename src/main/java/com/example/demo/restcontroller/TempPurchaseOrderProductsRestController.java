@@ -75,8 +75,10 @@ public class TempPurchaseOrderProductsRestController {
 	
 	@DeleteMapping("/remove/product/{id}")
 	public ResponseEntity<String> removePOProductById(@PathVariable Integer id ) {
-		System.err.println("inside delete mapping");
+		
 		PurchaseOrderProducts prod_obj = popurchaseorderserv.getPurchaseorderProductById(id);
+		
+		//System.err.println("inside delete mapping \n Product is "+prod_obj.toString());
 		if(prod_obj!=null) {
 			popurchaseorderserv.RemovePoProductById(id);
 			return new ResponseEntity<String>("Product is removed",HttpStatus.OK);
