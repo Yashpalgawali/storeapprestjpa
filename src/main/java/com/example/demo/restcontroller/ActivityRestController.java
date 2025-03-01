@@ -29,6 +29,8 @@ public class ActivityRestController {
 	public ResponseEntity<Activities> saveActivity(@RequestBody Activities activity)
 	{	
 		Activities act = actserv.saveActivity(activity);
+		
+		
 		if(act!=null)
 			return new ResponseEntity<Activities>(act,HttpStatus.OK);
 		else

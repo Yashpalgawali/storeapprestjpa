@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.session.AbstractSessionFixationProtectionStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.nimbusds.jose.JOSEException;

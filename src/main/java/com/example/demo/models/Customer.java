@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
-
 @Entity
 @SequenceGenerator(name="cust_seq",allocationSize = 1,initialValue = 1)
 @Table(name="tbl_customer")

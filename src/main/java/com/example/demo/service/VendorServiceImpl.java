@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.Vendor;
@@ -26,6 +27,8 @@ public class VendorServiceImpl implements VendorService {
 	@Override
 	public Vendor saveVendor(Vendor vend) {
 		Vendor vendor = vendorrepo.save(vend);
+		
+		vendorrepo.findById(vend.getVendor_id());
 		if(vendor!=null) {
 			actrepo.save(new Activities("Vendor "+vendor.getVendor_name()+" is saved successfully", Global.DATE_FORMATTER.format(LocalDateTime.now()) , Global.TIME_FORMATTER.format(LocalDateTime.now())));
 			return vendor;
@@ -45,7 +48,7 @@ public class VendorServiceImpl implements VendorService {
 	public Vendor getVendorById(String vid) {
 		
 		Integer venid = Integer.parseInt(vid);
-		return vendorrepo.findById(venid).get();
+		return vendorrepo.findById(venid).orElseThrow(() -> new ResourceNotFoundException("Vendor", "ID", vid)) ;
 	}
 
 	@Override
