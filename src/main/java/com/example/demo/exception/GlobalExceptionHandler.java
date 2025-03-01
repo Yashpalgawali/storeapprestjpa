@@ -13,6 +13,7 @@ import com.example.demo.dto.ErrorResponseDto;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+	// This will handle all the exceptions related t Internal_server_error
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponseDto> handleGlobalExceptions(Exception ex, WebRequest request) {
 		ErrorResponseDto errorDto = new ErrorResponseDto(
