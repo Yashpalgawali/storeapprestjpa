@@ -161,6 +161,23 @@ public class Vendor {
 		this.vendor_address = vendor_address;
 	}
 
+	
+	public Vendor(
+			@NotEmpty(message = "Name cant be blank") @Size(min = 5, max = 30, message = "The name must have at least 5 letters or maximum 30 letters") String vendor_name,
+			@Email(message = "Email address should be valid ") @NotEmpty(message = "Email cant be blank") String vendor_email,
+			@Pattern(regexp = "(^|[0-9]{10})", message = "Mobile nuber must have 10 digits") Long vendor_contact,
+			String state_name, String city_name, Long pincode, String vendor_gst, String vendor_address) {
+		super();
+		this.vendor_name = vendor_name;
+		this.vendor_email = vendor_email;
+		this.vendor_contact = vendor_contact;
+		this.state_name = state_name;
+		this.city_name = city_name;
+		this.pincode = pincode;
+		this.vendor_gst = vendor_gst;
+		this.vendor_address = vendor_address;
+	}
+
 	@Override
 	public String toString() {
 		return "Vendor [vendor_id=" + vendor_id + ", vendor_name=" + vendor_name + ", vendor_email=" + vendor_email
