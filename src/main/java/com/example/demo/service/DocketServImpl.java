@@ -9,6 +9,8 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.models.Docket;
 import com.example.demo.repository.DocketRepo;
 
@@ -16,7 +18,7 @@ import com.example.demo.repository.DocketRepo;
 public class DocketServImpl implements DocketService {
 
 	 
-	private DocketRepo dockrepo;
+	private final DocketRepo dockrepo;
 	
 	public DocketServImpl(DocketRepo dockrepo) {
 		super();
@@ -36,19 +38,20 @@ public class DocketServImpl implements DocketService {
 	@Override
 	public Docket getDocketById(Integer id) {
 		
-		Optional<Docket> docket = dockrepo.findById(id);
-		if(!docket.isEmpty()) {
-			return docket.get();
-		}
-		else {
-			return null;
-		}
+		return dockrepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Docket ", "Docket Id", ""+id));	
 	}
 
 	@Override
 	public int updateDocket(Docket dock) {
 		
-		return dockrepo.updateDocket(dock.getOrder_id(), dock.getCust_name(), dock.getDocket_num(), dock.getParty().getParty_id(),dock.getDocket_id());
+		int result = dockrepo.updateDocket(dock.getOrder_id(), dock.getCust_name(), dock.getDocket_num(), dock.getParty().getParty_id(),dock.getDocket_id());
+		if(result>0)
+		{
+			return result;
+		}
+		else {
+			throw new GlobalException("Docket "+dock.getDocket_num()+" is not updated");
+		}
 	}
 
 	@Override

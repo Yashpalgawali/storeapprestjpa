@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -111,8 +112,8 @@ public class InvoiceServImpl implements InvoiceService {
 	 	}
 	 	 	
 	 	System.err.println("MAX INVOICE NO. = "+max_inv_no);
-	 	String tday = LocalDate.now().format(Global.DATE_FORMATTER);
-	 	String ttime = LocalDate.now().format(Global.TIME_FORMATTER);
+	 	String tday = LocalDateTime.now().format(Global.DATE_FORMATTER);
+	 	String ttime = LocalDateTime.now().format(Global.TIME_FORMATTER);
 	 	
 	 	invoice.setDate_added(tday);
 	 	invoice.setTotal_amount(last_total);

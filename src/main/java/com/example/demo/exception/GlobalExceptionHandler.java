@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorResponseDto>(errorDto , HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler
+	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
 		ErrorResponseDto errorDto = new ErrorResponseDto(
 						request.getDescription(false),
@@ -36,5 +36,17 @@ public class GlobalExceptionHandler {
 			);
 		
 		return new ResponseEntity<ErrorResponseDto>(errorDto , HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(ResourceNotModifiedException.class)
+	public ResponseEntity<ErrorResponseDto> handleResourceNotModifiedException(ResourceNotModifiedException ex, WebRequest request) {
+		ErrorResponseDto errorDto = new ErrorResponseDto(
+						request.getDescription(false),
+						HttpStatus.CONFLICT,
+						ex.getMessage(),
+						LocalDateTime.now()
+			);
+		
+		return new ResponseEntity<ErrorResponseDto>(errorDto , HttpStatus.CONFLICT);
 	}
 }

@@ -23,14 +23,12 @@ import lombok.ToString;
 
 
 @Entity
-@SequenceGenerator(name="vendor_seq",allocationSize = 1 , initialValue = 1)
 @Table(name="tbl_vendor")
-
 @Schema(name = "Vendor", description = "Schema to hold the Vendor Information")
-
 public class Vendor {
 	
 	@Id
+	@SequenceGenerator(name="vendor_seq",allocationSize = 1 , initialValue = 1)
 	@GeneratedValue(strategy=GenerationType.AUTO, generator = "vendor_seq" )
 	@Schema(description = "This is id of the Vendor" ,example = "1")
 	private Integer vendor_id;

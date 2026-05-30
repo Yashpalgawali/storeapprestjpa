@@ -17,7 +17,7 @@ import com.example.demo.service.CustomerService;
 
 @RestController
 @RequestMapping("customer")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class CustomerRestController {
 	
 	private CustomerService custserv;
@@ -43,7 +43,7 @@ public class CustomerRestController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-		System.err.println("Inside getcustbyid() ID = "+id);
+//		System.err.println("Inside getcustbyid() ID = "+id);
 		Customer cust = custserv.getCustomerById(id);
 		if(cust!=null)
 			return new ResponseEntity<Customer>(cust,HttpStatus.OK);

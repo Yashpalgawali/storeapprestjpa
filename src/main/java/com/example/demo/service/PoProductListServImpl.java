@@ -26,7 +26,7 @@ public class PoProductListServImpl implements PoProductListService {
 	
 	@Override
 	public PoProductsList savePoProductsList(PoProductsList poprod) {
-		
+
 		int cgst_per = poprod.getGst_rate()/2;
 		int igst_per = poprod.getGst_rate();
 		poprod.setCgst_per(cgst_per);
@@ -72,11 +72,11 @@ public class PoProductListServImpl implements PoProductListService {
 
 	@Override
 	public int updatePoProductsList(PoProductsList poprod) {
-		
+
 		int cgst = poprod.getGst_rate()/2;
 		int igst = poprod.getGst_rate();
 		int result = poprodlistrepo.updatePoProductById(poprod.getProd_id(), poprod.getProd_name(), poprod.getProd_model(), poprod.getProd_hsn(), poprod.getProd_price(), poprod.getProd_unit(), cgst, cgst, igst);
-		if(result>0) {
+		if(result > 0) {
 			Activities activity = new Activities();
 			activity.setActivity("Purchase Product "+poprod.getProd_name() +" is updated successfully");
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));

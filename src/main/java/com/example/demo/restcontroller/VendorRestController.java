@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("vendor")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @Validated
 @Tag(name="CRUD REST API for Vendor in the application" , description = "CRUD REST APIs in storeapplication to CREATE,GET,UPDATE,DELETE Vendor details")
 

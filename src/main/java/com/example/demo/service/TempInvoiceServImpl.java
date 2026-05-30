@@ -123,7 +123,6 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		
 		Temp_Invoice tmpinv = tempinvrepo.save(teinv);
 		if(tmpinv!=null) {
-			 
 			return 1;
 		}
 		else {

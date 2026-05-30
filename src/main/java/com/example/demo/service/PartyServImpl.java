@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.Party;
@@ -32,6 +34,7 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			return part;
 		}
 		else {
 			Activities activity = new Activities();
@@ -39,8 +42,10 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			
+			throw new GlobalException("Party "+party.getParty_name()+" is not saved");
 		}
-		return part;
+	
 	}
 
 	@Override
@@ -51,12 +56,8 @@ public class PartyServImpl implements PartyService {
 	@Override
 	public Party getpartyById(Integer id) {
 		
-		try {
-			return partyrepo.findById(id).get();
-		}
-		catch(Exception e) {
-			return null;
-		}
+		return partyrepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Party", "Patry ID", ""+id));
+		 
 	}
 
 	@Override
@@ -69,6 +70,7 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			return res;
 		}
 		else {
 			Activities activity = new Activities();
@@ -76,8 +78,10 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			
+			throw new GlobalException("Party "+party.getParty_name()+" is not updated");
 		}
-		return res;
+	
 	}
 
 }
