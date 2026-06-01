@@ -1,45 +1,54 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ResourceNotModifiedException;
 import com.example.demo.models.Prefix;
 import com.example.demo.repository.PrefixRepository;
 
+import lombok.RequiredArgsConstructor;
+
+
 @Service("prefixserv")
+@RequiredArgsConstructor
 public class PrefixServImpl implements PrefixService {
 
-	private PrefixRepository prefixrepo;
-	
-	public PrefixServImpl(PrefixRepository prefixrepo) {
-		super();
-		this.prefixrepo = prefixrepo;
-	}
+	private final PrefixRepository prefixrepo;
 
 	@Override
 	public Prefix getPrefixById(Integer id) {
-		Optional<Prefix> prefixObject = prefixrepo.findById(id);
-		if(!prefixObject.isEmpty()) {
-			return prefixObject.get();
-		}
-		else {
-			return null;
-		}
+		return prefixrepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Prefix", "prefix ", ""+id)) ;		
 	}
 
 	@Override
-	public int updatePrefixById(Prefix prefix) {
+	@Transactional
+	public void updatePrefixById(Prefix prefix) {
 		 
 		int result = prefixrepo.updatePrefix(prefix.getFin_year(), prefix.getSetting_id());
-		return result;
+		if(result < 0) 
+		 throw new ResourceNotModifiedException("Prefix "+prefix.getPrefix()+"-"+prefix.getFin_year()+" is not updated");
 	}
 
 	@Override
-	public List<Prefix> getAllPrefixes() {
+	public Prefix getAllPrefixes() {
 	 
-		return prefixrepo.findAll();
+		List<Prefix> prefixList = prefixrepo.findAll();
+		if(prefixList.size() > 0 )
+			return prefixList.getFirst();
+		throw new ResourceNotFoundException("Prefix", "Prefix", "prefixes ");
+	}
+
+	@Override
+	public void savePrefix(Prefix prefix) {
+		
+		Prefix savedPrefix = prefixrepo.save(prefix);
+		if(savedPrefix == null )
+			throw new GlobalException("Prefix "+prefix.getPrefix()+"-"+prefix.getFin_year()+" is not saved");
 	}
 
 }

@@ -1,62 +1,59 @@
 package com.example.demo.restcontroller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.models.Prefix;
 import com.example.demo.service.PrefixService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("prefix")
-@CrossOrigin
+@RequiredArgsConstructor
 public class PrefixController {
 
-	private PrefixService prefixserv;
+	private final PrefixService prefixserv;
 
-	public PrefixController(PrefixService prefixserv) {
-		super();
-		this.prefixserv = prefixserv;
-	}
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<Prefix> getPrefixById(@PathVariable Integer id) {
 		Prefix prefix = prefixserv.getPrefixById(id);
-		if(prefix!=null) {
-			return new ResponseEntity<Prefix>(prefix, HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<Prefix>(HttpStatus.NOT_FOUND);
-		}
+
+		return new ResponseEntity<Prefix>(prefix, HttpStatus.OK);
+
 	}
-	
+
 	@PutMapping("/")
-	public ResponseEntity<Prefix> updatePrefixById(@RequestBody Prefix prefix) {
-		int res = prefixserv.updatePrefixById(prefix);
-		if(res > 0 ) {
-			return new ResponseEntity<Prefix>(prefixserv.getPrefixById(prefix.getSetting_id()) ,HttpStatus.OK);	
-		}
-		else {
-			return new ResponseEntity<Prefix>(HttpStatus.NOT_MODIFIED);
-		}
+	public ResponseEntity<ResponseDto> updatePrefixById(@RequestBody Prefix prefix) {
+		prefixserv.updatePrefixById(prefix);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ResponseDto(
+						"Prefix " + prefix.getPrefix() + "-" + prefix.getFin_year() + " is updated successfully",
+						HttpStatus.OK));
+
 	}
-	
+
+	@PostMapping("/")
+	public ResponseEntity<ResponseDto> savePrefix(@RequestBody Prefix prefix) {
+		prefixserv.savePrefix(prefix);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ResponseDto(
+						"Prefix " + prefix.getPrefix() + "-" + prefix.getFin_year() + " is created successfully",
+						HttpStatus.CREATED));
+
+	}
+
 	@GetMapping("/")
-	public ResponseEntity<List<Prefix>> getAllPrefixes(){
-		List<Prefix> prefixList = prefixserv.getAllPrefixes();
-		if(prefixList.size()>0) {
-			return new ResponseEntity<List<Prefix>>(prefixList, HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<List<Prefix>>(HttpStatus.NO_CONTENT);
-		}
+	public ResponseEntity<Prefix> getAllPrefixes() {
+		Prefix prefixList = prefixserv.getAllPrefixes();
+		return new ResponseEntity<Prefix>(prefixList, HttpStatus.OK);
 	}
 }

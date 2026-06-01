@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
+import com.example.demo.models.Prefix;
 import com.example.demo.models.PurchaseOrder;
 import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.repository.ActivityRepository;
@@ -23,9 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PurchaseOrderServImpl implements PurchaseOrderService {
 
-	private PurchaseOrderRepository porderrepo;
-	private PurchaseOrderProductsRepo po_prod_repo;
-	private PrefixService prefixserv;
+	private final PurchaseOrderRepository porderrepo;
+	private final PurchaseOrderProductsRepo po_prod_repo;
+	private final PrefixService prefixserv;
 	private final ActivityRepository actrepo;
 
 	@Override
@@ -37,9 +38,9 @@ public class PurchaseOrderServImpl implements PurchaseOrderService {
 		porder.setOrder_id(temp_id);
 		
 		porder.setPo_date(LocalDate.now().format(Global.DATE_FORMATTER));
-		prefixserv.getAllPrefixes().stream().forEach(e->{
-			porder.setPrefix(e.getFin_year());
-		}); 
+		
+		Prefix allPrefixes = prefixserv.getAllPrefixes();
+		porder.setPrefix(allPrefixes.getFin_year());
 		 
 		float total = (float) po_prod_repo.getPurchaseOrderProductsByTempId(temp_id)
 		.stream()
