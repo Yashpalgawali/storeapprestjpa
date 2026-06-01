@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,6 +50,7 @@ public class JwtAuthentication {
 		http.authorizeHttpRequests(auth -> {
 		
 			auth.antMatchers("/users/**","/authenticate","/error").permitAll();
+			auth.antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 			auth.anyRequest().authenticated();
 		});
 		 
@@ -59,7 +61,7 @@ public class JwtAuthentication {
 	 		cors.configurationSource(request->{
 	 			 CorsConfiguration config = new CorsConfiguration();
 
-	 			 config.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:3000","http://192.168.0.219:3000/*","http://192.168.0.219:8081/","http://192.168.0.219:4200")); // Your Angular app's URL
+	 			 config.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:3000","http://192.168.0.219:3000","http://192.168.0.219:8081","http://192.168.0.219:4200")); // Your Angular app's URL
 //	 			 config.setAllowedOrigins(Arrays.asList("*")); // Your Angular app's URL
 	             config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
 	             config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
