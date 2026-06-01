@@ -2,12 +2,8 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
- 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,18 +17,17 @@ import com.example.demo.models.Invoice_Product;
 import com.example.demo.service.InvoiceProductService;
 import com.example.demo.service.InvoiceService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("invoice")
+@RequiredArgsConstructor
 public class InvoiceRestController { 
 	 
 	private InvoiceProductService invprodserv;
 	private InvoiceService invserv;
-	 
-	public InvoiceRestController(InvoiceProductService invprodserv, InvoiceService invserv) {
-		this.invprodserv = invprodserv;
-		this.invserv = invserv;
-	}
-
 
 	@PostMapping("/")
 	public ResponseEntity<Invoice> saveInvoice(@RequestBody Invoice invoice,HttpServletRequest request)

@@ -3,9 +3,6 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Service;
 
 import com.example.demo.models.Invoice_Product;
@@ -13,17 +10,17 @@ import com.example.demo.models.Product;
 import com.example.demo.repository.InvoiceProductRepo;
 import com.example.demo.repository.ProductRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 @Service("invprodserv")
+@RequiredArgsConstructor
 public class InvoiceProductServImpl implements InvoiceProductService {
 
 	private InvoiceProductRepo invprodrepo;
 	
 	private ProductRepository prodrepo;
-	
-	public InvoiceProductServImpl(InvoiceProductRepo invprodrepo, ProductRepository prodrepo) {
-		this.invprodrepo=invprodrepo;
-		this.prodrepo=prodrepo;
-	}
 
 	@Override
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod, HttpServletRequest request) {

@@ -2,11 +2,8 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.service.POPurchaseOrderProdServImpl;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("purchaseorderproduct")
-@CrossOrigin("*")
+@RequiredArgsConstructor
 public class TempPurchaseOrderProductsRestController {
 
 	private	POPurchaseOrderProdServImpl popurchaseorderserv;
-	
-	public TempPurchaseOrderProductsRestController(POPurchaseOrderProdServImpl popurchaseorderserv) {
-		this.popurchaseorderserv = popurchaseorderserv;
-	}
-	
+		
 	@PostMapping("/")
 	public ResponseEntity<List<PurchaseOrderProducts>> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,HttpServletRequest request)
 	{

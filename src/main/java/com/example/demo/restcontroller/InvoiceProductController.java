@@ -2,8 +2,6 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,18 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.models.Invoice_Product;
 import com.example.demo.service.InvoiceProductService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("invoiceproduct")
+@RequiredArgsConstructor
 public class InvoiceProductController {
 
 	private InvoiceProductService invprodserv;
 
-	public InvoiceProductController(InvoiceProductService invprodserv) {
-		super();
-		this.invprodserv = invprodserv;
-	}
-	
-	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteInvoiceProductById(@PathVariable String id){
 		

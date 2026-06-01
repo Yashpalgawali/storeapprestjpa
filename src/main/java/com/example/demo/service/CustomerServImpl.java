@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -14,18 +15,15 @@ import com.example.demo.models.Customer;
 import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.CustomerRepo;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("custserv")
+@RequiredArgsConstructor
 public class CustomerServImpl implements CustomerService {
 
 	private final CustomerRepo custrepo;
 
 	private final ActivityRepository actrepo;
-
-	public CustomerServImpl(CustomerRepo custrepo, ActivityRepository actrepo) {
-		super();
-		this.custrepo = custrepo;
-		this.actrepo = actrepo;
-	}
 
 	@Override
 	public Customer saveCustomer(Customer cust) {
@@ -37,11 +35,10 @@ public class CustomerServImpl implements CustomerService {
 					Global.DATE_FORMATTER.format(LocalDateTime.now()),
 					Global.TIME_FORMATTER.format(LocalDateTime.now())));
 			return customer;
+		} else {
+			throw new GlobalException("Customer " + cust.getCust_first_name() + " is not saved");
 		}
-		else {
-			throw new GlobalException("Customer "+cust.getCust_first_name()+" is not saved");
-		}
-		
+
 	}
 
 	@Override
@@ -58,6 +55,7 @@ public class CustomerServImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional
 	public int updateCustomer(Customer cust) {
 		int val = custrepo.updateCustomer(cust.getCust_first_name(), cust.getCust_last_name(), cust.getCust_address(),
 				cust.getCust_email(), cust.getCust_contact(), cust.getCust_country(), cust.getState_name(),
@@ -69,11 +67,10 @@ public class CustomerServImpl implements CustomerService {
 					Global.DATE_FORMATTER.format(LocalDateTime.now()),
 					Global.TIME_FORMATTER.format(LocalDateTime.now())));
 			return val;
+		} else {
+			throw new ResourceNotModifiedException("Customer " + cust.getCust_first_name() + " is not updated");
 		}
-		else {
-			throw new ResourceNotModifiedException("Customer "+cust.getCust_first_name()+" is not updated");
-		}
-		
+
 	}
 
 }

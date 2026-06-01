@@ -7,8 +7,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -40,6 +38,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 
 @Configuration
 public class JwtAuthentication {
@@ -49,8 +49,8 @@ public class JwtAuthentication {
 		http.httpBasic(basic->{});
 		http.authorizeHttpRequests(auth -> {
 		
-			auth.antMatchers("/users/**","/authenticate","/error").permitAll();
-			auth.antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+			auth.requestMatchers("/users/**","/authenticate","/error").permitAll();
+			auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 			auth.anyRequest().authenticated();
 		});
 		 

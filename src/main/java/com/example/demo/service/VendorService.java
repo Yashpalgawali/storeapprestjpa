@@ -12,6 +12,6 @@ public interface VendorService {
 	
 	public Vendor getVendorById(String vid);
 	
-	public int updateVendorById(Vendor vend);
+	public void updateVendorById(Vendor vend);
 	
 }

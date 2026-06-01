@@ -38,6 +38,18 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorResponseDto>(errorDto , HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(ResourceAlreadyExistsException.class)
+	public ResponseEntity<ErrorResponseDto> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
+		ErrorResponseDto errorDto = new ErrorResponseDto(
+						request.getDescription(false),
+						HttpStatus.BAD_GATEWAY,
+						ex.getMessage(),
+						LocalDateTime.now()
+			);
+		
+		return new ResponseEntity<ErrorResponseDto>(errorDto , HttpStatus.BAD_GATEWAY);
+	}
+	
 	@ExceptionHandler(ResourceNotModifiedException.class)
 	public ResponseEntity<ErrorResponseDto> handleResourceNotModifiedException(ResourceNotModifiedException ex, WebRequest request) {
 		ErrorResponseDto errorDto = new ErrorResponseDto(

@@ -2,12 +2,8 @@ package com.example.demo.restcontroller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +19,13 @@ import com.example.demo.service.InvoiceProductService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.TempInvoiceService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("tempinvoice")
-@CrossOrigin("*")
+@RequiredArgsConstructor
 public class TempInvoiceRestController {
 	
 //	private TempInvoiceService tempinvserv;
@@ -34,12 +34,7 @@ public class TempInvoiceRestController {
 	private TempInvoiceService tempinserv;
     
 	private InvoiceProductService invprodserv;
-	
-	public TempInvoiceRestController(ProductService prodserv, TempInvoiceService tempinserv) {
-		super();
-		this.prodserv = prodserv;
-		this.tempinserv = tempinserv;
-	}
+
 //    TempInvoiceRestController(HttpSession sess,TempInvoiceService tempinserv,TempInvoiceService tempinvserv,ProductService prodserv) {
 //    	this.sess=sess;
 //    	this.tempinserv=tempinserv;

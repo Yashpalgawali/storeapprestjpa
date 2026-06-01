@@ -2,9 +2,9 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.example.demo.models.Temp_Invoice;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface TempInvoiceService {
 

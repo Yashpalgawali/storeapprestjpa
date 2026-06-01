@@ -1,29 +1,22 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.models.Docket;
 import com.example.demo.repository.DocketRepo;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("dockserv")
+@RequiredArgsConstructor
 public class DocketServImpl implements DocketService {
 
-	 
 	private final DocketRepo dockrepo;
-	
-	public DocketServImpl(DocketRepo dockrepo) {
-		super();
-		this.dockrepo = dockrepo;
-	}
 
 	@Override
 	public Docket saveDocket(Docket dock) {
@@ -37,20 +30,20 @@ public class DocketServImpl implements DocketService {
 
 	@Override
 	public Docket getDocketById(Integer id) {
-		
-		return dockrepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Docket ", "Docket Id", ""+id));	
+
+		return dockrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Docket ", "Docket Id", "" + id));
 	}
 
 	@Override
+	@Transactional
 	public int updateDocket(Docket dock) {
-		
-		int result = dockrepo.updateDocket(dock.getOrder_id(), dock.getCust_name(), dock.getDocket_num(), dock.getParty().getParty_id(),dock.getDocket_id());
-		if(result>0)
-		{
+
+		int result = dockrepo.updateDocket(dock.getOrder_id(), dock.getCust_name(), dock.getDocket_num(),
+				dock.getParty().getParty_id(), dock.getDocket_id());
+		if (result > 0) {
 			return result;
-		}
-		else {
-			throw new GlobalException("Docket "+dock.getDocket_num()+" is not updated");
+		} else {
+			throw new GlobalException("Docket " + dock.getDocket_num() + " is not updated");
 		}
 	}
 

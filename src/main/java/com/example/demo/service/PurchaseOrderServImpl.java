@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Service;
 
 import com.example.demo.globalconfig.Global;
@@ -18,22 +15,18 @@ import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.PurchaseOrderProductsRepo;
 import com.example.demo.repository.PurchaseOrderRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 @Service("purshaseorderserv")
+@RequiredArgsConstructor
 public class PurchaseOrderServImpl implements PurchaseOrderService {
 
 	private PurchaseOrderRepository porderrepo;
 	private PurchaseOrderProductsRepo po_prod_repo;
 	private PrefixService prefixserv;
 	private final ActivityRepository actrepo;
-
-	public PurchaseOrderServImpl(PurchaseOrderRepository porderrepo, PurchaseOrderProductsRepo po_prod_repo,
-			PrefixService prefixserv, ActivityRepository actrepo) {
-		super();
-		this.porderrepo = porderrepo;
-		this.po_prod_repo = po_prod_repo;
-		this.prefixserv = prefixserv;
-		this.actrepo = actrepo;
-	}
 
 	@Override
 	public PurchaseOrder savePurchaseOrder(PurchaseOrder porder,HttpServletRequest request) {

@@ -1,21 +1,21 @@
 package com.example.demo.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.globalconfig.Global;
-import com.example.demo.models.Activities;
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
 import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.TempInvoiceRepo;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
 @Service("tempinvserv")
+@RequiredArgsConstructor
 public class TempInvoiceServImpl implements TempInvoiceService {
 
 	
@@ -24,13 +24,7 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 	private final ActivityRepository actrepo;
 	
 	private final ProductRepository prodrepo;
-	
-	public TempInvoiceServImpl(TempInvoiceRepo tempinvrepo, ActivityRepository actrepo,ProductRepository prodrepo) {
-		super();
-		this.tempinvrepo = tempinvrepo;
-		this.actrepo = actrepo;
-		this.prodrepo = prodrepo;
-	}
+
 
 	@Override
 	public Temp_Invoice saveTempInvoice(Temp_Invoice tin) {
