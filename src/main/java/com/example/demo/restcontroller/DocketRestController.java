@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,19 +16,16 @@ import com.example.demo.models.Docket;
 import com.example.demo.service.DocketService;
 import com.example.demo.service.PartyService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("docket")
-@CrossOrigin("*")
+@RequiredArgsConstructor
 public class DocketRestController {
  
-	private DocketService dockserv;
+	private final DocketService dockserv;
 	
-	private PartyService partyserv;
-
-	public DocketRestController(PartyService partyserv,DocketService dockserv) {
-		this.partyserv=partyserv;
-		this.dockserv=dockserv;
-	}
+	private final PartyService partyserv;
 	
 	@PostMapping("/")
 	public ResponseEntity<Docket> saveDocket(@RequestBody Docket dock) {

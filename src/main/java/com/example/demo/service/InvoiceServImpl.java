@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.Invoice;
@@ -135,7 +136,10 @@ public class InvoiceServImpl implements InvoiceService {
 
 	@Override
 	public List<Invoice> getAllInvoices() {
-		return invrepo.getAllInvoices();
+		List<Invoice> invList = invrepo.getAllInvoices();
+		if(invList.size() > 0)
+			return invList;
+		throw new ResourceNotFoundException("Invoices","invoice","invoice");
 	}
 
 	@Override

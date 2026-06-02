@@ -59,10 +59,10 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public Vendor getVendorById(String vid) {
+	public Vendor getVendorById(Integer vid) {
 
-		return vendorrepo.findById(Integer.parseInt(vid))
-				.orElseThrow(() -> new ResourceNotFoundException("Vendor", "ID", vid));
+		return vendorrepo.findById(vid)
+				.orElseThrow(() -> new ResourceNotFoundException("Vendor", "ID", ""+vid));
 	}
 
 	@Override

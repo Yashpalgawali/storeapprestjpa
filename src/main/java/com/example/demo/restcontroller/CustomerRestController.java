@@ -12,51 +12,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.models.Customer;
+import com.example.demo.service.ActivityService;
 import com.example.demo.service.CustomerService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("customer")
-//@CrossOrigin("*")
+@RequiredArgsConstructor
 public class CustomerRestController {
-	
-	private CustomerService custserv;
-	
- 	public CustomerRestController(CustomerService custserv) {
-		this.custserv=custserv;
-	}
-	
-	
+
+	private final CustomerService custserv;
+
 	@PostMapping("/")
 	public ResponseEntity<Customer> saveCustomer(@RequestBody Customer customer) {
 		Customer cust = custserv.saveCustomer(customer);
-		if(cust!=null)
+		if (cust != null)
 			return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
 		else
 			return new ResponseEntity<Customer>(customer, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@GetMapping("/")
 	public ResponseEntity<List<Customer>> getAllCustomers() {
-		return  new ResponseEntity<List<Customer>>(custserv.getAllCustomers(),HttpStatus.OK); 
+		return new ResponseEntity<List<Customer>>(custserv.getAllCustomers(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-//		System.err.println("Inside getcustbyid() ID = "+id);
+
 		Customer cust = custserv.getCustomerById(id);
-		if(cust!=null)
-			return new ResponseEntity<Customer>(cust,HttpStatus.OK);
-		else
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		return new ResponseEntity<Customer>(cust, HttpStatus.OK);
+
 	}
 
 	@PutMapping("/")
-	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
+	public ResponseEntity<ResponseDto> updateCustomer(@RequestBody Customer customer) {
 		int res = custserv.updateCustomer(customer);
-		if(res>0)
-			return new ResponseEntity<Customer>(customer, HttpStatus.OK);
-		else
-			return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Customer "+customer.getCust_first_name()+" is saved successfully",HttpStatus.OK));
+		
 	}
 }

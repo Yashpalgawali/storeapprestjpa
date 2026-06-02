@@ -10,7 +10,7 @@ public interface VendorService {
 	
 	public List<Vendor> getAllVendors();
 	
-	public Vendor getVendorById(String vid);
+	public Vendor getVendorById(Integer vid);
 	
 	public void updateVendorById(Vendor vend);
 	

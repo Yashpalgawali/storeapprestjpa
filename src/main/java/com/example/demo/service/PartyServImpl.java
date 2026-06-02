@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -13,20 +14,17 @@ import com.example.demo.models.Party;
 import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.PartyRepo;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("partyserv")
+@RequiredArgsConstructor
 public class PartyServImpl implements PartyService {
 
 	private final PartyRepo partyrepo;
 	private final ActivityRepository actrepo;
-	
-	public PartyServImpl(PartyRepo partyrepo, ActivityRepository actrepo) {
-		super();
-		this.partyrepo = partyrepo;
-		this.actrepo = actrepo;
-	}
 
 	@Override
-	public Party saveParty(Party party) {
+	public void saveParty(Party party) {
 		Party part = partyrepo.save(party);
 		if(part!=null) {
 			Activities activity = new Activities();
@@ -34,7 +32,7 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
-			return part;
+			
 		}
 		else {
 			Activities activity = new Activities();
@@ -61,7 +59,8 @@ public class PartyServImpl implements PartyService {
 	}
 
 	@Override
-	public int updateParty(Party party) {
+	@Transactional
+	public void updateParty(Party party) {
 		  
 		Integer res = partyrepo.updateParty(party.getParty_name(),  party.getParty_id());
 		if(res >0) {
@@ -70,7 +69,7 @@ public class PartyServImpl implements PartyService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
-			return res;
+			
 		}
 		else {
 			Activities activity = new Activities();

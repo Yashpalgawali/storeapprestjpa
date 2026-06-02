@@ -6,12 +6,12 @@ import com.example.demo.models.Party;
 
 public interface PartyService {
 
-	public Party saveParty(Party party);
+	public void saveParty(Party party);
 	
 	public List<Party> getAllParties();
 	
 	public Party getpartyById(Integer id);
 	
-	public int updateParty(Party part);
+	public void updateParty(Party part);
 	
 }

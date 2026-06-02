@@ -6,23 +6,21 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.PoProductsList;
 import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.PoProductListRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("poprodlistserv")
+@RequiredArgsConstructor
 public class PoProductListServImpl implements PoProductListService {
 
 	private final PoProductListRepository poprodlistrepo;
-	private final ActivityRepository actrepo;
-	
-	public PoProductListServImpl(PoProductListRepository poprodlistrepo, ActivityRepository actrepo) {
-		super();
-		this.poprodlistrepo = poprodlistrepo;
-		this.actrepo = actrepo;
-	}
+	private final ActivityRepository actrepo;	
 	
 	@Override
 	public PoProductsList savePoProductsList(PoProductsList poprod) {
@@ -55,7 +53,10 @@ public class PoProductListServImpl implements PoProductListService {
 	@Override
 	public List<PoProductsList> getAllPoProductList() {
 
-		return poprodlistrepo.findAll();
+		List<PoProductsList> poProdList = poprodlistrepo.findAll();
+		if(poProdList.size() > 0 )
+			return poProdList;
+		throw new ResourceNotFoundException("Po Product", "Po Product", "po product");
 	}
 
 	@Override

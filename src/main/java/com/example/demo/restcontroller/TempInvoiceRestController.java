@@ -30,17 +30,10 @@ public class TempInvoiceRestController {
 	
 //	private TempInvoiceService tempinvserv;
 //	private HttpSession sess;
-	private ProductService prodserv;
-	private TempInvoiceService tempinserv;
+	private final  ProductService prodserv;
+	private final TempInvoiceService tempinserv;
     
-	private InvoiceProductService invprodserv;
-
-//    TempInvoiceRestController(HttpSession sess,TempInvoiceService tempinserv,TempInvoiceService tempinvserv,ProductService prodserv) {
-//    	this.sess=sess;
-//    	this.tempinserv=tempinserv;
-//    	this.tempinvserv=tempinvserv;
-//    	this.prodserv=prodserv;
-//    }
+	private final InvoiceProductService invprodserv;
 	
 	@PostMapping("/")
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
@@ -74,7 +67,7 @@ public class TempInvoiceRestController {
 		
 		float sub_tot,cgst,sgst,igst,total;
 		
-		Product tem = prodserv.getProductById((String.valueOf(prod_id)));
+		Product tem = prodserv.getProductById(prod_id);
  		if(p_cust_price> 0){
 			unit_price = (float) (p_cust_price / 1.18);
 		}

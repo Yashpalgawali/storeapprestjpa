@@ -6,12 +6,12 @@ import com.example.demo.models.Product;
 
 public interface ProductService {
 	
-	public Product saveProduct(Product pro);
+	public void saveProduct(Product pro);
 	
 	public List<Product> getAllProducts();
 	
-	public Product getProductById(String pid);
+	public Product getProductById(Long pid);
 	
-	public int updateProduct(Product prod);
+	public void updateProduct(Product prod);
 	
 }

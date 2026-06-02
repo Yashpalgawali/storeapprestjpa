@@ -6,47 +6,51 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ResourceNotModifiedException;
 import com.example.demo.models.GstTaxRate;
 import com.example.demo.repository.GstTaxRateRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("gsttaxserv")
+@RequiredArgsConstructor
 public class GstTaxRateServiceImpl implements GstTaxService {
 
-	private GstTaxRateRepository gsttaxrepo;
-	
-	@Autowired
-	public GstTaxRateServiceImpl(GstTaxRateRepository gsttaxrepo) {
-		this.gsttaxrepo = gsttaxrepo;
-	}
+	private final GstTaxRateRepository gsttaxrepo;
 
 	@Override
-	public GstTaxRate saveGstTaxRate(GstTaxRate gsttax) {
+	public void saveGstTaxRate(GstTaxRate gsttax) {
 
-		return gsttaxrepo.save(gsttax);
+		GstTaxRate savedObj = gsttaxrepo.save(gsttax);
+		if (savedObj == null)
+			throw new GlobalException("GST tax rate" + gsttax.getTaxrate() + " is not saved");
 	}
 
 	@Override
 	public List<GstTaxRate> getAllGstTaxRates() {
 
-		return gsttaxrepo.findAll();
+		List<GstTaxRate> gstTaxList = gsttaxrepo.findAll();
+		if (gstTaxList.size() > 0)
+			return gstTaxList;
+		throw new ResourceNotFoundException("Gst", "tax", "gst tax rate");
 	}
 
 	@Override
-	public int updateGstTaxRate(GstTaxRate gsttax) {
+	public void updateGstTaxRate(GstTaxRate gsttax) {
 		// TODO Auto-generated method stub
-		return 0;
+		int res = gsttaxrepo.updateGstTaxRate(gsttax.getGstid(), gsttax.getType(), gsttax.getTaxrate());
+		if (res < 0)
+			throw new ResourceNotModifiedException("Gst Tax Rate " + gsttax.getTaxrate() + " is not modified");
 	}
 
 	@Override
 	public GstTaxRate getGstTaxrateById(int id) {
 
-		Optional<GstTaxRate> gsttax = gsttaxrepo.findById(id);
-		if(gsttax.isEmpty()) {
-			return gsttax.get();
-		}
-		else {
-			return null;
-		}
+		return gsttaxrepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Gst Tax", "tax rate id ", "" + id));
+
 	}
 
 }

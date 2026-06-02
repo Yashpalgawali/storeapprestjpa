@@ -10,16 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.models.Users;
 import com.example.demo.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
 public class UserController {
 
 	private final UserService userserv;
 
-	public UserController(UserService userserv) {
-		super();
-		this.userserv = userserv;
-	}
 	
 	@PutMapping("/")
 	public ResponseEntity<String> updatePassword(@RequestBody Users user )

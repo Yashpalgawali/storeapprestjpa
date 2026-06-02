@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,22 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.models.Activities;
 import com.example.demo.service.ActivityService;
 
-@RestController()
-@CrossOrigin("*")
+import lombok.RequiredArgsConstructor;
+
+@RestController
 @RequestMapping("activity")
+@RequiredArgsConstructor
 public class ActivityRestController {
 
-	private ActivityService actserv ;
-	
-	public ActivityRestController(ActivityService actserv) {
-		this.actserv = actserv;
-	}
-	
+	private final ActivityService actserv ;
+		
 	@PostMapping("/")
 	public ResponseEntity<Activities> saveActivity(@RequestBody Activities activity)
 	{	
-		Activities act = actserv.saveActivity(activity);
-		
+		Activities act = actserv.saveActivity(activity);		
 		
 		if(act!=null)
 			return new ResponseEntity<Activities>(act,HttpStatus.OK);

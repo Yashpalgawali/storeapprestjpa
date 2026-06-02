@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InvoiceProductServImpl implements InvoiceProductService {
 
-	private InvoiceProductRepo invprodrepo;
+	private final InvoiceProductRepo invprodrepo;
 	
-	private ProductRepository prodrepo;
+	private final ProductRepository prodrepo;
 
 	@Override
 	public Invoice_Product saveInvoiceProduct(Invoice_Product invprod, HttpServletRequest request) {

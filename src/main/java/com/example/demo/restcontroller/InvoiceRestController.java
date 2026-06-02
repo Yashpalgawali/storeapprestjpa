@@ -26,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InvoiceRestController { 
 	 
-	private InvoiceProductService invprodserv;
-	private InvoiceService invserv;
+	private final InvoiceProductService invprodserv;
+	private final InvoiceService invserv;
 
 	@PostMapping("/")
 	public ResponseEntity<Invoice> saveInvoice(@RequestBody Invoice invoice,HttpServletRequest request)

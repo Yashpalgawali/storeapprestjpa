@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.models.Vendor;
 import com.example.demo.service.VendorService;
 
@@ -31,19 +32,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VendorRestController {
 
-	private VendorService vendorserv;
+	private final VendorService vendorserv;
 
 	@Operation(summary = "Create Vendor REST API", description = "REST API to create the vendor")
 	@ApiResponse
 	@PostMapping("/")
-	public ResponseEntity<Vendor> saveVendor(@Valid @RequestBody Vendor vendor) {
-		Vendor vend = vendorserv.saveVendor(vendor);
-
-		if (vend != null) {
-			return new ResponseEntity<Vendor>(vend, HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<ResponseDto> saveVendor(@Valid @RequestBody Vendor vendor) {
+		 vendorserv.saveVendor(vendor);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Vendor "+vendor.getVendor_name()+" is created successfully ",HttpStatus.CREATED));
+	
 	}
 
 	@GetMapping("/")
@@ -55,19 +53,15 @@ public class VendorRestController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Vendor> getVendorById(@PathVariable Integer id) {
-		Vendor vendor = vendorserv.getVendorById("" + id);
-		if (vendor != null) {
-			return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Vendor>(HttpStatus.NO_CONTENT);
-		}
+		Vendor vendor = vendorserv.getVendorById(id);
+		return new ResponseEntity<Vendor>(vendor, HttpStatus.OK);		 
 	}
 
 	@PutMapping("/")
-	public ResponseEntity<Vendor> updateVendor(@RequestBody Vendor vend) {
+	public ResponseEntity<ResponseDto> updateVendor(@RequestBody Vendor vend) {
 		vendorserv.updateVendorById(vend);
 
-		return new ResponseEntity<Vendor>(vend, HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Vendor "+vend.getVendor_name()+" is updated successfully ",HttpStatus.OK));
 
 	}
 }

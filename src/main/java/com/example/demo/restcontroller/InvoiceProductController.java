@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InvoiceProductController {
 
-	private InvoiceProductService invprodserv;
+	private final InvoiceProductService invprodserv;
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteInvoiceProductById(@PathVariable String id){

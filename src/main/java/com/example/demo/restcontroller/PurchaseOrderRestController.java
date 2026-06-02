@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PurchaseOrderRestController {
 
-	private PurchaseOrderServImpl porderserv;
-	private PoProductsService poprodserv;
+	private final PurchaseOrderServImpl porderserv;
+	private final PoProductsService poprodserv;
 
 	@PostMapping("/")
 	public ResponseEntity<PurchaseOrder> savePurchaseOrder(@RequestBody PurchaseOrder porder,HttpServletRequest request)

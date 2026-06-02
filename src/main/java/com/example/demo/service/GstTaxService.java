@@ -6,11 +6,11 @@ import com.example.demo.models.GstTaxRate;
 
 public interface GstTaxService {
 
-	public GstTaxRate saveGstTaxRate(GstTaxRate gsttax);
+	public void saveGstTaxRate(GstTaxRate gsttax);
 	
 	public List<GstTaxRate> getAllGstTaxRates();
 	
-	public int updateGstTaxRate(GstTaxRate gsttax);
+	public void updateGstTaxRate(GstTaxRate gsttax);
 	
 	public GstTaxRate getGstTaxrateById(int id);
 }

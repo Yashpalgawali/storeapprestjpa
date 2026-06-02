@@ -9,13 +9,11 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Entity
 @Table(name="tbl_vendor")
@@ -30,16 +28,16 @@ public class Vendor {
 	private Integer vendor_id;
 	
 	@Schema(description = "This is the Vendor name" ,example = "ABC")
-	@NotEmpty(message = "Name cant be blank")
+	@NotEmpty(message = "Name can't be blank")
 	@Size(min = 5,max = 30,message = "The name must have at least 5 letters or maximum 30 letters")
 	private String vendor_name;
 	
 	@Email(message = "Email address should be valid ")
-	@NotEmpty(message = "Email cant be blank")
+	@NotEmpty(message = "Email can't be blank")
 	@Schema(description = "This is email of the Vendor" ,example = "abc@gmail.com")
 	private String vendor_email;
 	
-	@Pattern(regexp = "(^|[0-9]{10})",message = "Mobile nuber must have 10 digits")
+	//@Pattern(regexp = "(^|[0-9]{10})",message = "Mobile number must have 10 digits")
 	@Schema(description = "This is Mobile Number of the Vendor" ,example = "1234567897")
 	private Long vendor_contact;
 	

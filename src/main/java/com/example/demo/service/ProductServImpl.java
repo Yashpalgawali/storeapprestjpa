@@ -4,28 +4,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.Product;
 import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.ProductRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("prodserv")
+@RequiredArgsConstructor
 public class ProductServImpl implements ProductService {
 	
 	private final ProductRepository prodrepo;
 	private final ActivityRepository actrepo;
 
-	public ProductServImpl(ProductRepository prodrepo, ActivityRepository actrepo) {
-		super();
-		this.prodrepo = prodrepo;
-		this.actrepo = actrepo;
-	}
-
 	@Override
-	public Product saveProduct(Product pro) {
+	public void saveProduct(Product pro) {
+
+		float cgst = pro.getGsttax() / 2;
+		float igst = pro.getGsttax();
+		
+		pro.setCgst_per(cgst);
+		pro.setSgst_per(cgst);
+		pro.setIgst_per(igst);
+		
 		Product prod = prodrepo.save(pro);
+		
 		if(prod!=null) {
 			Activities activity = new Activities();
 			activity.setActivity("Product "+prod.getProd_name() +" is Saved successfully");
@@ -39,28 +48,27 @@ public class ProductServImpl implements ProductService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			throw new GlobalException("Product "+pro.getProd_name()+" is not saved");
 		}	
-		return prod;
+		 
 	}
 
 	@Override
 	public List<Product> getAllProducts() {
-		return  prodrepo.findAll();
+		List<Product> prodList = prodrepo.findAll();
+		if(prodList.size() > 0)
+			return  prodList;
+		throw new ResourceNotFoundException("Product ", "product", "product");
 	}
 
 	@Override
-	public Product getProductById(String pid) {
-		Long prid = Long.parseLong(pid);
-		try {
-			return prodrepo.findById(prid).get();
-		}
-		catch(Exception e) {
-			return null;
-		}
+	public Product getProductById(Long pid) {
+		return prodrepo.findById(pid).orElseThrow(() -> new ResourceNotFoundException("Product", "id", ""+pid) );
 	}
 
 	@Override
-	public int updateProduct(Product prod) {
+	@Transactional
+	public void updateProduct(Product prod) {
 		Integer result = prodrepo.updateProduct(prod.getPid(), prod.getProd_name(), prod.getProd_price(), prod.getProd_unit(),
 				prod.getProd_model_no(), prod.getProd_hsn(), prod.getGsttax());
 		if(result>0) {
@@ -77,7 +85,7 @@ public class ProductServImpl implements ProductService {
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
 		}
-		return result;
+		throw new GlobalException("Product "+prod.getProd_name()+" is not updated");
 	}
 
 }
