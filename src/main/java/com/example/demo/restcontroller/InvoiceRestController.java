@@ -47,10 +47,7 @@ public class InvoiceRestController {
 	@GetMapping("/")
 	public ResponseEntity<List<Invoice>> getAllInvoices() {
 		List<Invoice> invlist = invserv.getAllInvoices();
-		if(invlist.size()>0)
-			return new  ResponseEntity<List<Invoice>>(invlist , HttpStatus.OK) ;
-		else
-			return new  ResponseEntity<List<Invoice>>( HttpStatus.NO_CONTENT) ;
+		return new  ResponseEntity<List<Invoice>>(invlist , HttpStatus.OK) ;
 		
 	}
 

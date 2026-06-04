@@ -13,11 +13,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @SequenceGenerator(name="temp_invoice_seq",allocationSize = 1, initialValue = 1)
 @Table(name="tbl_temp_invoice")
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor 
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
 public class Temp_Invoice {
 
 	@Id

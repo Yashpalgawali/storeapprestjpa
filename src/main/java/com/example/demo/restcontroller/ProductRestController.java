@@ -27,7 +27,7 @@ public class ProductRestController {
 
 	@PostMapping("/")
 	public ResponseEntity<ResponseDto> saveProduct(@RequestBody Product prod) {
-
+		prodserv.saveProduct(prod);
 		return ResponseEntity.status(HttpStatus.CREATED).body(
 				new ResponseDto("Product " + prod.getProd_name() + " is created successfully", HttpStatus.CREATED));
 

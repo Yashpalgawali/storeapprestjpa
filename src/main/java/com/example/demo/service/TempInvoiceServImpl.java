@@ -2,32 +2,35 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
-import com.example.demo.repository.ActivityRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.TempInvoiceRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service("tempinvserv")
 @RequiredArgsConstructor
+@Slf4j
 public class TempInvoiceServImpl implements TempInvoiceService {
 
 	
 	private final TempInvoiceRepo tempinvrepo;
 	
-	private final ActivityRepository actrepo;
-	
 	private final ProductRepository prodrepo;
 
 
+	private Logger logger = LoggerFactory.getLogger(TempInvoiceServImpl.class);
+	
 	@Override
 	public Temp_Invoice saveTempInvoice(Temp_Invoice tin) {
+		logger.error("Temp Invoice is {} ",tin);
 		return tempinvrepo.save(tin);
 	}
 

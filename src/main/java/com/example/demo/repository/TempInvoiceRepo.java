@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.models.Temp_Invoice;
 
-
 @Repository("tempinvrepo")
 public interface TempInvoiceRepo extends JpaRepository<Temp_Invoice, Integer> {
 
@@ -23,6 +22,7 @@ public interface TempInvoiceRepo extends JpaRepository<Temp_Invoice, Integer> {
 //	Integer deleteTempInvoiceByTempInvId(Integer tid);
 
 	
-	@Query(value="select * from tbl_temp_invoice as tin join tbl_product as tp on tp.pid=tin.prod_id where tin.temp_invoice_id=?1", nativeQuery = true)
+//	@Query(value="select * from tbl_temp_invoice as tin join tbl_product as tp on tp.pid=tin.prod_id where tin.temp_invoice_id=:tid", nativeQuery = true)
+	@Query("SELECT tin FROM Temp_Invoice tin JOIN tin.product WHERE tin.temp_invoice_id=:tid")
 	List<Temp_Invoice> getTempInvByTempInvoiceId(Integer tid);
 }

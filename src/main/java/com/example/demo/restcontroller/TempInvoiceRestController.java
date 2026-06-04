@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
-import com.example.demo.service.InvoiceProductService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.TempInvoiceService;
 
@@ -27,132 +26,123 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("tempinvoice")
 @RequiredArgsConstructor
 public class TempInvoiceRestController {
-	
-//	private TempInvoiceService tempinvserv;
-//	private HttpSession sess;
-	private final  ProductService prodserv;
+
+	private final ProductService prodserv;
 	private final TempInvoiceService tempinserv;
-    
-	private final InvoiceProductService invprodserv;
-	
+
 	@PostMapping("/")
-	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
-	{
+	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,
+			HttpServletRequest request) {
 		HttpSession sess = request.getSession();
-		Integer sessid = (Integer) sess.getAttribute("temp_id"); 
-		System.err.println("Inside saveTempInvoice() session ID is "+sess.getId()+"\n temp_id in the session is "+sessid);
-		
-	    Integer chk_tmp_id = 0; 
-	    if (sessid == null) {
-	        chk_tmp_id = tempinserv.getMaxTempInvoiceId();
-	        if (chk_tmp_id == null) {
-	        	System.err.println("MAX temp_id is  NULL \n");
-	            chk_tmp_id = 1;
-	             
-	        } else {
-	        	System.err.println("MAX temp_id is = "+chk_tmp_id);
-	            chk_tmp_id = chk_tmp_id + 1;
-	        }
-	        sess.setAttribute("temp_id", chk_tmp_id);
-	        sessid=chk_tmp_id;
-	    }
-	    
-	    System.err.println("inside saveTempInvoice() sessid = "+sessid);
-	    		
-		Long 	prod_id 	= teinv.getProduct().getPid();
-		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
-		Integer p_qty   	= teinv.getQty();
-		Float   p_cust_price= teinv.getCustom_price();
-		Float unit_price=0.0f;
-		
-		float sub_tot,cgst,sgst,igst,total;
-		
+		Integer sessid = (Integer) sess.getAttribute("temp_id");
+		System.err.println(
+				"Inside saveTempInvoice() session ID is " + sess.getId() + "\n temp_id in the session is " + sessid);
+ 
+		Integer chk_tmp_id = 0;
+		if (sessid == null) {
+			chk_tmp_id = tempinserv.getMaxTempInvoiceId();
+			if (chk_tmp_id == null) {
+				System.err.println("MAX temp_id is  NULL \n");
+				chk_tmp_id = 1;
+
+			} else {
+				System.err.println("MAX temp_id is = " + chk_tmp_id);
+				chk_tmp_id = chk_tmp_id + 1;
+			}
+			sess.setAttribute("temp_id", chk_tmp_id);
+			sessid = chk_tmp_id;
+		}
+
+		System.err.println("inside saveTempInvoice() sessid = " + sessid);
+
+		Long prod_id = teinv.getProduct().getPid();
+		Long p_hsn = teinv.getProduct().getProd_hsn();
+		Integer p_qty = teinv.getQty();
+		Float p_cust_price = teinv.getCustom_price();
+		Float unit_price = 0.0f;
+
+		float sub_tot, cgst, sgst, igst, total;
+
 		Product tem = prodserv.getProductById(prod_id);
- 		if(p_cust_price> 0){
+		if (p_cust_price > 0) {
 			unit_price = (float) (p_cust_price / 1.18);
+		} else {
+			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
 		}
-		else{
-			unit_price = (float) (Float.parseFloat(tem.getProd_price())/(1.18));
-		}
-		
+
 		sub_tot = unit_price * teinv.getQty();
-		
-		if(teinv.getStoption().equals("mh")) {
+
+		if (teinv.getStoption().equals("mh")) {
 			teinv.setCgst_per(tem.getCgst_per());
 			teinv.setSgst_per(tem.getSgst_per());
 			teinv.setIgst(0);
 
-			cgst = Math.round((sub_tot/100) * tem.getCgst_per());
-			sgst = Math.round((sub_tot/100) * tem.getSgst_per());
-			igst = Math.round((sub_tot/100) * teinv.getIgst_per());
-		}
-		else {	
+			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
+			igst = Math.round((sub_tot / 100) * teinv.getIgst_per());
+		} else {
 			teinv.setIgst_per(tem.getIgst_per());
 			teinv.setCgst_per(0);
 			teinv.setSgst_per(0);
-			
-			cgst = Math.round((sub_tot/100) * teinv.getCgst_per());
-			sgst = Math.round((sub_tot/100) * teinv.getSgst_per());
-			igst = Math.round((sub_tot/100) * tem.getIgst_per());
+
+			cgst = Math.round((sub_tot / 100) * teinv.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * teinv.getSgst_per());
+			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
 		}
-		
-		
+
 		teinv.setTemp_invoice_id(sessid);
 		teinv.setCgst(cgst);
 		teinv.setSgst(sgst);
 		teinv.setIgst(igst);
-		
+
 		Long phsn = tem.getProd_hsn();
 		String nhsn = String.valueOf(phsn);
 		teinv.setHsn(nhsn);
 		teinv.setUnit(tem.getProd_unit());
 		teinv.setUnit_price(unit_price);
-		teinv.setTotal(sub_tot+cgst+sgst+igst);
-		
+		teinv.setTotal(sub_tot + cgst + sgst + igst);
+
 		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
-		if(tmpinv!=null) {
-			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid) , HttpStatus.CREATED);
-		}
-		else {
+		if (tmpinv != null) {
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid),
+					HttpStatus.CREATED);
+		} else {
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}	
-	
+	}
+
 	@GetMapping("/{temp_id}")
 	public ResponseEntity<List<Temp_Invoice>> getAllTempInvoiceByTempInvoiceID(@PathVariable Integer temp_id) {
 		List<Temp_Invoice> tempinvoice = tempinserv.getTempInvByTempInvoiceId(temp_id);
-		  
-		if(tempinvoice.size()>0)
+
+		if (tempinvoice.size() > 0)
 			return new ResponseEntity<List<Temp_Invoice>>(tempinvoice, HttpStatus.OK);
 		else
-			return new ResponseEntity<List<Temp_Invoice>>( HttpStatus.NO_CONTENT);
+			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.NO_CONTENT);
 	}
-	
+
 	@DeleteMapping("/removeitem/{id}")
 	public ResponseEntity<String> removeTemp_invoice(@PathVariable String id) {
 		boolean res = tempinserv.deleteSelectedTempInvoice(id);
-		if(res) {
-			return new ResponseEntity<String>("true",HttpStatus.OK);	
-		}
-		else {
-			return new ResponseEntity<String>("false",HttpStatus.NOT_MODIFIED);
+		if (res) {
+			return new ResponseEntity<String>("true", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("false", HttpStatus.NOT_MODIFIED);
 		}
 	}
-	
+
 	@PutMapping("/")
-	public ResponseEntity<String> updateTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
-	{
+	public ResponseEntity<String> updateTempInvoice(@RequestBody Temp_Invoice teinv, HttpServletRequest request) {
 		HttpSession sess = request.getSession();
 		int result = tempinserv.updateTempInvoice(teinv, request);
-		if(result>0) {
+		if (result > 0) {
 			sess.setAttribute("temp_id", teinv.getTemp_id());
 			return new ResponseEntity<String>(HttpStatus.OK);
-		}
-		else {
+		} else {
 			return new ResponseEntity<String>(HttpStatus.NOT_MODIFIED);
 		}
 	}
-	
+
 //	@PutMapping("/")
 //	public String updateTempInvoice(@RequestBody Temp_Invoice teinv,HttpServletRequest request)
 //	{
