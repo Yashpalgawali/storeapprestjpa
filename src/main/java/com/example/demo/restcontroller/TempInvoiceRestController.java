@@ -33,78 +33,78 @@ public class TempInvoiceRestController {
 	@PostMapping("/")
 	public ResponseEntity<List<Temp_Invoice>> saveTempInvoice(@RequestBody Temp_Invoice teinv,
 			HttpServletRequest request) {
-		HttpSession sess = request.getSession();
-		Integer sessid = (Integer) sess.getAttribute("temp_id");
-		System.err.println(
-				"Inside saveTempInvoice() session ID is " + sess.getId() + "\n temp_id in the session is " + sessid);
- 
-		Integer chk_tmp_id = 0;
-		if (sessid == null) {
-			chk_tmp_id = tempinserv.getMaxTempInvoiceId();
-			if (chk_tmp_id == null) {
-				System.err.println("MAX temp_id is  NULL \n");
-				chk_tmp_id = 1;
+//		HttpSession sess = request.getSession();
+//		Integer sessid = (Integer) sess.getAttribute("temp_id");
+//		System.err.println(
+//				"Inside saveTempInvoice() session ID is " + sess.getId() + "\n temp_id in the session is " + sessid);
+// 
+//		Integer chk_tmp_id = 0;
+//		if (sessid == null) {
+//			chk_tmp_id = tempinserv.getMaxTempInvoiceId();
+//			if (chk_tmp_id == null) {
+//				System.err.println("MAX temp_id is  NULL \n");
+//				chk_tmp_id = 1;
+//
+//			} else {
+//				System.err.println("MAX temp_id is = " + chk_tmp_id);
+//				chk_tmp_id = chk_tmp_id + 1;
+//			}
+//			sess.setAttribute("temp_id", chk_tmp_id);
+//			sessid = chk_tmp_id;
+//		}
+//
+//		System.err.println("inside saveTempInvoice() sessid = " + sessid);
+//
+//		Long prod_id = teinv.getProduct().getPid();
+//		Long p_hsn = teinv.getProduct().getProd_hsn();
+//		Integer p_qty = teinv.getQty();
+//		Float p_cust_price = teinv.getCustom_price();
+//		Float unit_price = 0.0f;
+//
+//		float sub_tot, cgst, sgst, igst, total;
+//
+//		Product tem = prodserv.getProductById(prod_id);
+//		if (p_cust_price > 0) {
+//			unit_price = (float) (p_cust_price / 1.18);
+//		} else {
+//			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
+//		}
+//
+//		sub_tot = unit_price * teinv.getQty();
+//
+//		if (teinv.getStoption().equals("mh")) {
+//			teinv.setCgst_per(tem.getCgst_per());
+//			teinv.setSgst_per(tem.getSgst_per());
+//			teinv.setIgst(0);
+//
+//			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
+//			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
+//			igst = Math.round((sub_tot / 100) * teinv.getIgst_per());
+//		} else {
+//			teinv.setIgst_per(tem.getIgst_per());
+//			teinv.setCgst_per(0);
+//			teinv.setSgst_per(0);
+//
+//			cgst = Math.round((sub_tot / 100) * teinv.getCgst_per());
+//			sgst = Math.round((sub_tot / 100) * teinv.getSgst_per());
+//			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
+//		}
+//
+//		teinv.setTemp_invoice_id(sessid);
+//		teinv.setCgst(cgst);
+//		teinv.setSgst(sgst);
+//		teinv.setIgst(igst);
+//
+//		Long phsn = tem.getProd_hsn();
+//		String nhsn = String.valueOf(phsn);
+//		teinv.setHsn(nhsn);
+//		teinv.setUnit(tem.getProd_unit());
+//		teinv.setUnit_price(unit_price);
+//		teinv.setTotal(sub_tot + cgst + sgst + igst);
 
-			} else {
-				System.err.println("MAX temp_id is = " + chk_tmp_id);
-				chk_tmp_id = chk_tmp_id + 1;
-			}
-			sess.setAttribute("temp_id", chk_tmp_id);
-			sessid = chk_tmp_id;
-		}
-
-		System.err.println("inside saveTempInvoice() sessid = " + sessid);
-
-		Long prod_id = teinv.getProduct().getPid();
-		Long p_hsn = teinv.getProduct().getProd_hsn();
-		Integer p_qty = teinv.getQty();
-		Float p_cust_price = teinv.getCustom_price();
-		Float unit_price = 0.0f;
-
-		float sub_tot, cgst, sgst, igst, total;
-
-		Product tem = prodserv.getProductById(prod_id);
-		if (p_cust_price > 0) {
-			unit_price = (float) (p_cust_price / 1.18);
-		} else {
-			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
-		}
-
-		sub_tot = unit_price * teinv.getQty();
-
-		if (teinv.getStoption().equals("mh")) {
-			teinv.setCgst_per(tem.getCgst_per());
-			teinv.setSgst_per(tem.getSgst_per());
-			teinv.setIgst(0);
-
-			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
-			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
-			igst = Math.round((sub_tot / 100) * teinv.getIgst_per());
-		} else {
-			teinv.setIgst_per(tem.getIgst_per());
-			teinv.setCgst_per(0);
-			teinv.setSgst_per(0);
-
-			cgst = Math.round((sub_tot / 100) * teinv.getCgst_per());
-			sgst = Math.round((sub_tot / 100) * teinv.getSgst_per());
-			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
-		}
-
-		teinv.setTemp_invoice_id(sessid);
-		teinv.setCgst(cgst);
-		teinv.setSgst(sgst);
-		teinv.setIgst(igst);
-
-		Long phsn = tem.getProd_hsn();
-		String nhsn = String.valueOf(phsn);
-		teinv.setHsn(nhsn);
-		teinv.setUnit(tem.getProd_unit());
-		teinv.setUnit_price(unit_price);
-		teinv.setTotal(sub_tot + cgst + sgst + igst);
-
-		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv);
+		Temp_Invoice tmpinv = tempinserv.saveTempInvoice(teinv,request);
 		if (tmpinv != null) {
-			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(sessid),
+			return new ResponseEntity<List<Temp_Invoice>>(tempinserv.getTempInvByTempInvoiceId(tmpinv.getTemp_invoice_id()),
 					HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<List<Temp_Invoice>>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -50,7 +50,7 @@ public class InvoiceServImpl implements InvoiceService {
 //		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
 
 		Integer temp_id = Integer.parseInt("" + invoice.getOrder_id());
-		tempinvrepo.findById(temp_id).get();
+//		tempinvrepo.findById(temp_id).get();
 
 		List<Temp_Invoice> tmplist = tempinvrepo.getTempInvById(temp_id);
 
@@ -86,6 +86,8 @@ public class InvoiceServImpl implements InvoiceService {
 			invprod.setOrder_id(order_id);
 
 			last_total = last_total + tmplist.get(i).getTotal();
+			invprod.setTotal(last_total);
+			
 			invprodrepo.save(invprod);
 
 		}

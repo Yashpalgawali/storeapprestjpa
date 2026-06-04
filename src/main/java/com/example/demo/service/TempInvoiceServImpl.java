@@ -12,6 +12,7 @@ import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.TempInvoiceRepo;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,17 +21,90 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TempInvoiceServImpl implements TempInvoiceService {
 
-	
 	private final TempInvoiceRepo tempinvrepo;
-	
+
 	private final ProductRepository prodrepo;
 
+//	private final TempInvoiceService tempinserv;
+	
+	private final ProductService prodserv;
 
 	private Logger logger = LoggerFactory.getLogger(TempInvoiceServImpl.class);
-	
+
 	@Override
-	public Temp_Invoice saveTempInvoice(Temp_Invoice tin) {
-		logger.error("Temp Invoice is {} ",tin);
+	public Temp_Invoice saveTempInvoice(Temp_Invoice tin,HttpServletRequest request) {
+		logger.error("Temp Invoice is {} ", tin);
+		
+		HttpSession sess = request.getSession();
+		Integer sessid = (Integer) sess.getAttribute("temp_id");
+		System.err.println(
+				"Inside saveTempInvoice() session ID is " + sess.getId() + "\n temp_id in the session is " + sessid);
+ 
+		Integer chk_tmp_id = 0;
+		if (sessid == null) {
+			chk_tmp_id = tempinvrepo.getMaxTempInvoiceNum();
+					
+			if (chk_tmp_id == null) {
+				System.err.println("MAX temp_id is  NULL \n");
+				chk_tmp_id = 1;
+
+			} else {
+				System.err.println("MAX temp_id is = " + chk_tmp_id);
+				chk_tmp_id = chk_tmp_id + 1;
+			}
+			sess.setAttribute("temp_id", chk_tmp_id);
+			sessid = chk_tmp_id;
+		}
+
+		System.err.println("inside saveTempInvoice() sessid = " + sessid);
+
+		Long prod_id = tin.getProduct().getPid();
+		Long p_hsn = tin.getProduct().getProd_hsn();
+		Integer p_qty = tin.getQty();
+		Float p_cust_price = tin.getCustom_price();
+		Float unit_price = 0.0f;
+
+		float sub_tot, cgst, sgst, igst, total;
+
+		Product tem = prodserv.getProductById(prod_id);
+		if (p_cust_price > 0) {
+			unit_price = (float) (p_cust_price / 1.18);
+		} else {
+			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
+		}
+
+		sub_tot = unit_price * tin.getQty();
+
+		if (tin.getStoption().equals("mh")) {
+			tin.setCgst_per(tem.getCgst_per());
+			tin.setSgst_per(tem.getSgst_per());
+			tin.setIgst(0);
+
+			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
+			igst = Math.round((sub_tot / 100) * tin.getIgst_per());
+		} else {
+			tin.setIgst_per(tem.getIgst_per());
+			tin.setCgst_per(0);
+			tin.setSgst_per(0);
+
+			cgst = Math.round((sub_tot / 100) * tin.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * tin.getSgst_per());
+			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
+		}
+
+		tin.setTemp_invoice_id(sessid);
+		tin.setCgst(cgst);
+		tin.setSgst(sgst);
+		tin.setIgst(igst);
+
+		Long phsn = tem.getProd_hsn();
+		String nhsn = String.valueOf(phsn);
+		tin.setHsn(nhsn);
+		tin.setUnit(tem.getProd_unit());
+		tin.setUnit_price(unit_price);
+		tin.setTotal(sub_tot + cgst + sgst + igst);
+		
 		return tempinvrepo.save(tin);
 	}
 
@@ -41,88 +115,84 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 
 	@Override
 	public Integer getMaxTempInvoiceId() {
-		return  tempinvrepo.getMaxTempInvoiceNum();
+		return tempinvrepo.getMaxTempInvoiceNum();
 	}
 
 	@Override
 	public boolean deleteSelectedTempInvoice(String temp_id) {
 		Integer tid = Integer.parseInt(temp_id);
 
-		if(tempinvrepo.existsById(tid)) {
+		if (tempinvrepo.existsById(tid)) {
 			tempinvrepo.deleteById(tid);
-			
+
 //			Activities act = new Activities("Product with ID "+temp_id+" deleted from table ", LocalDate.now().format(Global.DATE_FORMATTER),  LocalDate.now().format(Global.TIME_FORMATTER));
 //			actrepo.save(act);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
 
 	@Override
 	public List<Temp_Invoice> getTempInvByTempInvoiceId(Integer tid) {
-		
+
 		return tempinvrepo.getTempInvByTempInvoiceId(tid);
 	}
 
 	@Override
-	public int updateTempInvoice(Temp_Invoice teinv,HttpServletRequest request) {
-		
-		Long 	prod_id 	= teinv.getProduct().getPid();
-		Long 	p_hsn 		= teinv.getProduct().getProd_hsn();
-		Integer p_qty   	= teinv.getQty();
-		Float   p_cust_price= teinv.getCustom_price();
-		Float unit_price=0.0f;
-		
-		float sub_tot,cgst,sgst,igst,total;
-		
-		Product tem = prodrepo.findById(prod_id).get();
- 		if(p_cust_price> 0){
-			unit_price = (float) (p_cust_price / 1.18);
-		}
-		else{
-			unit_price = (float) (Float.parseFloat(tem.getProd_price())/(1.18));
-		}
-		
-		sub_tot = unit_price * teinv.getQty();
-		
-		if(teinv.getStoption().equals("mh")) {
-			teinv.setCgst_per(tem.getCgst_per());
-			teinv.setSgst_per(tem.getSgst_per());
-			teinv.setIgst(0);
+	public int updateTempInvoice(Temp_Invoice tin, HttpServletRequest request) {
 
-			cgst = Math.round((sub_tot/100) * tem.getCgst_per());
-			sgst = Math.round((sub_tot/100) * tem.getSgst_per());
-			igst = Math.round((sub_tot/100) * teinv.getIgst_per());
+		Long prod_id = tin.getProduct().getPid();
+		Long p_hsn = tin.getProduct().getProd_hsn();
+		Integer p_qty = tin.getQty();
+		Float p_cust_price = tin.getCustom_price();
+		Float unit_price = 0.0f;
+
+		float sub_tot, cgst, sgst, igst, total;
+
+		Product tem = prodrepo.findById(prod_id).get();
+		if (p_cust_price > 0) {
+			unit_price = (float) (p_cust_price / 1.18);
+		} else {
+			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
 		}
-		else {	
-			teinv.setIgst_per(tem.getIgst_per());
-			teinv.setCgst_per(0);
-			teinv.setSgst_per(0);
-			
-			cgst = Math.round((sub_tot/100) * teinv.getCgst_per());
-			sgst = Math.round((sub_tot/100) * teinv.getSgst_per());
-			igst = Math.round((sub_tot/100) * tem.getIgst_per());
+
+		sub_tot = unit_price * tin.getQty();
+
+		if (tin.getStoption().equals("mh")) {
+			tin.setCgst_per(tem.getCgst_per());
+			tin.setSgst_per(tem.getSgst_per());
+			tin.setIgst(0);
+
+			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
+			igst = Math.round((sub_tot / 100) * tin.getIgst_per());
+		} else {
+			tin.setIgst_per(tem.getIgst_per());
+			tin.setCgst_per(0);
+			tin.setSgst_per(0);
+
+			cgst = Math.round((sub_tot / 100) * tin.getCgst_per());
+			sgst = Math.round((sub_tot / 100) * tin.getSgst_per());
+			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
 		}
-		
-		teinv.setTemp_invoice_id(teinv.getTemp_id());
-		teinv.setCgst(cgst);
-		teinv.setSgst(sgst);
-		teinv.setIgst(igst);
-		
+
+		tin.setTemp_invoice_id(tin.getTemp_id());
+		tin.setCgst(cgst);
+		tin.setSgst(sgst);
+		tin.setIgst(igst);
+
 		Long phsn = tem.getProd_hsn();
 		String nhsn = String.valueOf(phsn);
-		teinv.setHsn(nhsn);
-		teinv.setUnit(tem.getProd_unit());
-		teinv.setUnit_price(unit_price);
-		teinv.setTotal(sub_tot+cgst+sgst+igst);
-		
-		Temp_Invoice tmpinv = tempinvrepo.save(teinv);
-		if(tmpinv!=null) {
+		tin.setHsn(nhsn);
+		tin.setUnit(tem.getProd_unit());
+		tin.setUnit_price(unit_price);
+		tin.setTotal(sub_tot + cgst + sgst + igst);
+
+		Temp_Invoice tmpinv = tempinvrepo.save(tin);
+		if (tmpinv != null) {
 			return 1;
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}

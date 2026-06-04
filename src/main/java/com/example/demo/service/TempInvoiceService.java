@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface TempInvoiceService {
 
-	public Temp_Invoice saveTempInvoice(Temp_Invoice tin);
+	public Temp_Invoice saveTempInvoice(Temp_Invoice tin,HttpServletRequest request);
 	
 	public List<Temp_Invoice> getTempInvById(Integer tid);
 	
