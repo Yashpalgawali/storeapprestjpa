@@ -28,6 +28,6 @@ public class ExamplePOTempProducts {
 	private Integer temp_id;
 	@OneToOne
 	@JoinColumn(name="prod_id")
-	private PoProductsList product;
+	private PoProducts product;
 	
 }

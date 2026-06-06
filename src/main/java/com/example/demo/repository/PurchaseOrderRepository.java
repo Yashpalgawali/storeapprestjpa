@@ -8,4 +8,5 @@ import com.example.demo.models.PurchaseOrder;
 @Repository("porderrepo")
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Integer> {
 
+//	public int updatePurchaseOrder()
 }

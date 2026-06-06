@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,12 +48,18 @@ public class CreditNoteProduct {
 
 	private Integer order_id;
 	
+	private Integer credit_note_id;
+	
+	private float price;
+//	@Transient
+//	private float custom_price;
+//
+//	@Transient
+//	private String stoption;
+//	
 	@ManyToOne
 	@JoinColumn(name="prod_id")
 	private Product product;
 	
-	@ManyToOne
-	@JoinColumn(name="customer_id")
-	private Customer customer;
-		
+ 
 }

@@ -17,4 +17,6 @@ public interface PoProductsService {
 	public void RemovePoProductById(Integer id);
 	
 	public PurchaseOrderProducts getPurchaseorderProductById(Integer id);
+	
+	public PurchaseOrderProducts updatePurchaseOrderProducts(PurchaseOrderProducts poprod, HttpServletRequest request);
 }

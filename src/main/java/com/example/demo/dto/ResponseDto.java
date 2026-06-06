@@ -10,6 +10,6 @@ public class ResponseDto {
 	
 	private String responseMessage;
 	
-	private HttpStatus errorCode;
+	private HttpStatus statusCode;
 	
 }

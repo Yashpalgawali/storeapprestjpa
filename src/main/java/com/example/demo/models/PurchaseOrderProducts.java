@@ -15,11 +15,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name="tbl_po_products")
 @SequenceGenerator(name="po_products_seq",initialValue = 1, allocationSize = 1)
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor 
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
 public class PurchaseOrderProducts {
  
 	@Id
@@ -51,7 +52,7 @@ public class PurchaseOrderProducts {
 	
 	@OneToOne
 	@JoinColumn(name="po_prod_id")
-	private PoProductsList product;
+	private PoProducts product;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="po_id")

@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("vendor")
 @Validated
-@Tag(name = "CRUD REST API for Vendor in the application", description = "CRUD REST APIs in storeapplication to CREATE,GET,UPDATE,DELETE Vendor details")
+@Tag(name = "CRUD REST API for Vendor in the Application", description = "CRUD REST API's in Store Application to CREATE, GET, UPDATE, DELETE Vendor details")
 @RequiredArgsConstructor
 public class VendorRestController {
 
@@ -43,11 +43,16 @@ public class VendorRestController {
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Vendor "+vendor.getVendor_name()+" is created successfully ",HttpStatus.CREATED));
 	
 	}
+//
+//	@GetMapping("/")
+//	public ResponseEntity<List<Vendor>> viewVendors(HttpServletRequest request) {
+//		HttpSession sess = request.getSession();
+//		System.err.println("Inside viewvendors() \n session ID is " + sess.getId());
+//		return new ResponseEntity<List<Vendor>>(vendorserv.getAllVendors(), HttpStatus.OK);
+//	}
 
 	@GetMapping("/")
-	public ResponseEntity<List<Vendor>> viewVendors(HttpServletRequest request) {
-		HttpSession sess = request.getSession();
-		System.err.println("Inside viewvendors() \n session ID is " + sess.getId());
+	public ResponseEntity<List<Vendor>> viewVendors() {		
 		return new ResponseEntity<List<Vendor>>(vendorserv.getAllVendors(), HttpStatus.OK);
 	}
 

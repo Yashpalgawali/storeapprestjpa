@@ -2,28 +2,28 @@ package com.example.demo.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
-import com.example.demo.models.PoProductsList;
+import com.example.demo.models.PoProducts;
 import com.example.demo.repository.ActivityRepository;
-import com.example.demo.repository.PoProductListRepository;
+import com.example.demo.repository.PoProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service("poprodlistserv")
+@Service("poprodserv")
 @RequiredArgsConstructor
-public class PoProductListServImpl implements PoProductListService {
+public class PoProductServImpl implements PoProductService {
 
-	private final PoProductListRepository poprodlistrepo;
+	private final PoProductRepository poprodlistrepo;
 	private final ActivityRepository actrepo;	
 	
 	@Override
-	public PoProductsList savePoProductsList(PoProductsList poprod) {
+	public void savePoProductsList(PoProducts poprod) {
 
 		int cgst_per = poprod.getGst_rate()/2;
 		int igst_per = poprod.getGst_rate();
@@ -31,48 +31,44 @@ public class PoProductListServImpl implements PoProductListService {
 		poprod.setSgst_per(cgst_per);
 		poprod.setIgst_per(igst_per);
 		
-		PoProductsList prod = poprodlistrepo.save(poprod);
+		PoProducts prod = poprodlistrepo.save(poprod);
 		if(prod!=null) {
 			Activities activity = new Activities();
-			activity.setActivity("Product "+prod.getProd_name() +" is Saved successfully");
+			activity.setActivity("PO Product "+prod.getProd_name() +" is Saved successfully");
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
 		}
 		else {
 			Activities activity = new Activities();
-			activity.setActivity("Product is Not saved successfully");
+			activity.setActivity("PO Product is Not saved successfully");
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			
+			throw new GlobalException("PO Product "+poprod.getProd_name()+" is Not saved ");
 		}
 			
-		return prod;
+		 
 	}
 
 	@Override
-	public List<PoProductsList> getAllPoProductList() {
+	public List<PoProducts> getAllPoProductList() {
 
-		List<PoProductsList> poProdList = poprodlistrepo.findAll();
+		List<PoProducts> poProdList = poprodlistrepo.findAll();
 		if(poProdList.size() > 0 )
 			return poProdList;
 		throw new ResourceNotFoundException("Po Product", "Po Product", "po product");
 	}
 
 	@Override
-	public PoProductsList getPoProductById(Integer pid) {
-		Optional<PoProductsList> poprod = poprodlistrepo.findById(pid); 
-		if(!poprod.isEmpty())
-		{
-			return poprod.get();
-		}
-		else {
-			return null;
-		}
+	public PoProducts getPoProductById(Integer pid) {
+		return poprodlistrepo.findById(pid).orElseThrow(()-> new ResourceNotFoundException("Id", "Po Product ID", ""+pid));
+		
 	}
 
 	@Override
-	public int updatePoProductsList(PoProductsList poprod) {
+	public void updatePoProductsList(PoProducts poprod) {
 
 		int cgst = poprod.getGst_rate()/2;
 		int igst = poprod.getGst_rate();
@@ -90,8 +86,10 @@ public class PoProductListServImpl implements PoProductListService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			
+			throw new GlobalException("PO Product "+poprod.getProd_name()+" is not updated ");
 		}
-		return result;
+		 
 	}
 
 }

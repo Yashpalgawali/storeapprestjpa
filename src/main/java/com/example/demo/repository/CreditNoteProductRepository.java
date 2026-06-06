@@ -10,5 +10,8 @@ import com.example.demo.models.CreditNoteProduct;
 public interface CreditNoteProductRepository extends JpaRepository<CreditNoteProduct, Integer> {
 
 	@Query("SELECT MAX(c.order_id) FROM CreditNoteProduct c")
-	 public int getMaxTempCreditNoteNumber();
+	 public Integer getMaxTempCreditNoteNumber();
+	
+	@Query("SELECT MAX(c.credit_note_id) FROM CreditNoteProduct c")
+	 public Integer getMaxCreditNoteId();
 }

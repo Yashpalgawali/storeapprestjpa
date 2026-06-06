@@ -7,6 +7,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,7 +44,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class JwtAuthentication {
- 	
+	@Autowired
+	private CustomAuthenticationEntryPoint authenticationEntryPoint;
+	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.httpBasic(basic->{});
@@ -80,6 +83,7 @@ public class JwtAuthentication {
 					response.getWriter().flush();
 				});
 			});
+	 	http.exceptionHandling(ex->ex.authenticationEntryPoint(authenticationEntryPoint));
 		http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);	
 
 		return http.build();

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.models.PurchaseOrderProducts;
 import com.example.demo.service.POPurchaseOrderProdServImpl;
 
@@ -26,16 +27,15 @@ public class TempPurchaseOrderProductsRestController {
 	private final POPurchaseOrderProdServImpl popurchaseorderserv;
 
 	@PostMapping("/")
-	public ResponseEntity<List<PurchaseOrderProducts>> savePurchaseOrderProducts(
-			@RequestBody PurchaseOrderProducts poproducts, HttpServletRequest request) {
+	public ResponseEntity<PurchaseOrderProducts> savePurchaseOrderProducts(@RequestBody PurchaseOrderProducts poproducts,
+			HttpServletRequest request) {
 
-		PurchaseOrderProducts poprod = popurchaseorderserv.savePurchaseOrderProducts(poproducts, request);
-		if (poprod != null) {
-			List<PurchaseOrderProducts> polist = popurchaseorderserv.getPOPurchaseProductsByTempId(poprod.getTemp_id());
-			return new ResponseEntity<List<PurchaseOrderProducts>>(polist, HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<List<PurchaseOrderProducts>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+//		popurchaseorderserv.savePurchaseOrderProducts(poproducts, request);
+//		return ResponseEntity.status(HttpStatus.CREATED)
+//				.body(new ResponseDto("Purchase Order created successfully", HttpStatus.CREATED));
+		
+		PurchaseOrderProducts poprods =  popurchaseorderserv.savePurchaseOrderProducts(poproducts, request);
+		return new ResponseEntity<PurchaseOrderProducts>(poprods, HttpStatus.CREATED);
 	}
 
 //	@PostMapping("/")
@@ -55,10 +55,11 @@ public class TempPurchaseOrderProductsRestController {
 //	}
 
 	@GetMapping("/{tempid}")
-	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable Integer tempid) {
-		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(tempid);
+	public ResponseEntity<List<PurchaseOrderProducts>> getPurchaseOrderProductsByTempId(@PathVariable String tempid) {
+		
+		List<PurchaseOrderProducts> tempList = popurchaseorderserv.getPOPurchaseProductsByTempId(Integer.parseInt(tempid));
 		System.err.println("inside getPOPurchaseProductsByTempId() Temp Id= " + tempid + "\n");
-		tempList.stream().forEach(e -> System.err.println(e));
+
 		if (tempList.size() > 0) {
 			return new ResponseEntity<List<PurchaseOrderProducts>>(tempList, HttpStatus.OK);
 		} else {
@@ -67,18 +68,12 @@ public class TempPurchaseOrderProductsRestController {
 	}
 
 	@DeleteMapping("/remove/product/{id}")
-	public ResponseEntity<String> removePOProductById(@PathVariable Integer id) {
+	public ResponseEntity<ResponseDto> removePOProductById(@PathVariable Integer id) {
 
-		PurchaseOrderProducts prod_obj = popurchaseorderserv.getPurchaseorderProductById(id);
+		popurchaseorderserv.getPurchaseorderProductById(id);
 
-		// System.err.println("inside delete mapping \n Product is
-		// "+prod_obj.toString());
-		if (prod_obj != null) {
-			popurchaseorderserv.RemovePoProductById(id);
-			return new ResponseEntity<String>("Product is removed", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("Product is NOT removed", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		popurchaseorderserv.RemovePoProductById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Product is removed", HttpStatus.OK));
 
 	}
 }

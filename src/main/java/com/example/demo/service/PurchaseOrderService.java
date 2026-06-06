@@ -14,7 +14,7 @@ public interface PurchaseOrderService {
 	
 	public PurchaseOrder getPurchaseOrderById(Integer pid);
 	
-	public int updatePurchaseOrder(PurchaseOrder porder);
+	public PurchaseOrder updatePurchaseOrder(PurchaseOrder porder);
 	
 	
 }

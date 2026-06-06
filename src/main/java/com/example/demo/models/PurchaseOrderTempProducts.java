@@ -50,6 +50,6 @@ public class PurchaseOrderTempProducts {
 	@OneToOne()
 //		@JsonIgnore
 	@JoinColumn(name = "prod_id")
-	private PoProductsList product;
+	private PoProducts product;
 
 }

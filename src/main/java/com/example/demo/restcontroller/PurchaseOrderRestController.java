@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.models.PurchaseOrder;
 import com.example.demo.service.PoProductsService;
 import com.example.demo.service.PurchaseOrderServImpl;
@@ -31,48 +32,40 @@ public class PurchaseOrderRestController {
 	@PostMapping("/")
 	public ResponseEntity<PurchaseOrder> savePurchaseOrder(@RequestBody PurchaseOrder porder,HttpServletRequest request)
 	{
+//		HttpSession sess = request.getSession();
+//		 
+//		porderserv.savePurchaseOrder(porder,request);
+//		sess.removeAttribute("temp_po_id");
+//		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Purchase Order is created successfully", HttpStatus.CREATED));
+
 		HttpSession sess = request.getSession();
 		 
-		PurchaseOrder pord = porderserv.savePurchaseOrder(porder,request);
-		if(pord!=null)
-		{
-			sess.removeAttribute("temp_po_id");
-			return new ResponseEntity<PurchaseOrder>(pord, HttpStatus.CREATED);
-		}
-		else
-			return new ResponseEntity<PurchaseOrder>(HttpStatus.INTERNAL_SERVER_ERROR);
+		PurchaseOrder purchaseOrder = porderserv.savePurchaseOrder(porder,request);
+		sess.removeAttribute("temp_po_id");
+		return new ResponseEntity<PurchaseOrder>(purchaseOrder , HttpStatus.CREATED) ;
+
 	}
 	
 	@GetMapping("/")
 	public ResponseEntity<List<PurchaseOrder>> getAllPurchaseOrders()
 	{
 		List<PurchaseOrder> plist = porderserv.getAllPurchaseOrders();
-		if(plist.size()>0) {
-			return new ResponseEntity<List<PurchaseOrder>>(plist , HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<List<PurchaseOrder>>(HttpStatus.NO_CONTENT);
-		}
+		return new ResponseEntity<List<PurchaseOrder>>(plist , HttpStatus.OK);		
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Integer id) {
 		PurchaseOrder porder = porderserv.getPurchaseOrderById(id);
-		if(porder!=null) {
-			return new ResponseEntity<PurchaseOrder>(porder , HttpStatus.OK);
-		}
-		else {
-			return new ResponseEntity<PurchaseOrder>( HttpStatus.NOT_FOUND);
-		}
+		 
+		return new ResponseEntity<PurchaseOrder>(porder , HttpStatus.OK);
+		 
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<PurchaseOrder> updatePurchaseOrder(@RequestBody PurchaseOrder porder)
+	public ResponseEntity<ResponseDto> updatePurchaseOrder(@RequestBody PurchaseOrder porder)
 	{
-		int result = porderserv.updatePurchaseOrder(porder);
-		if(result>0)
-			return new ResponseEntity<PurchaseOrder>(porderserv.getPurchaseOrderById(porder.getPo_id()), HttpStatus.OK);
-		else
-			return new ResponseEntity<PurchaseOrder>(HttpStatus.NOT_MODIFIED);
+		porderserv.updatePurchaseOrder(porder);
+		return  ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Purchase Order is updated Successfully",  HttpStatus.OK));
+		
 	}
 }
