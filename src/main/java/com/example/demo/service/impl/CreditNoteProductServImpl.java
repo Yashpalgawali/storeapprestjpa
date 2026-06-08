@@ -61,11 +61,11 @@ public class CreditNoteProductServImpl implements ICreditNoteProductService {
 		Product product = prodserv.getProductById(creditNoteProduct.getProduct().getPid());
 		
 		String state = creditNoteProduct.getStoption();
-		p_cust_price = creditNoteProduct.getCustom_price();
+		p_cust_price = (float) (creditNoteProduct.getCustom_price() * 1.18);
 				
 		System.err.println("User entered the custom price "+p_cust_price);
 				
- 		if(p_cust_price <= 0 ) {	
+ 		if(p_cust_price > 0 ) {	
 			unit_price =  (float) (p_cust_price / 1.18);
 		}
 		else {			
@@ -76,7 +76,7 @@ public class CreditNoteProductServImpl implements ICreditNoteProductService {
  		
  		System.err.println("Unit price "+unit_price+" \n SUbtotal = "+sub_tot );
  		
- 		creditNoteProduct.setPrice(p_cust_price);
+ 		creditNoteProduct.setPrice(unit_price);
  		creditNoteProduct.setSubtotal(sub_tot);
  		
 		System.err.println("State Option "+state+"\n SUbtotal is "+sub_tot);

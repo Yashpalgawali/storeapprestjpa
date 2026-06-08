@@ -6,7 +6,7 @@ import com.example.demo.models.CreditNote;
 
 public interface CreditNoteService {
 
-	public CreditNote saveCreditNote(CreditNote creditnote);
+	public void saveCreditNote(CreditNote creditnote);
 	
 	public List<CreditNote> getAllCreditNotes();
 	
