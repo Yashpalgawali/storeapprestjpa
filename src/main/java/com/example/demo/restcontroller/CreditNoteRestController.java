@@ -16,7 +16,6 @@ import com.example.demo.models.CreditNote;
 import com.example.demo.service.CreditNoteService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,12 +27,6 @@ public class CreditNoteRestController {
 	
 	@PostMapping("/")
 	public ResponseEntity<ResponseDto> saveCreditNote(@RequestBody CreditNote creditNote,HttpServletRequest request) {
-		
-		System.err.println("In controller Credit note Object "+creditNote.toString());
-		
-		HttpSession sess =request.getSession();
-		
-		System.err.println("Orrder ID in session is "+sess.getAttribute("temp_id"));
 		creditnoteserv.saveCreditNote(creditNote);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Credit Note is created successfully",HttpStatus.CREATED) );
 	}
