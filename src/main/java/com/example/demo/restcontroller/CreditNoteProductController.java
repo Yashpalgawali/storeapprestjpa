@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +28,10 @@ public class CreditNoteProductController {
 	private final ICreditNoteProductService creditnoteprodserv;
 	
 	@PostMapping("/")
-	public ResponseEntity<ResponseDto> saveCreditNoteProduct(@RequestBody CreditNoteProductDto creditnoteprod, HttpServletRequest request )
+	public ResponseEntity<CreditNoteProductDto> saveCreditNoteProduct(@RequestBody CreditNoteProductDto creditnoteprod, HttpServletRequest request )
 	{
-		creditnoteprodserv.saveCreditNoteProduct(creditnoteprod, request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto( "Credit Note product saved successfully" ,HttpStatus.CREATED )); 
+		CreditNoteProductDto savedCreditNoteProd =creditnoteprodserv.saveCreditNoteProduct(creditnoteprod, request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedCreditNoteProd); 
 	}
 	
 	@GetMapping("/{id}")
@@ -39,5 +40,12 @@ public class CreditNoteProductController {
 		List<CreditNoteProduct> prodList = creditnoteprodserv.getCreditNoteProductsByOrderId(id);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(prodList);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<ResponseDto> deleteCreditNoteProductsById(@PathVariable Integer id){
+		
+		creditnoteprodserv.deleteCreditNoteProductByCreditNoteProductId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Credit note product deleted", HttpStatus.OK));
 	}
 }

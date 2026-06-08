@@ -9,9 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface ICreditNoteProductService {
 
-
-	
 	public List<CreditNoteProduct> getCreditNoteProductsByOrderId(Integer order_id);
 
-	public void saveCreditNoteProduct(CreditNoteProductDto creditNoteProduct, HttpServletRequest request);
+	public CreditNoteProductDto saveCreditNoteProduct(CreditNoteProductDto creditNoteProduct,
+			HttpServletRequest request);
+	
+	public void deleteCreditNoteProductByCreditNoteProductId(Integer id);
 }

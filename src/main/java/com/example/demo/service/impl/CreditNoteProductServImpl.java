@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.CreditNoteProductDto;
+import com.example.demo.exception.GlobalException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.mapper.CreditNoteProductMapper;
 import com.example.demo.models.CreditNoteProduct;
@@ -26,7 +29,7 @@ public class CreditNoteProductServImpl implements ICreditNoteProductService {
 	private final ProductService prodserv;
 	
 	@Override
-	public void saveCreditNoteProduct(CreditNoteProductDto creditNoteProduct,HttpServletRequest request) {
+	public CreditNoteProductDto saveCreditNoteProduct(CreditNoteProductDto creditNoteProduct,HttpServletRequest request) {
 		System.err.println("Credit note Product Object is "+creditNoteProduct.toString());
 		
 		HttpSession sess = request.getSession();
@@ -118,13 +121,32 @@ public class CreditNoteProductServImpl implements ICreditNoteProductService {
 		
 	 	CreditNoteProduct mappedCreditNoteProduct = CreditNoteProductMapper.mapToCreditNoteProduct(creditNoteProduct, new CreditNoteProduct() );
 	 	
-		creditnoteprodrepo.save(mappedCreditNoteProduct);
+		CreditNoteProduct saveCreditNoteProductDto = creditnoteprodrepo.save(mappedCreditNoteProduct);
+		if(saveCreditNoteProductDto!= null ) {
+			creditNoteProduct.setCredit_note_prod_id(saveCreditNoteProductDto.getCredit_note_prod_id());
+			return creditNoteProduct;
+		}
+		else {
+			throw new GlobalException("Credit Note Product is not saved");
+		}
 	}
 
 	@Override
 	public List<CreditNoteProduct> getCreditNoteProductsByOrderId(Integer order_id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<CreditNoteProduct> credNoteProdList = creditnoteprodrepo.getAllCreditNoteProductsByOrderId(order_id);
+		if(credNoteProdList.size() > 0)
+			return credNoteProdList;
+		throw new ResourceNotFoundException("Credit Note Products", "Order Id" , ""+order_id);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCreditNoteProductByCreditNoteProductId(Integer id) {
+		
+		creditnoteprodrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Credit Note Product", "ID ", ""+id));		
+		
+		creditnoteprodrepo.deleteCreditNoteProductByCredNoteProdId(id);
+		
 	}
 
 }

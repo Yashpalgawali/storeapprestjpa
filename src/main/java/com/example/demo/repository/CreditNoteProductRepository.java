@@ -1,7 +1,11 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.models.CreditNoteProduct;
@@ -10,8 +14,15 @@ import com.example.demo.models.CreditNoteProduct;
 public interface CreditNoteProductRepository extends JpaRepository<CreditNoteProduct, Integer> {
 
 	@Query("SELECT MAX(c.order_id) FROM CreditNoteProduct c")
-	 public Integer getMaxTempCreditNoteNumber();
-	
+	public Integer getMaxTempCreditNoteNumber();
+
 	@Query("SELECT MAX(c.credit_note_id) FROM CreditNoteProduct c")
-	 public Integer getMaxCreditNoteId();
+	public Integer getMaxCreditNoteId();
+
+	@Query("SELECT c FROM CreditNoteProduct c WHERE c.order_id=:orderid")
+	public List<CreditNoteProduct> getAllCreditNoteProductsByOrderId(Integer orderid);
+	
+	@Query("DELETE FROM CreditNoteProduct c WHERE c.credit_note_prod_id=:id")
+	@Modifying
+	public void deleteCreditNoteProductByCredNoteProdId(@Param("id") Integer id);
 }
