@@ -11,4 +11,5 @@ public interface CreditNoteRepository extends JpaRepository<CreditNote, Integer>
 
 	@Query("SELECT MAX(c.credit_note_num)  FROM  CreditNote c")
 	public Integer getMaxCreditNoteNumber();
+		
 }

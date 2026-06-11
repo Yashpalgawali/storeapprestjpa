@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import com.example.demo.models.Prefix;
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
 import com.example.demo.repository.ActivityRepository;
-import com.example.demo.repository.CustomerRepo;
 import com.example.demo.repository.InvoiceProductRepo;
 import com.example.demo.repository.InvoiceRepo;
 import com.example.demo.repository.PrefixRepository;
@@ -36,7 +36,6 @@ public class InvoiceServImpl implements InvoiceService {
 	private final TempInvoiceRepo tempinvrepo;
 	private final ProductRepository prodrepo;
 	private final InvoiceProductRepo invprodrepo;
-	private final CustomerRepo customerrepo;
 	private final PrefixRepository prefixrepo;
 	private final ActivityRepository actrepo;
 
@@ -194,5 +193,19 @@ public class InvoiceServImpl implements InvoiceService {
 			actrepo.save(activity);
 		}
 		return res;
+	}
+
+	@Override
+	public Invoice getInvoiceByOrderId(Integer orderid) {
+
+		Optional<Invoice> invoice = invrepo.getInvoiceByOrderId(orderid);
+		if(invoice.isPresent()) {
+			System.err.println("getinvoicebyorderID() order ID  "+orderid+" is ");
+			return invoice.get();
+		}
+		else {
+			throw new ResourceNotFoundException("Invoice", "Order ID ", ""+orderid);
+		}
+		 
 	}
 }

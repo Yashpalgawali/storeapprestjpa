@@ -11,4 +11,6 @@ public interface CreditNoteService {
 	public List<CreditNote> getAllCreditNotes();
 	
 	public CreditNote getCreditNotebyId(Integer id);
+	
+	public CreditNote getCreditNotebyOrderId(Integer orderid);
 }

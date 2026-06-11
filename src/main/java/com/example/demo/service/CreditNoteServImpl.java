@@ -10,6 +10,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.globalconfig.Global;
 import com.example.demo.models.CreditNote;
 import com.example.demo.models.Customer;
+import com.example.demo.models.Invoice;
 import com.example.demo.repository.CreditNoteRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class CreditNoteServImpl implements CreditNoteService {
 	private final CreditNoteRepository crednoterepo;
 
 	private final CustomerService custserv;
+	
+	private final InvoiceService invserv;
 	
 	@Override
 	public void saveCreditNote(CreditNote creditnote) {
@@ -37,6 +40,9 @@ public class CreditNoteServImpl implements CreditNoteService {
 		}
 		
 		creditnote.setDate_added(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+		
+		creditnote.setInvoice(null);
+		
 		CreditNote crednote = crednoterepo.save(creditnote);
 		if(crednote==null) {
 			throw new GlobalException("Crdit Note is not created");
@@ -53,7 +59,21 @@ public class CreditNoteServImpl implements CreditNoteService {
 
 	@Override
 	public CreditNote getCreditNotebyId(Integer id) {
- 		return crednoterepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Credit Note", "ID", ""+id));
+ 		CreditNote creditNote = crednoterepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Credit Note", "ID", ""+id));
+		
+ 		Invoice inv = invserv.getInvoiceByOrderId(creditNote.getOrder_id());
+ 		
+ 		System.err.println("Invoice found by Order ID "+creditNote.getOrder_id() +"is "+inv.toString());
+ 		creditNote.setInvoice(inv);
+ 		System.err.println("Found credit note for ID "+id+" is "+creditNote.toString());
+ 		return  creditNote;
+ 		
+	}
+
+	@Override
+	public CreditNote getCreditNotebyOrderId(Integer orderid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

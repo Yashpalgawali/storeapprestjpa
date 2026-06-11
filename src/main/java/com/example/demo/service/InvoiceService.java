@@ -18,4 +18,5 @@ public interface InvoiceService {
 
 	public int updateInvoiceById(Invoice invoice, HttpServletRequest request);
 
+	public Invoice getInvoiceByOrderId(Integer orderid);
 }

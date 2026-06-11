@@ -12,24 +12,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_credit_note")
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor @ToString
 public class CreditNote {
 
 	@Id
 	@SequenceGenerator(name = "credit_note_seq", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(generator = "credit_note_seq", strategy = GenerationType.AUTO)
 	private Integer credit_note_id;
-	
+
 	private Integer credit_note_num;
 
 	private Integer order_id;
-	
+
 	private String prefix;
 
 	private String date_added;
@@ -38,6 +39,8 @@ public class CreditNote {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
-	 
+	@ManyToOne()
+	@JoinColumn(name = "invoice_id")
+	private Invoice invoice;
 
 }

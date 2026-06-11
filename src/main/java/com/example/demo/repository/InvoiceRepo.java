@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -37,4 +38,6 @@ public interface InvoiceRepo extends JpaRepository<Invoice, Integer> {
 	@Query("UPDATE Invoice i set i.order_id=:order_id,i.invoice_no=:invoice_no,i.total_amount=:total_amount,i.customer.customer_id=:cust_id,i.date_added=:date_added,i.updated_date=:updated_date,i.vehicle=:vehicle,i.batch_no=:batch_no,i.orderponumber=:orderponumber WHERE i.invoice_id=:id")
 	public int updateInvoiceById(Integer id,Integer order_id,Integer invoice_no,Float total_amount,Long cust_id,String date_added,String updated_date,String vehicle,String batch_no,String orderponumber);
 	
+	@Query("SELECT i FROM Invoice i WHERE i.order_id=:orderid")
+	public Optional<Invoice> getInvoiceByOrderId(Integer orderid);
 }
