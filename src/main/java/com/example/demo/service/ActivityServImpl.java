@@ -7,15 +7,14 @@ import org.springframework.stereotype.Service;
 import com.example.demo.models.Activities;
 import com.example.demo.repository.ActivityRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("actserv")
+@RequiredArgsConstructor
 public class ActivityServImpl implements ActivityService {
 
 	private final ActivityRepository actrepo;
-	
-	public ActivityServImpl(ActivityRepository actrepo) {
-		this.actrepo = actrepo;
-	}
-	
+
 	@Override
 	public Activities saveActivity(Activities activity) {
 

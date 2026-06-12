@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.globalconfig.Global;
 import com.example.demo.models.Activities;
 import com.example.demo.models.PoProducts;
 import com.example.demo.models.PurchaseOrderProducts;
@@ -126,16 +127,16 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		if(savedpoprod != null) {
 			Activities act = new Activities();
 			act.setActivity("Purchase Order products saved successfully");
-			act.setActivity_date(LocalDateTime.now().toString());
-			act.setActivity_time(LocalDateTime.now().toString());
+			act.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			act.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			
 			actrepo.save(act);
 		}
 		else {
 			Activities act = new Activities();
 			act.setActivity("Purchase Order products are not saved ");
-			act.setActivity_date(LocalDateTime.now().toString());
-			act.setActivity_time(LocalDateTime.now().toString());
+			act.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			act.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			
 			actrepo.save(act);
 		}
@@ -178,7 +179,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		HttpSession sess = request.getSession();
 
 		Integer sessid = (Integer) sess.getAttribute("temp_po_id");
-		System.err.println("temp po id in session is " + sessid + "\n");
+
 		Integer chk_tmp_id = 0;
 		if (sessid == null) {
 			chk_tmp_id = po_prod_repo.getMaxTempId();
@@ -206,9 +207,7 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 		subtotal = unit_price * poprod.getQty();
 
 		poprod.setUnit_price(unit_price);
-		System.err.println("Check state option \n Is this MH = " + stoption.equals("mh") + "\n Is this Other = "
-				+ stoption.equals("ot"));
-
+		
 		int gst_rate = poprod.getProduct().getIgst_per();
 
 		if (stoption.equals("mh")) {
@@ -259,23 +258,21 @@ public class POPurchaseOrderProdServImpl implements PoProductsService {
 
 		poprod.setPo_id(null);
 
-		System.err.println("Inside update POpurchaseorder service " + poprod.toString());
-
 		PurchaseOrderProducts savedpoprod = po_prod_repo.save(poprod);
 				
 		if(savedpoprod != null) {
 			Activities act = new Activities();
 			act.setActivity("Purchase Order products saved successfully");
-			act.setActivity_date(LocalDateTime.now().toString());
-			act.setActivity_time(LocalDateTime.now().toString());
+			act.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			act.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			
 			actrepo.save(act);
 		}
 		else {
 			Activities act = new Activities();
 			act.setActivity("Purchase Order products are not saved ");
-			act.setActivity_date(LocalDateTime.now().toString());
-			act.setActivity_time(LocalDateTime.now().toString());
+			act.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
+			act.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			
 			actrepo.save(act);
 		}

@@ -44,7 +44,10 @@ public class CustomerServImpl implements CustomerService {
 	@Override
 	public List<Customer> getAllCustomers() {
 
-		return custrepo.findAll();
+		List<Customer> custList = custrepo.findAll();
+		if(custList.size() > 0)
+			return custList;
+		throw new GlobalException("No Customer(s) found");
 	}
 
 	@Override
