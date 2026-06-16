@@ -43,51 +43,48 @@ public class InvoiceServImpl implements InvoiceService {
 
 	@Override
 	public Invoice saveInvoice(Invoice invoice, HttpServletRequest request) {
-
-		HttpSession sess = request.getSession();
-//		Integer temp_id = (Integer) sess.getAttribute("temp_id");
-//		List<Temp_Invoice> tmplist = tempinserv.getTempInvById(temp_id);
-
+ 
 		Integer temp_id = Integer.parseInt("" + invoice.getOrder_id());
-//		tempinvrepo.findById(temp_id).get();
-
-		List<Temp_Invoice> tmplist = tempinvrepo.getTempInvById(temp_id);
+ 		List<Temp_Invoice> tmplist = tempinvrepo.getTempInvById(temp_id);
 
 		Float last_total = 0.0f, sub_total = 0.0f;
-
-		int tid = tempinvrepo.getMaxTempInvoiceNum();
+ 		int tid = tempinvrepo.getMaxTempInvoiceNum();
 
 		for (int i = 0; i < tmplist.size(); i++) {
 			// String pid = String.valueOf(tmplist.get(i).getProduct().getPid());
 
 			Product product = prodrepo.findById(tmplist.get(i).getProduct().getPid()).get();
 			// Product product = prodserv.getProductById(pid);
-
-			Invoice_Product invprod = new Invoice_Product();
-
-			// invprod.setTemp_invoice(tmplist.get(i));
-
-			invprod.setCgst(tmplist.get(i).getCgst());
-			invprod.setSgst(tmplist.get(i).getSgst());
-			invprod.setIgst(tmplist.get(i).getIgst());
-			invprod.setCgst_per((int) tmplist.get(i).getCgst_per());
-			invprod.setSgst_per((int) tmplist.get(i).getSgst_per());
-			invprod.setIgst_per((int) tmplist.get(i).getIgst_per());
-			invprod.setPrice(tmplist.get(i).getUnit_price());
-			invprod.setQty(tmplist.get(i).getQty());
-
-			invprod.setSubtotal(tmplist.get(i).getQty() * tmplist.get(i).getUnit_price());
-			invprod.setTotal(tmplist.get(i).getTotal());
-			invprod.setProduct(product);
-
-			Integer order_id = tmplist.get(i).getTemp_invoice_id();
-
-			invprod.setOrder_id(order_id);
+//
+//			Invoice_Product invprod = new Invoice_Product();
+//
+//			// invprod.setTemp_invoice(tmplist.get(i));
+//
+//			invprod.setCgst(tmplist.get(i).getCgst());
+//			invprod.setSgst(tmplist.get(i).getSgst());
+//			invprod.setIgst(tmplist.get(i).getIgst());
+//			invprod.setCgst_per((int) tmplist.get(i).getCgst_per());
+//			invprod.setSgst_per((int) tmplist.get(i).getSgst_per());
+//			invprod.setIgst_per((int) tmplist.get(i).getIgst_per());
+//			invprod.setPrice(tmplist.get(i).getUnit_price());
+//			invprod.setQty(tmplist.get(i).getQty());
+//
+//			invprod.setSubtotal(tmplist.get(i).getQty() * tmplist.get(i).getUnit_price());
+//			
+//			//invprod.setTotal(tmplist.get(i).getTotal());
+//			invprod.setTotal(invprod.getSubtotal()+invprod.getCgst()+invprod.getSgst()+invprod.getIgst());
+//			invprod.setProduct(product);
+//
+//			Integer order_id = tmplist.get(i).getTemp_invoice_id();
+//
+//			invprod.setOrder_id(order_id);
 
 			last_total = last_total + tmplist.get(i).getTotal();
-			invprod.setTotal(last_total);
-			
-			invprodrepo.save(invprod);
+//			invprod.setTotal(last_total);
+//			
+//			System.err.println("Invoice product  "+invprod.toString());
+//			
+//			invprodrepo.save(invprod);
 
 		}
 
@@ -146,6 +143,7 @@ public class InvoiceServImpl implements InvoiceService {
 	@Override
 	public Invoice getInvoiceByInvoiceId(Integer id) {
 		Invoice invoice = invrepo.getInvoiceByInvoiceId(id);
+		System.err.println("Invoice for ID "+id+" is "+invoice.toString());
 		return invoice;
 	}
 
@@ -198,14 +196,7 @@ public class InvoiceServImpl implements InvoiceService {
 	@Override
 	public Invoice getInvoiceByOrderId(Integer orderid) {
 
-		Optional<Invoice> invoice = invrepo.getInvoiceByOrderId(orderid);
-		if(invoice.isPresent()) {
-			System.err.println("getinvoicebyorderID() order ID  "+orderid+" is ");
-			return invoice.get();
-		}
-		else {
-			throw new ResourceNotFoundException("Invoice", "Order ID ", ""+orderid);
-		}
+		return invrepo.getInvoiceByOrderId(orderid).orElseThrow(()-> new ResourceNotFoundException("Invoice", "Order ID ", ""+orderid));
 		 
 	}
 }

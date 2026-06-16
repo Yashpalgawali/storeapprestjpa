@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.models.Invoice_Product;
 import com.example.demo.models.Product;
 import com.example.demo.models.Temp_Invoice;
+import com.example.demo.repository.InvoiceProductRepo;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.TempInvoiceRepo;
 
@@ -27,6 +29,7 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 
 //	private final TempInvoiceService tempinserv;
 	
+	private final InvoiceProductRepo invprodrepo;
 	private final ProductService prodserv;
 
 	private Logger logger = LoggerFactory.getLogger(TempInvoiceServImpl.class);
@@ -34,6 +37,8 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 	@Override
 	public Temp_Invoice saveTempInvoice(Temp_Invoice tin,HttpServletRequest request) {
 		logger.error("Temp Invoice is {} ", tin);
+		
+		System.err.println("TEMP INVOICE is "+tin.toString());
 		
 		HttpSession sess = request.getSession();
 		Integer sessid = (Integer) sess.getAttribute("temp_id");
@@ -61,14 +66,15 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		Long prod_id = tin.getProduct().getPid();
 		Long p_hsn = tin.getProduct().getProd_hsn();
 		Integer p_qty = tin.getQty();
-		Float p_cust_price = tin.getCustom_price();
+		Float p_cust_price = tin.getUnit_price();
 		Float unit_price = 0.0f;
 
 		float sub_tot, cgst, sgst, igst, total;
 
 		Product tem = prodserv.getProductById(prod_id);
-		if (p_cust_price > 0) {
-			unit_price = (float) (p_cust_price / 1.18);
+		if ( tin.getUnit_price() > 0) {
+			
+			unit_price = (float) (tin.getUnit_price() / 1.18);
 		} else {
 			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
 		}
@@ -82,14 +88,14 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 
 			cgst = Math.round((sub_tot / 100) * tem.getCgst_per());
 			sgst = Math.round((sub_tot / 100) * tem.getSgst_per());
-			igst = Math.round((sub_tot / 100) * tin.getIgst_per());
+			igst = 0.0f;
 		} else {
 			tin.setIgst_per(tem.getIgst_per());
 			tin.setCgst_per(0);
 			tin.setSgst_per(0);
 
-			cgst = Math.round((sub_tot / 100) * tin.getCgst_per());
-			sgst = Math.round((sub_tot / 100) * tin.getSgst_per());
+			cgst = 0.0f;
+			sgst = cgst;
 			igst = Math.round((sub_tot / 100) * tem.getIgst_per());
 		}
 
@@ -105,7 +111,28 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		tin.setUnit_price(unit_price);
 		tin.setTotal(sub_tot + cgst + sgst + igst);
 		
-		return tempinvrepo.save(tin);
+		
+		Temp_Invoice save = tempinvrepo.save(tin);
+		if(save!=null ) {
+			Invoice_Product ivprod =new Invoice_Product();
+			ivprod.setCgst(cgst);
+			ivprod.setSgst(sgst);
+			ivprod.setIgst(igst);
+			ivprod.setCgst_per(tin.getCgst_per());
+			ivprod.setSgst_per(tin.getSgst_per());
+			ivprod.setIgst(tin.getIgst_per());
+			ivprod.setOrder_id(sessid);
+			ivprod.setQty(tin.getQty());
+			ivprod.setTotal(tin.getTotal());
+			ivprod.setPrice(tin.getUnit_price());
+			ivprod.setSubtotal(sub_tot);
+			ivprod.setProduct(tem);
+			
+			invprodrepo.save(ivprod);
+			
+			return save;
+		}
+		return null;
 	}
 
 	@Override
