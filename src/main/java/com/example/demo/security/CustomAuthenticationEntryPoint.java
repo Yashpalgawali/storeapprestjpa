@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	        response.setContentType("application/json");
 
 	        String message = (authException instanceof DisabledException)
-	                ? "Your account has been disabled. Please contact the administrator."
+	                ? "Your account has been disabled. Please contact the Administrator."
 	                : "Invalid username or password";
 
 	        response.getWriter().write("{\"message\": \"" + message + "\"}");

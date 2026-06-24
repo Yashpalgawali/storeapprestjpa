@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.AUTO,generator = "prod_seq")
 	private Long pid;
 
+	@Column(unique = true)
 	private String prod_name ;
 	
 	private String prod_price;

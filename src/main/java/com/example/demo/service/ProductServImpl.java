@@ -84,8 +84,9 @@ public class ProductServImpl implements ProductService {
 			activity.setActivity_date(Global.DATE_FORMATTER.format(LocalDateTime.now()));
 			activity.setActivity_time(Global.TIME_FORMATTER.format(LocalDateTime.now()));
 			actrepo.save(activity);
+			throw new GlobalException("Product "+prod.getProd_name()+" is not updated");
 		}
-		throw new GlobalException("Product "+prod.getProd_name()+" is not updated");
+		
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.restcontroller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.Invoice;
@@ -97,5 +99,32 @@ public class InvoiceRestController {
 			return new ResponseEntity<String>(HttpStatus.NOT_MODIFIED); 
 		}
 		 
+	}
+	
+	@GetMapping("/paged")
+	public Map<String , Object> getAllInvoicesInPagedManner(@RequestParam(defaultValue = "0") int start,
+				@RequestParam(defaultValue = "10") int length, @RequestParam(required = false) String search, 
+				@RequestParam(required = false)String orderColumn, @RequestParam(required = false) String orderDir)
+			{
+		
+			String mappedColumn = this.mapSortColumn(orderColumn);
+			return invserv.getAllInvoicesWithPagination(start, length, search, mappedColumn, orderDir);			
+	}
+	
+	private String mapSortColumn(String col) {
+		
+		return switch (col) {
+		case "empId" -> "empId";
+		case "empCode" -> "empCode";
+		case "empName" -> "empName";
+		case "joiningDate" -> "joiningDate";
+		case "contractorName" -> "contractorName";
+
+		case "department" -> "department.deptName";
+		case "designation" -> "designation.desigName";
+		case "company" -> "department.company.compName"; // <-- IMPORTANT
+
+		default -> "empId"; // fallback
+		};
 	}
 }

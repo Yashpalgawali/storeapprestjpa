@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.models.Invoice;
 
@@ -19,4 +20,6 @@ public interface InvoiceService {
 	public int updateInvoiceById(Invoice invoice, HttpServletRequest request);
 
 	public Invoice getInvoiceByOrderId(Integer orderid);
+	
+	public Map<String , Object> getAllInvoicesWithPagination(int start, int length ,String search, String mappedColumn,String orderDir);
 }

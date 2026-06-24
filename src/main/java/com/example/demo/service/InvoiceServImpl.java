@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -198,5 +199,14 @@ public class InvoiceServImpl implements InvoiceService {
 
 		return invrepo.getInvoiceByOrderId(orderid).orElseThrow(()-> new ResourceNotFoundException("Invoice", "Order ID ", ""+orderid));
 		 
+	}
+
+	@Override
+	public Map<String, Object> getAllInvoicesWithPagination(int start, int length, String search, String mappedColumn,
+			String orderDir) {
+
+		int page = start / length;
+		
+		return null;
 	}
 }

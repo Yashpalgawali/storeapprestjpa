@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.GlobalException;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -68,6 +69,7 @@ public class PoProductServImpl implements PoProductService {
 	}
 
 	@Override
+	@Transactional
 	public void updatePoProductsList(PoProducts poprod) {
 
 		int cgst = poprod.getGst_rate()/2;
