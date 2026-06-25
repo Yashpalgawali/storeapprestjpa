@@ -64,23 +64,24 @@ public class TempInvoiceServImpl implements TempInvoiceService {
 		System.err.println("inside saveTempInvoice() sessid = " + sessid);
 
 		Long prod_id = tin.getProduct().getPid();
-		Long p_hsn = tin.getProduct().getProd_hsn();
-		Integer p_qty = tin.getQty();
-		Float p_cust_price = tin.getUnit_price();
+//		Long p_hsn = tin.getProduct().getProd_hsn();
+//		Integer p_qty = tin.getQty();
+//		Float p_cust_price = tin.getUnit_price();
 		Float unit_price = 0.0f;
 
 		float sub_tot, cgst, sgst, igst, total;
 
 		Product tem = prodserv.getProductById(prod_id);
-		if ( tin.getUnit_price() > 0) {
-			
-			unit_price = (float) (tin.getUnit_price() / 1.18);
+		if ( tin.getCustom_price() > 0) {
+			 tin.setCustom_price(tin.getCustom_price() * 1.18f);
+			unit_price = (float) (tin.getCustom_price() / 1.18);
+			System.err.println("Unit Price after 18% tax is "+ unit_price * 1.18);
 		} else {
 			unit_price = (float) (Float.parseFloat(tem.getProd_price()) / (1.18));
 		}
 
 		sub_tot = unit_price * tin.getQty();
-
+System.err.println("subtotal is "+sub_tot);
 		if (tin.getStoption().equals("mh")) {
 			tin.setCgst_per(tem.getCgst_per());
 			tin.setSgst_per(tem.getSgst_per());
